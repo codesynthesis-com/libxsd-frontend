@@ -522,7 +522,7 @@ main (Int argc, Char* argv[])
     //
     SemanticGraph::Path path (argv[i], boost::filesystem::native);
 
-    Parser parser (true, true);
+    Parser parser (true, false, true);
     Evptr<SemanticGraph::Schema> tu (parser.parse (path));
 
     //

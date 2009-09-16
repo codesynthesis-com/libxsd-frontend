@@ -100,7 +100,7 @@ $(call include-dep,$(cxx_od))
 .PHONY: $(out_base)/
 $(out_base)/: $(xsd_frontend.l)
 
-# what to clean
+# Clean
 #
 .PHONY: $(clean)
 
@@ -110,7 +110,18 @@ $(clean): $(xsd_frontend.l).o.clean     \
   $(addsuffix .cxx.clean,$(cxx_od))     \
   $(addsuffix .m4.clean,$(m4_cxx))
 
-# how to
+# Generated .gitignore.
+#
+ifeq ($(out_base),$(src_base))
+$(xsd_frontend.l): | $(out_base)/.gitignore
+
+$(out_base)/.gitignore: files := semantic-graph/fundamental.hxx semantic-graph/fundamental.cxx
+$(clean): $(out_base)/.gitignore.clean
+
+$(call include,$(bld_root)/git/gitignore.make)
+endif
+
+# How to.
 #
 $(call include,$(bld_root)/cxx/o-l.make)
 $(call include,$(bld_root)/cxx/cxx-o.make)

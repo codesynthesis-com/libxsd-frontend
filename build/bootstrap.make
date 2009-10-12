@@ -18,33 +18,29 @@ endif
 
 # Aliases
 #
+.PHONY: $(out_base)/       \
+        $(out_base)/.test  \
+        $(out_base)/.clean
+
 ifdef %interactive%
 
-.PHONY: test $(out_base)/.test \
-        clean $(out_base)/.clean
+.PHONY: test clean
 
 test: $(out_base)/.test
 clean: $(out_base)/.clean
 
-ifeq ($(.DEFAULT_GOAL),test)
-.DEFAULT_GOAL :=
-endif
-
-ifeq ($(.DEFAULT_GOAL),clean)
+ifneq ($(filter $(.DEFAULT_GOAL),test clean),)
 .DEFAULT_GOAL :=
 endif
 
 endif
 
-# Don't include dependency info if we are cleaning.
+# Don't include dependency info for certain targets.
 #
-define include-dep
-endef
-
-ifneq ($(MAKECMDGOALS),clean)
-ifneq ($(MAKECMDGOALS),disfigure)
 define include-dep
 $(call -include,$1)
 endef
-endif
+
+ifneq ($(filter $(MAKECMDGOALS),clean cleandoc disfigure),)
+include-dep =
 endif

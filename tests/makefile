@@ -9,8 +9,6 @@ default   := $(out_base)/
 test      := $(out_base)/.test
 clean     := $(out_base)/.clean
 
-.PHONY: $(default) $(test) $(clean)
-
 $(default): $(out_base)/dump/ $(out_base)/schema/
 $(test): $(out_base)/schema/.test
 $(clean): $(out_base)/dump/.clean $(out_base)/schema/.clean

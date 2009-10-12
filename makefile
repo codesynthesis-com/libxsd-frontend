@@ -9,12 +9,9 @@ default := $(out_base)/
 test    := $(out_base)/.test
 clean   := $(out_base)/.clean
 
-.PHONY: $(default) $(test) $(clean)
-
 $(default): $(out_base)/xsd-frontend/ $(out_base)/tests/
 $(test): $(out_base)/tests/.test
 $(clean): $(out_base)/xsd-frontend/.clean $(out_base)/tests/.clean
-
 
 $(call import,$(src_base)/xsd-frontend/makefile)
 $(call import,$(src_base)/tests/makefile)

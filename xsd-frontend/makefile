@@ -74,7 +74,6 @@ $(call import,\
   $(scf_root)/import/libfrontend-elements/stub.make,\
   l: fe.l,cpp-options: fe.l.cpp-options)
 
-
 # what to build
 #
 $(xsd_frontend.l): $(cxx_obj) $(fe.l) $(cult.l) $(xerces_c.l) $(fs.l)
@@ -97,13 +96,10 @@ $(call include-dep,$(cxx_od))
 
 # Alias for default target.
 #
-.PHONY: $(out_base)/
 $(out_base)/: $(xsd_frontend.l)
 
 # Clean
 #
-.PHONY: $(clean)
-
 $(clean): $(xsd_frontend.l).o.clean     \
   $(xsd_frontend.l.cpp-options).clean   \
   $(addsuffix .cxx.clean,$(cxx_obj))    \

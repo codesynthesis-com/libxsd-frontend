@@ -15,7 +15,6 @@ xsd-fe.l.cpp-options := $(out_root)/xsd-frontend/xsd-frontend.l.cpp-options
 driver  := $(out_base)/driver
 clean   := $(out_base)/.clean
 
-
 # Build.
 #
 $(driver): $(cxx_obj) $(xsd-fe.l)
@@ -24,17 +23,12 @@ $(cxx_obj) $(cxx_od): $(xsd-fe.l.cpp-options)
 
 $(call include-dep,$(cxx_od))
 
-
 # Convenience alias for default target.
 #
-.PHONY: $(out_base)/
 $(out_base)/: $(driver)
-
 
 # Clean.
 #
-.PHONY: $(clean)
-
 $(clean): $(driver).o.clean          \
   $(addsuffix .cxx.clean,$(cxx_obj)) \
   $(addsuffix .cxx.clean,$(cxx_od))

@@ -4436,7 +4436,14 @@ namespace XSDFrontend
         conf->setParameter (XMLUni::fgDOMValidate, true);
         conf->setParameter (XMLUni::fgDOMElementContentWhitespace, false);
         conf->setParameter (XMLUni::fgXercesSchema, true);
+
+        // Xerces-C++ 3.1.0 is the first version with working multi import
+        // support.
+        //
+#if _XERCES_VERSION >= 30100
         conf->setParameter (XMLUni::fgXercesHandleMultipleImports, multiple_imports_);
+#endif
+
         conf->setParameter (XMLUni::fgXercesSchemaFullChecking, full_schema_check_);
         conf->setParameter (XMLUni::fgXercesValidationErrorAsFatal, true);
 

@@ -306,7 +306,6 @@ namespace XSDFrontend
       Resolver (Schema& s, Boolean& valid, NamespaceMap& cache)
           : s_ (s), valid_ (valid), cache_ (cache)
       {
-        //*this >> contains_particle >> *this;
         *this >> contains_compositor >> *this;
       }
 
@@ -326,13 +325,6 @@ namespace XSDFrontend
       Void
       traverse (SemanticGraph::Element& e)
       {
-        // Avoid traversing element more than once.
-        //
-        //if (e.context ().count ("element-traversed"))
-        //  return;
-
-        //e.context ().set ("element-traversed", true);
-
         resolve_element (e);
       }
 
@@ -713,6 +705,8 @@ namespace XSDFrontend
             valid_ = false;
           }
         }
+
+        Traversal::Enumeration::traverse (e);
       }
 
       Void
@@ -1786,8 +1780,8 @@ namespace XSDFrontend
       Resolver resolver (*rs, valid_, *cache_);
 
       struct AnonymousMember: Traversal::Attribute,
-        Traversal::Element,
-        Traversal::Member
+                              Traversal::Element,
+                              Traversal::Member
       {
         AnonymousMember (Traversal::NodeDispatcherBase& d)
         {
@@ -1806,7 +1800,7 @@ namespace XSDFrontend
           traverse_member (e);
         }
 
-        virtual Void
+        Void
         traverse_member (SemanticGraph::Member& m)
         {
           if (m.typed () &&
@@ -1825,12 +1819,32 @@ namespace XSDFrontend
         Traversal::Belongs belongs_;
       } anonymous_member (resolver);
 
+      struct AnonymousBase: Traversal::Type
+      {
+        AnonymousBase (Traversal::NodeDispatcherBase& d)
+            : base_ (d)
+        {
+        }
+
+        virtual Void
+        traverse (SemanticGraph::Type& t)
+        {
+          if (!t.named ())
+            base_.dispatch (t);
+        }
+
+      private:
+        Traversal::NodeDispatcherBase& base_;
+      } anonymous_base (resolver);
+
       ns_names >> resolver;
       ns_names >> anonymous_member;
 
       Traversal::Names names;
+      Traversal::Inherits inherits;
       resolver >> names >> resolver;
       names >> anonymous_member;
+      resolver >> inherits >> anonymous_base;
 
       if (trace_)
         wcout << "starting resolution pass" << endl;
@@ -2453,7 +2467,6 @@ namespace XSDFrontend
   SemanticGraph::Type* Parser::Impl::
   list (XML::Element const& l, XML::Element const& t)
   {
-
     List& node (s_->new_node<List> (file (), t.line (), t.column ()));
 
     if (String item_type = l["itemType"])

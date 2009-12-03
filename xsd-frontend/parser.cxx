@@ -2089,6 +2089,11 @@ namespace XSDFrontend
     if (loc_translator_)
       loc = loc_translator_->translate (loc);
 
+    // Ignore empty <import>.
+    //
+    if (!loc && !i["namespace"])
+      return;
+
     Path path, rel_path, abs_path;
     try
     {
@@ -4327,7 +4332,7 @@ namespace XSDFrontend
         //@@ How can I get the line/column numbers for this?
         //
         wcerr << ctx_.file (base) << ": error: "
-              << "unable to guess which resource to open"
+              << "unable to guess which schema to open"
               << endl;
 
         wcerr << ctx_.file (base) << ": info: "

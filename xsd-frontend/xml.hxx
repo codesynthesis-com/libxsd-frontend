@@ -22,13 +22,12 @@ namespace XSDFrontend
 
     inline
     String
-    transcode (XMLCh const* s)
+    transcode (XMLCh const* s, Size length)
     {
       if (sizeof (WideChar) == 4)
       {
         // UTF-32
         //
-        Size length (Xerces::XMLString::stringLen (s));
         XMLCh const* end (s + length);
 
         // Find what the resulting buffer size will be.
@@ -79,10 +78,17 @@ namespace XSDFrontend
       {
         // UTF-16
         //
-        return String (reinterpret_cast<const WideChar*> (s));
+        return String (reinterpret_cast<const WideChar*> (s), length);
       }
       else
         return String ();
+    }
+
+    inline
+    String
+    transcode (XMLCh const* s)
+    {
+      return transcode (s,  Xerces::XMLString::stringLen (s));
     }
 
     inline
@@ -90,11 +96,8 @@ namespace XSDFrontend
     transcode_to_narrow (XMLCh const* xs)
     {
       Char* s (Xerces::XMLString::transcode (xs));
-
       NarrowString r (s);
-
       Xerces::XMLString::release (&s);
-
       return r;
     }
 

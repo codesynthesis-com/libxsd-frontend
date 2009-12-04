@@ -27,6 +27,7 @@
 
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/XMLString.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/BinInputStream.hpp>
 #include <xercesc/util/BinFileInputStream.hpp>
 

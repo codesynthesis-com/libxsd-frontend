@@ -1,6 +1,6 @@
 # file      : build/import/libxsd-frontend/stub.make
 # author    : Boris Kolpackov <boris@codesynthesis.com>
-# copyright : Copyright (c) 2005-2009 Code Synthesis Tools CC
+# copyright : Copyright (c) 2005-2010 Code Synthesis Tools CC
 # license   : GNU GPL v2 + exceptions; see accompanying LICENSE file
 
 $(call include-once,$(src_root)/xsd-frontend/makefile,$(out_root))

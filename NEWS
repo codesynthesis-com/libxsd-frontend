@@ -1,3 +1,8 @@
+Version 1.17.0
+
+  * Add support for resolving default/fixed values of QName type. Now 
+    the qualified value is represented in the <namespace>#<qname> form.
+
 Version 1.16.0
   
   * New transformation: simplifier. It simplifies the schema graph

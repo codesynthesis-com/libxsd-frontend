@@ -13,6 +13,7 @@
 
 #include <cult/containers/map.hxx>
 #include <cult/containers/stack.hxx>
+#include <cult/containers/vector.hxx>
 #include <cult/rtti/type-id.hxx>
 
 //@@ Do i need this?
@@ -120,6 +121,7 @@ namespace XSDFrontend
 
     typedef Cult::Containers::Map<String, CacheNodes> NodeMap;
     typedef Cult::Containers::Map<String, NodeMap> NamespaceMap;
+    typedef Cult::Containers::Vector<SemanticGraph::Member*> DefaultValues;
 
     template <typename X>
     X&
@@ -304,8 +306,14 @@ namespace XSDFrontend
                       Traversal::AttributeGroup,
                       Traversal::Compositor
     {
-      Resolver (Schema& s, Boolean& valid, NamespaceMap& cache)
-          : s_ (s), valid_ (valid), cache_ (cache)
+      Resolver (Schema& s,
+                Boolean& valid,
+                NamespaceMap& cache,
+                DefaultValues& default_values)
+          : s_ (s),
+            valid_ (valid),
+            cache_ (cache),
+            default_values_ (default_values)
       {
         *this >> contains_compositor >> *this;
       }
@@ -458,6 +466,14 @@ namespace XSDFrontend
                 m.fixed (ref.value ());
               else if (ref.default_ ())
                 m.default_ (ref.value ());
+
+              if (m.default_ ())
+              {
+                m.context ().set (
+                  "dom-node",
+                  ref.context ().get<Xerces::DOMElement*> ("dom-node"));
+                default_values_.push_back (&m);
+              }
             }
 
             // Transfer annotation if we haven't already gotten it.
@@ -1011,6 +1027,14 @@ namespace XSDFrontend
         else if (e.default_ ())
           copy.default_ (e.value ());
 
+        if (copy.default_ ())
+        {
+          copy.context ().set (
+            "dom-node",
+            e.context ().get<Xerces::DOMElement*> ("dom-node"));
+          default_values_.push_back (&copy);
+        }
+
         // Transfer annotation.
         //
         if (e.annotated ())
@@ -1076,6 +1100,14 @@ namespace XSDFrontend
                 a.fixed (p->value ());
               else if (p->default_ ())
                 a.default_ (p->value ());
+
+              if (a.default_ ())
+              {
+                a.context ().set (
+                  "dom-node",
+                  p->context ().get<Xerces::DOMElement*> ("dom-node"));
+                default_values_.push_back (&a);
+              }
 
               // Transfer annotation.
               //
@@ -1155,6 +1187,7 @@ namespace XSDFrontend
       Schema& s_;
       Boolean& valid_;
       NamespaceMap& cache_;
+      DefaultValues& default_values_;
 
     private:
       //Traversal::ContainsParticle contains_particle;
@@ -1433,7 +1466,7 @@ namespace XSDFrontend
         // be assigned to a namespace (which takes precedence over names
         // without a namespace).
         //
-        return XML::ns_name (e, p);
+        return XML::ns_name (e.dom_element (), p);
       }
       catch (XML::NoMapping const& ex)
       {
@@ -1444,12 +1477,44 @@ namespace XSDFrontend
       }
     }
 
+    SemanticGraph::Type&
+    ultimate_base (SemanticGraph::Type& t)
+    {
+      using namespace SemanticGraph;
+
+      Complex* c = dynamic_cast<Complex*> (&t);
+
+      if (c != 0 && c->inherits_p ())
+      {
+        Type* b (&c->inherits ().base ());
+
+        while (true)
+        {
+          Complex* cb (dynamic_cast<Complex*> (b));
+
+          if (cb != 0 && cb->inherits_p ())
+          {
+            b = &cb->inherits ().base ();
+            continue;
+          }
+
+          break;
+        }
+
+        return *b;
+      }
+      else
+        return t;
+    }
+
   private:
     template <typename Edge, typename Node>
     Edge*
     set_type (String const& type, XML::Element const& e, Node& node);
 
   private:
+    XML::PtrVector<Xerces::DOMDocument>* dom_docs_;
+
     struct Iterator
     {
       Iterator (Xerces::DOMElement* e)
@@ -1517,6 +1582,10 @@ namespace XSDFrontend
     {
       return file_stack_.top ();
     }
+
+    // Members with default/fixed values (needed for QName handling).
+    //
+    DefaultValues default_values_;
 
   private:
     Boolean qualify_attribute_;
@@ -1696,6 +1765,12 @@ namespace XSDFrontend
   parse (Path const& tu)
   {
     valid_ = true;
+    schema_map_.clear ();
+    default_values_.clear ();
+
+    XML::PtrVector<Xerces::DOMDocument> dom_docs;
+    dom_docs_ = &dom_docs;
+
     NamespaceMap cache;
     cache_ = &cache;
 
@@ -1749,6 +1824,8 @@ namespace XSDFrontend
       s_ = cur_ = 0;
     }
 
+    dom_docs_->push_back (d);
+
     // Second pass to resolve forward references to types, elements,
     // attributes and groups.
     //
@@ -1778,7 +1855,7 @@ namespace XSDFrontend
       schema >> uses >> schema;
       schema >> schema_names >> ns >> ns_names;
 
-      Resolver resolver (*rs, valid_, *cache_);
+      Resolver resolver (*rs, valid_, *cache_, default_values_);
 
       struct AnonymousMember: Traversal::Attribute,
                               Traversal::Element,
@@ -1853,6 +1930,52 @@ namespace XSDFrontend
       schema.dispatch (*rs);
     }
 
+    // Resolve default/fixed values of QName type.
+    //
+    if (valid_)
+    {
+      for (DefaultValues::ConstIterator i (default_values_.begin ()),
+             e (default_values_.end ()); i != e; ++i)
+      {
+        SemanticGraph::Member& m (**i);
+        SemanticGraph::Type& t (m.type ());
+        SemanticGraph::Context& c (m.context ());
+
+        if (ultimate_base (t).is_a<SemanticGraph::Fundamental::QName> ())
+        {
+          String v (m.value ());
+          Xerces::DOMElement* e (c.get<Xerces::DOMElement*> ("dom-node"));
+
+          try
+          {
+            // We have to try to resolve even the empty prefix since it can
+            // be assigned to a namespace (which takes precedence over names
+            // without a namespace).
+            //
+            String ns (XML::ns_name (e, XML::prefix (v)));
+
+            if (m.fixed ())
+              m.fixed (ns + L'#' + v);
+            else
+              m.default_ (ns + L'#' + v);
+          }
+          catch (XML::NoMapping const& ex)
+          {
+            if (!ex.prefix ().empty ())
+            {
+              wcerr << m.file () << ":" << m.line () << ":" << m.column ()
+                    << ": error: unable to resolve namespace for prefix '"
+                    <<  ex.prefix () << "'" << endl;
+
+              valid_ = false;
+            }
+          }
+        }
+
+        c.remove ("dom-node");
+      }
+    }
+
     if (!valid_)
       throw InvalidSchema ();
 
@@ -1863,6 +1986,12 @@ namespace XSDFrontend
   parse (Paths const& paths)
   {
     valid_ = true;
+    schema_map_.clear ();
+    default_values_.clear ();
+
+    XML::PtrVector<Xerces::DOMDocument> dom_docs;
+    dom_docs_ = &dom_docs;
+
     NamespaceMap cache;
     cache_ = &cache;
 
@@ -1931,6 +2060,8 @@ namespace XSDFrontend
 
       cur_ = 0;
 
+      dom_docs_->push_back (d);
+
       if (!valid_)
         break;
     }
@@ -1966,7 +2097,7 @@ namespace XSDFrontend
       schema >> uses >> schema;
       schema >> schema_names >> ns >> ns_names;
 
-      Resolver resolver (*rs, valid_, *cache_);
+      Resolver resolver (*rs, valid_, *cache_, default_values_);
 
       struct AnonymousMember: Traversal::Attribute,
                               Traversal::Element,
@@ -2019,6 +2150,52 @@ namespace XSDFrontend
         wcout << "starting resolution pass" << endl;
 
       schema.dispatch (*rs);
+    }
+
+    // Resolve default/fixed values of QName type.
+    //
+    if (valid_)
+    {
+      for (DefaultValues::ConstIterator i (default_values_.begin ()),
+             e (default_values_.end ()); i != e; ++i)
+      {
+        SemanticGraph::Member& m (**i);
+        SemanticGraph::Type& t (m.type ());
+        SemanticGraph::Context& c (m.context ());
+
+        if (ultimate_base (t).is_a<SemanticGraph::Fundamental::QName> ())
+        {
+          String v (m.value ());
+          Xerces::DOMElement* e (c.get<Xerces::DOMElement*> ("dom-node"));
+
+          try
+          {
+            // We have to try to resolve even the empty prefix since it can
+            // be assigned to a namespace (which takes precedence over names
+            // without a namespace).
+            //
+            String ns (XML::ns_name (e, XML::prefix (v)));
+
+            if (m.fixed ())
+              m.fixed (ns + L'#' + v);
+            else
+              m.default_ (ns + L'#' + v);
+          }
+          catch (XML::NoMapping const& ex)
+          {
+            if (!ex.prefix ().empty ())
+            {
+              wcerr << m.file () << ":" << m.line () << ":" << m.column ()
+                    << ": error: unable to resolve namespace for prefix '"
+                    <<  ex.prefix () << "'" << endl;
+
+              valid_ = false;
+            }
+          }
+        }
+
+        c.remove ("dom-node");
+      }
     }
 
     if (!valid_)
@@ -2181,6 +2358,8 @@ namespace XSDFrontend
 
       cur_chameleon_ = old_cur_chameleon;
       cur_ = old_cur;
+
+      dom_docs_->push_back (d);
     }
   }
 
@@ -2309,6 +2488,8 @@ namespace XSDFrontend
 
       cur_chameleon_ = old_cur_chameleon;
       cur_ = old_cur;
+
+      dom_docs_->push_back (d);
     }
   }
 
@@ -3287,6 +3468,11 @@ namespace XSDFrontend
       else if (e.attribute_p ("default"))
         node.default_ (e.attribute ("default"));
 
+      if (node.default_ ())
+      {
+        node.context ().set ("dom-node", e.dom_element ());
+        default_values_.push_back (&node);
+      }
 
       if (global)
       {
@@ -3407,6 +3593,12 @@ namespace XSDFrontend
       else if (e.attribute_p ("default"))
         node.default_ (e.attribute ("default"));
 
+      if (node.default_ ())
+      {
+        node.context ().set ("dom-node", e.dom_element ());
+        default_values_.push_back (&node);
+      }
+
       // Parse annotation.
       //
       push (e);
@@ -3450,6 +3642,14 @@ namespace XSDFrontend
             node.fixed (prot.value ());
           else if (prot.default_ ())
             node.default_ (prot.value ());
+
+          if (node.default_ ())
+          {
+            node.context ().set (
+              "dom-node",
+              prot.context ().get<Xerces::DOMElement*> ("dom-node"));
+            default_values_.push_back (&node);
+          }
         }
 
         // Transfer annotation if the ref declaration hasn't defined its own.
@@ -3646,6 +3846,11 @@ namespace XSDFrontend
       else if (a.attribute_p ("default"))
         node.default_ (a.attribute ("default"));
 
+      if (node.default_ ())
+      {
+        node.context ().set ("dom-node", a.dom_element ());
+        default_values_.push_back (&node);
+      }
 
       if (String type = a["type"])
       {
@@ -3733,6 +3938,11 @@ namespace XSDFrontend
       else if (a.attribute_p ("default"))
         node.default_ (a.attribute ("default"));
 
+      if (node.default_ ())
+      {
+        node.context ().set ("dom-node", a.dom_element ());
+        default_values_.push_back (&node);
+      }
 
       // Parse annotation.
       //
@@ -3762,6 +3972,14 @@ namespace XSDFrontend
             node.fixed (prot.value ());
           else if (prot.default_ ())
             node.default_ (prot.value ());
+
+          if (node.default_ ())
+          {
+            node.context ().set (
+              "dom-node",
+              prot.context ().get<Xerces::DOMElement*> ("dom-node"));
+            default_values_.push_back (&node);
+          }
         }
 
         // Transfer annotation if the ref declaration hasn't defined its own.

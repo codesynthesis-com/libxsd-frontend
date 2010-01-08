@@ -6,13 +6,15 @@
 #ifndef XSD_FRONTEND_XML_HXX
 #define XSD_FRONTEND_XML_HXX
 
-#include <xsd-frontend/types.hxx>
-#include <xsd-frontend/schema-dom-parser.hxx>
+#include <ostream>
 
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/util/XMLString.hpp>
 
-#include <ostream>
+#include <cult/containers/vector.hxx>
+
+#include <xsd-frontend/types.hxx>
+#include <xsd-frontend/schema-dom-parser.hxx>
 
 namespace XSDFrontend
 {
@@ -172,7 +174,7 @@ namespace XSDFrontend
 
       ~XMLChString ()
       {
-        Xerces::XMLString::release (&s_);
+        delete[] s_;
       }
 
       XMLCh const*
@@ -339,7 +341,7 @@ namespace XSDFrontend
     // Throws NoMapping if there is no prefix-namespace association.
     //
     inline String
-    ns_name (Element const& e, String const& prefix)
+    ns_name (Xerces::DOMElement const* e, String const& prefix)
     {
       // 'xml' prefix requires special handling and Xerces folks refuse
       // to handle this in DOM so I have to do it myself.
@@ -350,7 +352,7 @@ namespace XSDFrontend
       // 0 means "no prefix" to Xerces.
       //
       XMLCh const* xns (
-        e.dom_element ()->lookupNamespaceURI (
+        e->lookupNamespaceURI (
           prefix.empty () ? 0 : XMLChString (prefix).c_str ()));
 
       if (xns == 0)
@@ -362,8 +364,7 @@ namespace XSDFrontend
     class NoPrefix {};
 
     inline String
-    ns_prefix (Element const& e,
-               String const& wns)
+    ns_prefix (Element const& e, String const& wns)
     {
       XMLChString ns (wns);
 
@@ -403,7 +404,7 @@ namespace XSDFrontend
 
       try
       {
-        String ns (ns_name (e, prefix (n)));
+        String ns (ns_name (e.dom_element (), prefix (n)));
         return ns + L'#' + un;
       }
       catch (XML::NoMapping const&)
@@ -526,6 +527,29 @@ namespace XSDFrontend
 
     private:
       X* x_;
+    };
+
+    template <typename X>
+    struct PtrVector: Cult::Containers::Vector<X*>
+    {
+      typedef Cult::Containers::Vector<X*> Base;
+
+      ~PtrVector ()
+      {
+        for (typename Base::Iterator i (this->begin ()), e (this->end ());
+             i != e; ++i)
+        {
+          if (*i)
+            (*i)->release ();
+        }
+      }
+
+      Void
+      push_back (AutoPtr<X>& x)
+      {
+        Base::push_back (0);
+        this->back () = x.release ();
+      }
     };
   }
 }

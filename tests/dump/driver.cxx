@@ -203,6 +203,11 @@ namespace
       wcout << ind << (a.optional () ? "optional" : "required")
             << " attribute " << a.name ();
 
+      if (a.fixed ())
+        wcout << "==" << a.value ();
+      else if (a.default_ ())
+        wcout << "=" << a.value ();
+
       SemanticGraph::Type& t (a.type ());
 
       if (t.named ())
@@ -241,6 +246,11 @@ namespace
     {
       wcout << "element " << e.name ();
 
+      if (e.fixed ())
+        wcout << "==" << e.value ();
+      else if (e.default_ ())
+        wcout << "=" << e.value ();
+
       SemanticGraph::Type& t (e.type ());
 
       if (t.named ())
@@ -268,7 +278,14 @@ namespace
         wcout << ind << "<" << e.annotation ().documentation () << ">"
               << endl;
 
-      wcout << ind << "element " << e.name () << endl;
+      wcout << ind << "element " << e.name ();
+
+      if (e.fixed ())
+        wcout << "==" << e.value ();
+      else if (e.default_ ())
+        wcout << "=" << e.value ();
+
+      wcout << endl;
     }
   };
 
@@ -343,6 +360,11 @@ namespace
 
       wcout << ind << "attribute " << a.name ();
 
+      if (a.fixed ())
+        wcout << "==" << a.value ();
+      else if (a.default_ ())
+        wcout << "=" << a.value ();
+
       SemanticGraph::Type& t (a.type ());
 
       if (t.named ())
@@ -371,6 +393,11 @@ namespace
               << endl;
 
       wcout << ind << "element " << e.name ();
+
+      if (e.fixed ())
+        wcout << "==" << e.value ();
+      else if (e.default_ ())
+        wcout << "=" << e.value ();
 
       SemanticGraph::Type& t (e.type ());
 

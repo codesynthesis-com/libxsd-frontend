@@ -265,19 +265,16 @@ namespace XSDFrontend
             SemanticGraph::Path file (path (l));
             String file_str;
 
-            if (file != schema_path)
+            // Try to use the portable representation of the path. If that
+            // fails, fall back to the native representation.
+            //
+            try
             {
-              // Try to use the portable representation of the path. If that
-              // fails, fall back to the native representation.
-              //
-              try
-              {
-                file_str = file.string ();
-              }
-              catch (SemanticGraph::InvalidPath const&)
-              {
-                file_str = file.native_file_string ();
-              }
+              file_str = file.string ();
+            }
+            catch (SemanticGraph::InvalidPath const&)
+            {
+              file_str = file.native_file_string ();
             }
 
             String name (
@@ -349,19 +346,16 @@ namespace XSDFrontend
             SemanticGraph::Path file (path (c));
             String file_str;
 
-            if (file != schema_path)
+            // Try to use the portable representation of the path. If that
+            // fails, fall back to the native representation.
+            //
+            try
             {
-              // Try to use the portable representation of the path. If that
-              // fails, fall back to the native representation.
-              //
-              try
-              {
-                file_str = file.string ();
-              }
-              catch (SemanticGraph::InvalidPath const&)
-              {
-                file_str = file.native_file_string ();
-              }
+              file_str = file.string ();
+            }
+            catch (SemanticGraph::InvalidPath const&)
+            {
+              file_str = file.native_file_string ();
             }
 
             String name (
@@ -550,19 +544,16 @@ namespace XSDFrontend
         SemanticGraph::Path file (path (m));
         String file_str;
 
-        if (file != schema_path)
+        // Try to use the portable representation of the path. If that
+        // fails, fall back to the native representation.
+        //
+        try
         {
-          // Try to use the portable representation of the path. If that
-          // fails, fall back to the native representation.
-          //
-          try
-          {
-            file_str = file.string ();
-          }
-          catch (SemanticGraph::InvalidPath const&)
-          {
-            file_str = file.native_file_string ();
-          }
+          file_str = file.string ();
+        }
+        catch (SemanticGraph::InvalidPath const&)
+        {
+          file_str = file.native_file_string ();
         }
 
         String name (

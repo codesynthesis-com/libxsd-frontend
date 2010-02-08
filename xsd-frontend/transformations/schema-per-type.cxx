@@ -224,14 +224,11 @@ namespace XSDFrontend
       virtual Void
       traverse (SemanticGraph::List& l)
       {
+        // Treat item type as base type since it is impossible
+        // to create recursive constructs using list.
+        //
         SemanticGraph::Type& t (l.argumented ().type ());
-
-        Boolean weak (
-          by_value_key_ == 0 ||
-          !t.context ().count (by_value_key_) ||
-          !t.context ().get<Boolean> (by_value_key_));
-
-        set_dep (t, weak);
+        set_dep (t, false);
       }
 
       virtual Void

@@ -18,14 +18,20 @@ namespace XSDFrontend
   {
     using namespace Cult::Types;
 
-    class TypeSchemaTranslator
+    class SchemaPerTypeTranslator
     {
     public:
       virtual
-      ~TypeSchemaTranslator ();
+      ~SchemaPerTypeTranslator ();
 
+      // The following two functions should return empty string if
+      // there is no match.
+      //
       virtual WideString
-      translate (WideString const& ns, WideString const& name) = 0;
+      translate_type (WideString const& ns, WideString const& name) = 0;
+
+      virtual NarrowString
+      translate_schema (NarrowString const& abs_path) = 0;
     };
 
     // This transformation restructures the semantic graph to have
@@ -40,14 +46,14 @@ namespace XSDFrontend
       // with the by_value_key key and it is true, then the schema
       // for this type is included "strongly".
       //
-      SchemaPerType (TypeSchemaTranslator&, Char const* by_value_key = 0);
+      SchemaPerType (SchemaPerTypeTranslator&, Char const* by_value_key = 0);
 
       Cult::Containers::Vector<SemanticGraph::Schema*>
       transform (SemanticGraph::Schema&);
 
     private:
       Char const* by_value_key_;
-      TypeSchemaTranslator& trans_;
+      SchemaPerTypeTranslator& trans_;
     };
   }
 }

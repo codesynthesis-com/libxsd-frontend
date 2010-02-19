@@ -103,7 +103,7 @@ namespace XSDFrontend
                     SemanticGraph::Schema& xsd,
                     TypeSchemaMap& tsm,
                     FileSet& file_set,
-                    Transformations::TypeSchemaTranslator& trans)
+                    Transformations::SchemaPerTypeTranslator& trans)
     {
       using namespace SemanticGraph;
 
@@ -129,19 +129,24 @@ namespace XSDFrontend
           // Add a new schema node.
           //
           Path path;
-          String wbase (trans.translate (ns.name (), name));
+          String tn (trans.translate_type (ns.name (), name));
+          String wbase (tn ? tn : name);
 
           try
           {
             NarrowString base (wbase.to_narrow ());
 
-            // Escape directory separators.
+            // Escape directory separators unless they came from the
+            // translator.
             //
-            for (NarrowString::Iterator i (base.begin ()), e (base.end ());
-                 i != e; ++i)
+            if (!tn)
             {
-              if (*i == '/' || *i == '\\')
-                *i = '_';
+              for (NarrowString::Iterator i (base.begin ()), e (base.end ());
+                   i != e; ++i)
+              {
+                if (*i == '/' || *i == '\\')
+                  *i = '_';
+              }
             }
 
             // Make sure it is unique.
@@ -158,7 +163,6 @@ namespace XSDFrontend
             }
 
             file_set.insert (file_name);
-
             file_name += ".xsd";
 
             try
@@ -170,7 +174,7 @@ namespace XSDFrontend
               wcerr << "error: '" << file_name.c_str () << "' is not a valid "
                     << "filesystem path" << endl;
 
-              wcerr << "info: use type to file name translation mechanisms "
+              wcerr << "info: use type to file name translation mechanism "
                     << "to resolve this" << endl;
 
               throw Failed ();
@@ -181,7 +185,7 @@ namespace XSDFrontend
             wcerr << "error: '" << wbase << "' cannot be represented as a "
                   << "narrow string" << endl;
 
-            wcerr << "info: use type to file name translation mechanisms "
+            wcerr << "info: use type to file name translation mechanism "
                   << "to resolve this" << endl;
 
             throw Failed ();
@@ -304,7 +308,7 @@ namespace XSDFrontend
   namespace Transformations
   {
     SchemaPerType::
-    SchemaPerType (TypeSchemaTranslator& trans, Char const* by_value_key)
+    SchemaPerType (SchemaPerTypeTranslator& trans, Char const* by_value_key)
         : by_value_key_ (by_value_key), trans_ (trans)
     {
     }
@@ -338,11 +342,65 @@ namespace XSDFrontend
 
       for (Schemas::Iterator i (schemas.begin ()); i != schemas.end (); ++i)
       {
-        NarrowString s ((*i)->used_begin ()->path ().leaf ());
+        SemanticGraph::Path const& path (
+          (*i)->context ().get<SemanticGraph::Path> ("absolute-path"));
 
-        Size p (s.rfind ('.'));
-        file_set.insert (
-          p != NarrowString::npos ? NarrowString (s, 0, p) : s);
+        // Translate the schema file name.
+        //
+        NarrowString abs_path;
+
+        // Try to use the portable representation of the path. If that
+        // fails, fall back to the native representation.
+        //
+        try
+        {
+          abs_path = path.string ();
+        }
+        catch (SemanticGraph::InvalidPath const&)
+        {
+          abs_path = path.native_file_string ();
+        }
+
+        NarrowString tf (trans_.translate_schema (abs_path));
+        NarrowString file (tf ? tf : path.leaf ());
+
+        Size p (file.rfind ('.'));
+        NarrowString ext (
+          p != NarrowString::npos ? NarrowString (file, p) : "");
+
+        NarrowString base (
+          p != NarrowString::npos ? NarrowString (file, 0, p) : file);
+
+        // Make sure it is unique.
+        //
+        NarrowString new_name (base);
+
+        for (UnsignedLong n (1);
+             file_set.find (new_name) != file_set.end ();
+             ++n)
+        {
+          std::ostringstream os;
+          os << n;
+          new_name = base + os.str ();
+        }
+
+        file_set.insert (new_name);
+        new_name += ext;
+
+        try
+        {
+          (*i)->context ().set ("renamed", SemanticGraph::Path (new_name));
+        }
+        catch (SemanticGraph::InvalidPath const&)
+        {
+          wcerr << "error: '" << new_name.c_str () << "' is not a valid "
+                << "filesystem path" << endl;
+
+          wcerr << "info: use schema file name translation mechanism "
+                << "to resolve this" << endl;
+
+          throw Failed ();
+        }
       }
 
       // Process each schema node.
@@ -370,8 +428,8 @@ namespace XSDFrontend
       return schemas;
     }
 
-    TypeSchemaTranslator::
-    ~TypeSchemaTranslator ()
+    SchemaPerTypeTranslator::
+    ~SchemaPerTypeTranslator ()
     {
     }
   }

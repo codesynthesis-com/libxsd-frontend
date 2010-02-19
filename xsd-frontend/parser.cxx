@@ -1799,7 +1799,10 @@ namespace XSDFrontend
     {
       // Enter the file into schema_map_.
       //
-      schema_map_[SchemaId (system_complete (tu), ns)] = rs.get ();
+      Path abs_path (system_complete (tu));
+      abs_path.normalize ();
+      schema_map_[SchemaId (abs_path, ns)] = rs.get ();
+      rs->context ().set ("absolute-path", abs_path);
 
       s_ = cur_ = rs.get ();
       {
@@ -2024,7 +2027,9 @@ namespace XSDFrontend
 
       // Check if we already have this schema.
       //
-      SchemaId schema_id (system_complete (tu), ns);
+      Path abs_path (system_complete (tu));
+      abs_path.normalize ();
+      SchemaId schema_id (abs_path, ns);
 
       if (schema_map_.find (schema_id) != schema_map_.end ())
         continue;
@@ -2036,6 +2041,7 @@ namespace XSDFrontend
       // Enter the file into schema_map_.
       //
       schema_map_[schema_id] = &s;
+      s.context ().set ("absolute-path", abs_path);
 
       cur_ = &s;
 
@@ -2332,6 +2338,7 @@ namespace XSDFrontend
       s_->new_edge<Imports> (*cur_, s, path);
 
       schema_map_[schema_id] = &s;
+      s.context ().set ("absolute-path", abs_path);
 
       Schema* old_cur (cur_);
       Boolean old_cur_chameleon (cur_chameleon_);
@@ -2443,6 +2450,7 @@ namespace XSDFrontend
       s_->new_edge<Implies> (s, *xml_schema_, xml_schema_path_);
 
       schema_map_[schema_id] = &s;
+      s.context ().set ("absolute-path", abs_path);
 
       Boolean chameleon (false);
 

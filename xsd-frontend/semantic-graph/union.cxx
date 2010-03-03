@@ -21,7 +21,7 @@ namespace XSDFrontend
         UnionInit ()
         {
           TypeInfo ti (typeid (Union));
-          ti.add_base (Access::public_, true, typeid (Type));
+          ti.add_base (Access::public_, true, typeid (Specialization));
           RTTI::insert (ti);
         }
 

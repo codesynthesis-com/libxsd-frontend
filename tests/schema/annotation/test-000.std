@@ -6,7 +6,7 @@ primary
     <list type documentation>
     list list http://www.w3.org/2001/XMLSchema#string
     <union type documentation>
-    union union
+    union union http://www.w3.org/2001/XMLSchema#int http://www.w3.org/2001/XMLSchema#string 
     <enumeration type documentation>
     enumeration enum: http://www.w3.org/2001/XMLSchema#string
     {

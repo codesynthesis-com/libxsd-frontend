@@ -5,7 +5,7 @@
 
 include $(dir $(lastword $(MAKEFILE_LIST)))../../build/bootstrap.make
 
-tests := annotation anonymous attribute-group element-group default
+tests := annotation anonymous attribute-group element-group default union
 
 default   := $(out_base)/
 test      := $(out_base)/.test

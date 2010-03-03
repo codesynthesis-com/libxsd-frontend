@@ -1081,26 +1081,71 @@ namespace XSDFrontend
 
     class Specialization: public virtual Type
     {
+      typedef
+      Cult::Containers::Vector<Arguments*>
+      Argumented;
+
     public:
+      typedef
+      Bits::PointerIterator<Argumented::Iterator>
+      ArgumentedIterator;
+
+      typedef
+      Bits::PointerIterator<Argumented::ConstIterator>
+      ArgumentedConstIterator;
+
+      ArgumentedIterator
+      argumented_begin ()
+      {
+        return argumented_.begin ();
+      }
+
+      ArgumentedConstIterator
+      argumented_begin () const
+      {
+        return argumented_.begin ();
+      }
+
+      ArgumentedIterator
+      argumented_end ()
+      {
+        return argumented_.end ();
+      }
+
+      ArgumentedConstIterator
+      argumented_end () const
+      {
+        return argumented_.end ();
+      }
+
+      // Shortcut for one-argument specializations.
+      //
       Arguments&
       argumented () const
       {
-        return *argumented_;
+        return *argumented_[0];
       }
 
     protected:
       friend class Bits::Graph<Node, Edge>;
 
-      void
-      add_edge_right (Arguments& a)
-      {
-        argumented_ = &a;
-      }
-
       using Type::add_edge_right;
 
+      Void
+      add_edge_right (Arguments& a)
+      {
+        argumented_.push_back (&a);
+      }
+
+    public:
+      Void
+      add_edge_right (Arguments& a, ArgumentedIterator const& pos)
+      {
+        argumented_.insert (pos.base (), &a);
+      }
+
     private:
-      Arguments* argumented_;
+      Argumented argumented_;
     };
 
 

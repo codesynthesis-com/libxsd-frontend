@@ -62,6 +62,7 @@ namespace XSDFrontend
 
   namespace
   {
+    //
     // Exceptions.
     //
 
@@ -198,6 +199,21 @@ namespace XSDFrontend
 
     //
     //
+    struct UnionMemberType
+    {
+      UnionMemberType (String const& ns, String const& uq)
+          : ns_name (ns), uq_name (uq)
+      {
+      }
+
+      String ns_name;
+      String uq_name;
+    };
+
+    typedef Cult::Containers::Vector<UnionMemberType> UnionMemberTypes;
+
+    //
+    //
     struct ElementGroupRef
     {
       ElementGroupRef (String const& uq_name_, String const& ns_name_,
@@ -300,6 +316,7 @@ namespace XSDFrontend
                       Traversal::Fundamental::IdRef,
                       Traversal::Fundamental::IdRefs,
                       Traversal::List,
+                      Traversal::Union,
                       Traversal::Complex,
                       Traversal::Enumeration,
                       Traversal::ElementGroup,
@@ -581,6 +598,45 @@ namespace XSDFrontend
 
             valid_ = false;
           }
+        }
+      }
+
+      Void
+      traverse (SemanticGraph::Union& u)
+      {
+        using SemanticGraph::Union;
+
+        if (u.context ().count ("union-member-types"))
+        {
+          UnionMemberTypes const& m (
+            u.context ().get<UnionMemberTypes> ("union-member-types"));
+
+          // Process it backwards so that we can just insert each
+          // edge in the front.
+          //
+          for (UnionMemberTypes::ConstReverseIterator i (m.rbegin ());
+               i != m.rend (); i++)
+          {
+            try
+            {
+              NodeArgs<Union, Union::ArgumentedIterator> na (
+                u, u.argumented_begin ());
+
+              s_.new_edge<Arguments> (
+                resolve<SemanticGraph::Type> (
+                  i->ns_name, i->uq_name, s_, cache_), na);
+            }
+            catch (NotName const& ex)
+            {
+              wcerr << u.file () << ":" << u.line () << ":" << u.column () << ": "
+                    << "error: unable to resolve item type '" << i->uq_name << "' "
+                    << "in namespace '" << i->ns_name << "'" << endl;
+
+              valid_ = false;
+            }
+          }
+
+          u.context ().remove ("union-member-types");
         }
       }
 
@@ -2662,12 +2718,15 @@ namespace XSDFrontend
   SemanticGraph::Type* Parser::Impl::
   list (XML::Element const& l, XML::Element const& t)
   {
+    if (trace_)
+      wcout << "list" << endl;
+
     List& node (s_->new_node<List> (file (), t.line (), t.column ()));
 
     if (String item_type = l["itemType"])
     {
       if (trace_)
-        wcout << "list item type: " << fq_name (l, item_type) << endl;
+        wcout << "item type: " << fq_name (l, item_type) << endl;
 
       set_type<Arguments> (item_type, l, node);
     }
@@ -2720,13 +2779,152 @@ namespace XSDFrontend
     return &node;
   }
 
+  namespace
+  {
+    //
+    // List parsing utility functions.
+    //
+
+    // Find first non-space character.
+    //
+    Size
+    find_ns (const WideChar* s, Size size, Size pos)
+    {
+      while (pos < size &&
+             (s[pos] == 0x20 || // space
+              s[pos] == 0x0D || // carriage return
+              s[pos] == 0x09 || // tab
+              s[pos] == 0x0A))
+        ++pos;
+
+      return pos < size ? pos : String::npos;
+    }
+
+    // Find first space character.
+    //
+    Size
+    find_s (const WideChar* s, Size size, Size pos)
+    {
+      while (pos < size &&
+             s[pos] != 0x20 && // space
+             s[pos] != 0x0D && // carriage return
+             s[pos] != 0x09 && // tab
+             s[pos] != 0x0A)
+        ++pos;
+
+      return pos < size ? pos : String::npos;
+    }
+  }
+
   SemanticGraph::Type* Parser::Impl::
-  union_ (XML::Element const&, XML::Element const& t)
+  union_ (XML::Element const& u, XML::Element const& t)
   {
     if (trace_)
       wcout << "union" << endl;
 
     Union& node (s_->new_node<Union> (file (), t.line (), t.column ()));
+
+    Boolean has_members (false);
+
+    if (String members = u["memberTypes"])
+    {
+      // Don't bother trying to resolve member types at this point
+      // since the order is important so we would have to insert
+      // the late resolutions into specific places. It is simpler
+      // to just do the whole resolution later.
+      //
+      const WideChar* data (members.c_str ());
+      Size size (members.size ());
+
+      UnionMemberTypes* m (0);
+
+      // Traverse the type list while logically collapsing spaces.
+      //
+      for (Size i (find_ns (data, size, 0)); i != String::npos;)
+      {
+        String s;
+        Size j (find_s (data, size, i));
+
+        if (j != String::npos)
+        {
+          s = String (data + i, j - i);
+          i = find_ns (data, size, j);
+        }
+        else
+        {
+          // Last item.
+          //
+          s = String (data + i, size - i);
+          i = String::npos;
+        }
+
+        if (trace_)
+          wcout << "member type: " << fq_name (u, s) << endl;
+
+        if (m == 0)
+        {
+          node.context ().set ("union-member-types", UnionMemberTypes ());
+          m = &node.context ().get<UnionMemberTypes> ("union-member-types");
+        }
+
+        try
+        {
+          m->push_back (
+            UnionMemberType (
+              namespace_name (u, s), unqualified_name (s)));
+        }
+        catch (XML::NoMapping const& ex)
+        {
+          wcerr << file () << ":" << u.line () << ":" << u.column () << ": "
+                << "error: unable to resolve namespace prefix "
+                << "'" << ex.prefix () << "' in '" << s << "'" << endl;
+
+          valid_ = false;
+        }
+      }
+
+      has_members = (m != 0);
+    }
+
+    // Handle anonymous members.
+    //
+    push (u);
+
+    annotation (false);
+
+    while (more ())
+    {
+      XML::Element e (next ());
+      String name (e.name ());
+
+      if (trace_)
+        wcout << name << endl;
+
+      Type* t (0);
+
+      if (name == L"simpleType")  t = simple_type (e);  else
+      {
+        wcerr << file () << ":" << e.line () << ":" << e.column () << ": "
+              << "error: expected 'simpleType' instead of "
+              << "'" << e.name () << "'" << endl;
+
+        valid_ = false;
+      }
+
+      if (t)
+        s_->new_edge<Arguments> (*t, node);
+    }
+
+    pop ();
+
+    if (node.argumented_begin () == node.argumented_end () && !has_members)
+    {
+      wcerr << file () << ":" << u.line () << ":" << u.column () << ": "
+            << "error: expected 'memberTypes' attribute or 'simpleType' "
+            << "nested element" << endl;
+
+      valid_ = false;
+    }
 
     if (String name = t["name"])
       s_->new_edge<Names> (scope (), node, name);
@@ -4323,7 +4521,7 @@ namespace XSDFrontend
           //   each refType. Instead we could lookup the target type
           //   and then navigate through Arguments edges to see if this
           //   type already arguments specialization that we are intersted
-          //   in. But for now I will simply the logic by creating a new
+          //   in. But for now I will simplify the logic by creating a new
           //   specialization every time.
           //
 

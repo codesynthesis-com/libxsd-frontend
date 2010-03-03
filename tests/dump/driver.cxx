@@ -55,8 +55,23 @@ namespace
               << endl;
 
       wcout << ind << "list " <<
-        (l.named () ? l.name () : String ("<anonymous>"))
-            << " " << ref_name (l.argumented ().type ()) << endl;
+        (l.named () ? l.name () : String ("<anonymous>"));
+
+      SemanticGraph::Type& t (l.argumented ().type ());
+
+      if (t.named ())
+        wcout << " " << ref_name (t) << endl;
+      else
+      {
+        wcout << endl
+              << ind << "{" << endl;
+        indent++;
+
+        edge_traverser ().dispatch (l.argumented ());
+
+        indent--;
+        wcout << ind << "}" << endl;
+      }
     }
   };
 
@@ -70,7 +85,29 @@ namespace
               << endl;
 
       wcout << ind << "union " <<
-        (u.named () ? u.name () : String ("<anonymous>")) << endl;
+        (u.named () ? u.name () : String ("<anonymous>")) << " ";
+
+      for (Type::ArgumentedIterator i (u.argumented_begin ());
+           i != u.argumented_end (); ++i)
+      {
+        SemanticGraph::Type& t (i->type ());
+
+        if (t.named ())
+          wcout << ref_name (t) << " ";
+        else
+        {
+          wcout << endl
+                << ind << "{" << endl;
+          indent++;
+
+          edge_traverser ().dispatch (*i);
+
+          indent--;
+          wcout << ind << "}" << endl;
+        }
+      }
+
+      wcout << endl;
     }
   };
 
@@ -508,14 +545,12 @@ namespace
 struct AnonymousNameTranslator: Transformations::AnonymousNameTranslator
 {
   virtual WideString
-  translate (WideString const& file,
+  translate (WideString const& /*file*/,
              WideString const& ns,
              WideString const& name,
              WideString const& xpath)
   {
-    wcout << "anonymous: " << file << " " << ns << " " << name << " " <<
-      xpath << endl;
-
+    wcout << "anonymous: " << ns << " " << name << " " << xpath << endl;
     return name;
   }
 };
@@ -644,6 +679,17 @@ main (Int argc, Char* argv[])
     belongs >> union_;
     belongs >> complex;
     belongs >> enumeration;
+
+    //
+    //
+    Traversal::Argumented argumented;
+    list >> argumented;
+    union_ >> argumented;
+
+    argumented >> list;
+    argumented >> union_;
+    argumented >> complex;
+    argumented >> enumeration;
 
     //
     //

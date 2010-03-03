@@ -1,6 +1,6 @@
-anonymous:  test anon_base anon
-anonymous:  test anon_nested_base anon_nested
-anonymous:  test anon_nested_base_base anon_nested_base
+anonymous: test anon_base anon
+anonymous: test anon_nested_base anon_nested
+anonymous: test anon_nested_base_base anon_nested_base
 primary
 {
   namespace test

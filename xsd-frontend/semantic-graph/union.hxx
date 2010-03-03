@@ -12,7 +12,7 @@ namespace XSDFrontend
 {
   namespace SemanticGraph
   {
-    class Union: public virtual Type
+    class Union: public virtual Specialization
     {
     protected:
       friend class Bits::Graph<Node, Edge>;

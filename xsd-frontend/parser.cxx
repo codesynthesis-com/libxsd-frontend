@@ -3246,7 +3246,20 @@ namespace XSDFrontend
       XML::Element e (next ());
       String name (e.name ());
 
-      if (name == L"enumeration")
+      if (name == L"simpleType")
+      {
+        // This is a "superimposed" restriction where the base
+        // content is restricted by specifying another simple
+        // type. The attributes are restricted in the ussual
+        // way. So in effect we have kind of two base classes.
+        // I guess the way to handle this one day would be to
+        // copy all the facets from the base-to-this-type
+        // part of the hierarchy (will need to "know" facets
+        // for the built-in type restrictions as well). For
+        // now just ignore it.
+        //
+      }
+      else if (name == L"enumeration")
       {
         // Right now our sementic graph cannot represent enumerations
         // with attributes so we are going to ignore enumerators for

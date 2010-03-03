@@ -5,7 +5,7 @@
 
 include $(dir $(lastword $(MAKEFILE_LIST)))../../../build/bootstrap.make
 
-tests := 000
+tests := 000 001
 
 driver := $(out_root)/tests/dump/driver
 test   := $(out_base)/.test

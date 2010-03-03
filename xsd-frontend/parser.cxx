@@ -599,6 +599,8 @@ namespace XSDFrontend
             valid_ = false;
           }
         }
+
+        Traversal::List::traverse (l);
       }
 
       Void
@@ -638,6 +640,8 @@ namespace XSDFrontend
 
           u.context ().remove ("union-member-types");
         }
+
+        Traversal::Union::traverse (u);
       }
 
       Void
@@ -1979,9 +1983,11 @@ namespace XSDFrontend
 
       Traversal::Names names;
       Traversal::Inherits inherits;
+      Traversal::Argumented argumented;
       resolver >> names >> resolver;
       names >> anonymous_member;
       resolver >> inherits >> anonymous_base;
+      resolver >> argumented >> anonymous_base;
 
       if (trace_)
         wcout << "starting resolution pass" << endl;
@@ -2201,12 +2207,34 @@ namespace XSDFrontend
         Traversal::Belongs belongs_;
       } anonymous_member (resolver);
 
+      struct AnonymousBase: Traversal::Type
+      {
+        AnonymousBase (Traversal::NodeDispatcherBase& d)
+            : base_ (d)
+        {
+        }
+
+        virtual Void
+        traverse (SemanticGraph::Type& t)
+        {
+          if (!t.named ())
+            base_.dispatch (t);
+        }
+
+      private:
+        Traversal::NodeDispatcherBase& base_;
+      } anonymous_base (resolver);
+
       ns_names >> resolver;
       ns_names >> anonymous_member;
 
       Traversal::Names names;
+      Traversal::Inherits inherits;
+      Traversal::Argumented argumented;
       resolver >> names >> resolver;
       names >> anonymous_member;
+      resolver >> inherits >> anonymous_base;
+      resolver >> argumented >> anonymous_base;
 
       if (trace_)
         wcout << "starting resolution pass" << endl;

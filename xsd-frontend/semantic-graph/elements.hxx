@@ -815,13 +815,13 @@ namespace XSDFrontend
     class Inherits: public virtual Edge
     {
     public:
-      virtual Type&
+      Type&
       base () const
       {
         return *base_;
       }
 
-      virtual Type&
+      Type&
       derived () const
       {
         return *derived_;

@@ -84,7 +84,6 @@ namespace XSDFrontend
       Void
       add_edge_left (Substitutes& e)
       {
-        assert (substitutes_ == 0);
         substitutes_ = &e;
       }
 

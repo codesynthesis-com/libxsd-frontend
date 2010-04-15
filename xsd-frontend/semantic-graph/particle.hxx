@@ -126,7 +126,6 @@ namespace XSDFrontend
       Void
       add_edge_right (ContainsParticle& e)
       {
-        assert (contained_particle_ == 0);
         contained_particle_ = &e;
       }
 

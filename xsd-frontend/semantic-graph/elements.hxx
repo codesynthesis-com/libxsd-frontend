@@ -222,7 +222,6 @@ namespace XSDFrontend
       Void
       add_edge_right (Annotates& a)
       {
-        assert (annotates_ == 0);
         annotates_ = &a;
       }
 
@@ -309,7 +308,6 @@ namespace XSDFrontend
       Void
       add_edge_right (Annotates& a)
       {
-        assert (annotates_ == 0);
         annotates_ = &a;
       }
 
@@ -444,7 +442,6 @@ namespace XSDFrontend
       Void
       add_edge_right (Names& e)
       {
-        assert (named__ == 0);
         named__ = &e;
       }
 
@@ -709,7 +706,6 @@ namespace XSDFrontend
       Void
       add_edge_left (Inherits& e)
       {
-        assert (inherits_ == 0);
         inherits_ = &e;
       }
 
@@ -947,7 +943,6 @@ namespace XSDFrontend
       Member* member_;
       Namespace* namespace__;
     };
-
 
     //
     //

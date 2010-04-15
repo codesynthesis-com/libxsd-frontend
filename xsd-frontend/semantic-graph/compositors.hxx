@@ -210,7 +210,6 @@ namespace XSDFrontend
       Void
       add_edge_right (ContainsCompositor& e)
       {
-        assert (contained_compositor_ == 0);
         contained_compositor_ = &e;
       }
 

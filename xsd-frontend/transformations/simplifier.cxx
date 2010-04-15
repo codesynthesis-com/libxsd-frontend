@@ -10,11 +10,6 @@
 
 #include <cult/containers/vector.hxx>
 
-#include <iostream>
-
-using std::wcerr;
-using std::endl;
-
 namespace XSDFrontend
 {
   using namespace Cult;

@@ -194,22 +194,6 @@ namespace XSDFrontend
       }
 
     public:
-      Boolean
-      annotated_p () const
-      {
-        return annotates_ != 0;
-      }
-
-      Annotates&
-      annotated () const
-      {
-        return *annotates_;
-      }
-
-      Annotation&
-      annotation ();
-
-    public:
       template <typename X>
       Boolean
       is_a () const
@@ -221,19 +205,11 @@ namespace XSDFrontend
       friend class Bits::Graph<Node, Edge>;
 
       Edge ()
-          : annotates_ (0)
       {
-      }
-
-      Void
-      add_edge_right (Annotates& a)
-      {
-        annotates_ = &a;
       }
 
     private:
       mutable Context context_;
-      Annotates* annotates_;
     };
 
     inline Boolean

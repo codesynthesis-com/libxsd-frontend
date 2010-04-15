@@ -14,14 +14,6 @@ namespace XSDFrontend
 {
   namespace SemanticGraph
   {
-    // Edge
-    //
-    Annotation& Edge::
-    annotation ()
-    {
-      return annotates_->annotation ();
-    }
-
     // Node
     //
     Annotation& Node::

@@ -850,6 +850,8 @@ namespace XSDFrontend
       }
 
     protected:
+      friend class Bits::Graph<Node, Edge>;
+
       Inherits ()
       {
       }

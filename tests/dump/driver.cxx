@@ -7,6 +7,7 @@
 
 #include <xsd-frontend/parser.hxx>
 #include <xsd-frontend/transformations/anonymous.hxx>
+#include <xsd-frontend/transformations/enum-synthesis.hxx>
 
 #include <xsd-frontend/semantic-graph.hxx>
 #include <xsd-frontend/traversal.hxx>
@@ -571,11 +572,14 @@ main (Int argc, Char* argv[])
     //
     Int i (1);
     Boolean anon (false);
+    Boolean enum_synth (false);
 
     for (; i < argc; ++i)
     {
       if (argv[i] == NarrowString ("--anonymous"))
         anon = true;
+      else if (argv[i] == NarrowString ("--enum-synthesis"))
+        enum_synth = true;
       else
         break;
     }
@@ -603,6 +607,14 @@ main (Int argc, Char* argv[])
         //
         return 1;
       }
+    }
+
+    //
+    //
+    if (enum_synth)
+    {
+      Transformations::EnumSynthesis transf;
+      transf.transform (*tu, path);
     }
 
     //

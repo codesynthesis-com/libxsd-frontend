@@ -39,6 +39,7 @@ cxx_tun += traversal/attribute.cxx       \
            traversal/union.cxx
 
 cxx_tun += transformations/anonymous.cxx       \
+           transformations/enum-synthesis.cxx  \
            transformations/restriction.cxx     \
            transformations/schema-per-type.cxx \
            transformations/simplifier.cxx

@@ -306,19 +306,6 @@ namespace XSDFrontend
         abort (); // Told you so!
       }
 
-      // This is a bunch of experimental sink functions that allow
-      // extensions in the form of one-way edges.
-      //
-      //void
-      //add_edge_left (Edge&)
-      //{
-      //}
-
-      Void
-      add_edge_right (Edge&)
-      {
-      }
-
       Void
       add_edge_right (Annotates& a)
       {

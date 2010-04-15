@@ -188,6 +188,11 @@ namespace XSDFrontend
 
     public:
       using Bits::Graph<SemanticGraph::Node, Edge>::new_edge;
+      using Bits::Graph<SemanticGraph::Node, Edge>::reset_left_node;
+      using Bits::Graph<SemanticGraph::Node, Edge>::reset_right_node;
+      using Bits::Graph<SemanticGraph::Node, Edge>::add_edge_left;
+      using Bits::Graph<SemanticGraph::Node, Edge>::add_edge_right;
+      using Bits::Graph<SemanticGraph::Node, Edge>::delete_node;
       using Bits::Graph<SemanticGraph::Node, Edge>::delete_edge;
 
       template <typename T>

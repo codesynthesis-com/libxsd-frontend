@@ -178,7 +178,7 @@ namespace XSDFrontend
       }
 
       Boolean
-      used () const
+      used_p () const
       {
         return used_begin () != used_end ();
       }

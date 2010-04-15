@@ -86,7 +86,7 @@ namespace XSDFrontend
         // is where the type was defined.
         //
 
-        if (n.named ())
+        if (n.named_p ())
         {
           Scope& s (n.scope ());
           Namespace* ns (dynamic_cast<Namespace*> (&n));

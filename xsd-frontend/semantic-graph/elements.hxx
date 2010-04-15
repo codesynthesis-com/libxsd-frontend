@@ -393,57 +393,57 @@ namespace XSDFrontend
     {
     public:
       Boolean
-      named () const
+      named_p () const
       {
-        return named__ != 0;
+        return named_ != 0;
       }
 
       Name
       name () const
       {
-        assert (named ());
-        return named__->name ();
+        assert (named_p ());
+        return named_->name ();
       }
 
       Scope&
       scope ()
       {
-        assert (named ());
-        return named__->scope ();
+        assert (named_p ());
+        return named_->scope ();
       }
 
       Names&
-      named_ ()
+      named ()
       {
-        assert (named ());
-        return *named__;
+        assert (named_p ());
+        return *named_;
       }
 
     protected:
       friend class Bits::Graph<Node, Edge>;
 
       Nameable ()
-          : named__ (0)
+          : named_ (0)
       {
       }
 
       Void
       add_edge_right (Names& e)
       {
-        named__ = &e;
+        named_ = &e;
       }
 
       Void
       remove_edge_right (Names& e)
       {
-        assert (named__ == &e);
-        named__ = 0;
+        assert (named_ == &e);
+        named_ = 0;
       }
 
       using Node::add_edge_right;
 
     private:
-      Names* named__;
+      Names* named_;
     };
 
 
@@ -744,7 +744,7 @@ namespace XSDFrontend
       type () const;
 
       Boolean
-      typed () const
+      typed_p () const
       {
         return belongs_ != 0;
       }
@@ -970,13 +970,13 @@ namespace XSDFrontend
       // or it is a ref="" of a global member.
       //
       Boolean
-      global () const
+      global_p () const
       {
         return global_;
       }
 
       Boolean
-      qualified () const
+      qualified_p () const
       {
         return qualified_;
       }
@@ -996,13 +996,13 @@ namespace XSDFrontend
       // fixed value appears as if the default value was also set.
       //
       Boolean
-      default_ () const
+      default_p () const
       {
         return value_type_ != ValueType::none;
       }
 
       Boolean
-      fixed () const
+      fixed_p () const
       {
         return value_type_ == ValueType::fixed;
       }

@@ -56,11 +56,11 @@ namespace
               << endl;
 
       wcout << ind << "list " <<
-        (l.named () ? l.name () : String ("<anonymous>"));
+        (l.named_p () ? l.name () : String ("<anonymous>"));
 
       SemanticGraph::Type& t (l.argumented ().type ());
 
-      if (t.named ())
+      if (t.named_p ())
         wcout << " " << ref_name (t) << endl;
       else
       {
@@ -86,14 +86,14 @@ namespace
               << endl;
 
       wcout << ind << "union " <<
-        (u.named () ? u.name () : String ("<anonymous>")) << " ";
+        (u.named_p () ? u.name () : String ("<anonymous>")) << " ";
 
       for (Type::ArgumentedIterator i (u.argumented_begin ());
            i != u.argumented_end (); ++i)
       {
         SemanticGraph::Type& t (i->type ());
 
-        if (t.named ())
+        if (t.named_p ())
           wcout << ref_name (t) << " ";
         else
         {
@@ -135,7 +135,7 @@ namespace
               << endl;
 
       wcout << ind << "enumeration " <<
-        (e.named () ? e.name () : String ("<anonymous>")) << ": " <<
+        (e.named_p () ? e.name () : String ("<anonymous>")) << ": " <<
         ref_name (e.inherits ().base ()) << endl
             << ind << "{" << endl;
 
@@ -238,17 +238,17 @@ namespace
         wcout << ind << "<" << a.annotation ().documentation () << ">"
               << endl;
 
-      wcout << ind << (a.optional () ? "optional" : "required")
+      wcout << ind << (a.optional_p () ? "optional" : "required")
             << " attribute " << a.name ();
 
-      if (a.fixed ())
+      if (a.fixed_p ())
         wcout << "==" << a.value ();
-      else if (a.default_ ())
+      else if (a.default_p ())
         wcout << "=" << a.value ();
 
       SemanticGraph::Type& t (a.type ());
 
-      if (t.named ())
+      if (t.named_p ())
         wcout << " " << ref_name (t) << endl;
       else
       {
@@ -284,14 +284,14 @@ namespace
     {
       wcout << "element " << e.name ();
 
-      if (e.fixed ())
+      if (e.fixed_p ())
         wcout << "==" << e.value ();
-      else if (e.default_ ())
+      else if (e.default_p ())
         wcout << "=" << e.value ();
 
       SemanticGraph::Type& t (e.type ());
 
-      if (t.named ())
+      if (t.named_p ())
         wcout << " " << ref_name (t) << endl;
       else
       {
@@ -318,9 +318,9 @@ namespace
 
       wcout << ind << "element " << e.name ();
 
-      if (e.fixed ())
+      if (e.fixed_p ())
         wcout << "==" << e.value ();
-      else if (e.default_ ())
+      else if (e.default_p ())
         wcout << "=" << e.value ();
 
       wcout << endl;
@@ -369,7 +369,7 @@ namespace
               << endl;
 
       wcout << ind << "complex " <<
-        (c.named () ? c.name () : String ("<anonymous>"));
+        (c.named_p () ? c.name () : String ("<anonymous>"));
 
       if (c.inherits_p ())
         wcout << ": " << ref_name (c.inherits ().base ());
@@ -398,14 +398,14 @@ namespace
 
       wcout << ind << "attribute " << a.name ();
 
-      if (a.fixed ())
+      if (a.fixed_p ())
         wcout << "==" << a.value ();
-      else if (a.default_ ())
+      else if (a.default_p ())
         wcout << "=" << a.value ();
 
       SemanticGraph::Type& t (a.type ());
 
-      if (t.named ())
+      if (t.named_p ())
         wcout << " " << ref_name (t) << endl;
       else
       {
@@ -432,14 +432,14 @@ namespace
 
       wcout << ind << "element " << e.name ();
 
-      if (e.fixed ())
+      if (e.fixed_p ())
         wcout << "==" << e.value ();
-      else if (e.default_ ())
+      else if (e.default_p ())
         wcout << "=" << e.value ();
 
       SemanticGraph::Type& t (e.type ());
 
-      if (t.named ())
+      if (t.named_p ())
         wcout << " " << ref_name (t) << endl;
       else
       {

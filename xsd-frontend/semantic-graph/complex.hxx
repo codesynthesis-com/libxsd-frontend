@@ -19,7 +19,7 @@ namespace XSDFrontend
     {
     public:
       Boolean
-      mixed () const
+      mixed_p () const
       {
         return mixed_;
       }
@@ -40,7 +40,7 @@ namespace XSDFrontend
 
     public:
       Void
-      mixed (Boolean m)
+      mixed_p (Boolean m)
       {
         mixed_ = m;
       }

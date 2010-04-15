@@ -152,7 +152,7 @@ namespace XSDFrontend
             break;
         }
 
-        if (!schema->used ())
+        if (!schema->used_p ())
           return schema_path;
 
         Uses& u (*schema->used_begin ());
@@ -166,7 +166,7 @@ namespace XSDFrontend
         if (dynamic_cast<SemanticGraph::Namespace*> (&n) != 0)
           return L"<namespace-level>"; // There is a bug if you see this.
 
-        assert (n.named ());
+        assert (n.named_p ());
 
         SemanticGraph::Scope& scope (n.scope ());
 
@@ -254,7 +254,7 @@ namespace XSDFrontend
 
         //@@ This IDREF stuff is really ugly!
         //
-        if (!t.named () &&
+        if (!t.named_p () &&
             !t.is_a<SemanticGraph::Fundamental::IdRef> () &&
             !t.is_a<SemanticGraph::Fundamental::IdRefs> ())
         {
@@ -335,7 +335,7 @@ namespace XSDFrontend
 
         //@@ This IDREF stuff is really ugly!
         //
-        if (!t.named () &&
+        if (!t.named_p () &&
             !t.is_a<SemanticGraph::Fundamental::IdRef> () &&
             !t.is_a<SemanticGraph::Fundamental::IdRefs> ())
         {
@@ -426,7 +426,7 @@ namespace XSDFrontend
 
         //@@ This IDREF stuff is really ugly!
         //
-        if (!t.named () &&
+        if (!t.named_p () &&
             !t.is_a<SemanticGraph::Fundamental::IdRef> () &&
             !t.is_a<SemanticGraph::Fundamental::IdRefs> ())
         {
@@ -469,7 +469,7 @@ namespace XSDFrontend
 
         //@@ This IDREF stuff us really ugly!
         //
-        if (!t.named () &&
+        if (!t.named_p () &&
             !t.is_a<SemanticGraph::Fundamental::IdRef> () &&
             !t.is_a<SemanticGraph::Fundamental::IdRefs> ())
         {

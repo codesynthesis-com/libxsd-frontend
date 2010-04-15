@@ -252,16 +252,16 @@ namespace XSDFrontend
           Element& re (dynamic_cast<Element&> (r));
           Element& be (dynamic_cast<Element&> (b));
 
-          if (re.qualified ())
+          if (re.qualified_p ())
           {
-            if (be.qualified () &&
+            if (be.qualified_p () &&
                 re.name () == be.name () &&
                 re.namespace_ ().name () == be.namespace_ ().name ())
               return true;
           }
           else
           {
-            if (!be.qualified () && re.name () == be.name ())
+            if (!be.qualified_p () && re.name () == be.name ())
               return true;
           }
 
@@ -308,9 +308,9 @@ namespace XSDFrontend
             if (a == 0)
               continue;
 
-            if (prot->qualified ())
+            if (prot->qualified_p ())
             {
-              if (a->qualified () &&
+              if (a->qualified_p () &&
                   prot->namespace_ ().name () == a->namespace_ ().name ())
               {
                 break;
@@ -318,7 +318,7 @@ namespace XSDFrontend
             }
             else
             {
-              if (!a->qualified ())
+              if (!a->qualified_p ())
                 break;
             }
 
@@ -330,24 +330,24 @@ namespace XSDFrontend
             a = &schema_.new_node<Attribute> (prot->file (),
                                               prot->line (),
                                               prot->column (),
-                                              prot->optional (),
-                                              prot->global (),
-                                              prot->qualified ());
+                                              prot->optional_p (),
+                                              prot->global_p (),
+                                              prot->qualified_p ());
 
             schema_.new_edge<Names> (c, *a, name);
 
             // Transfer namespace.
             //
-            if (prot->qualified ())
+            if (prot->qualified_p ())
             {
               schema_.new_edge<BelongsToNamespace> (*a, prot->namespace_ ());
             }
 
             // Default and fixed values if any.
             //
-            if (prot->fixed ())
+            if (prot->fixed_p ())
               a->fixed (prot->value ());
-            else if (prot->default_ ())
+            else if (prot->default_p ())
               a->default_ (prot->value ());
 
             // Belongs edge.
@@ -465,7 +465,7 @@ namespace XSDFrontend
       {
         SemanticGraph::Type& t (e.type ());
 
-        if (!t.named () && !t.context ().count ("seen"))
+        if (!t.named_p () && !t.context ().count ("seen"))
         {
           t.context ().set ("seen", true);
 
@@ -484,7 +484,7 @@ namespace XSDFrontend
       {
         SemanticGraph::Type& t (a.type ());
 
-        if (!t.named () && !t.context ().count ("seen"))
+        if (!t.named_p () && !t.context ().count ("seen"))
         {
           t.context ().set ("seen", true);
 

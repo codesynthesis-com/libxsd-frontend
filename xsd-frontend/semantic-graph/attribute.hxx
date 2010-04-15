@@ -16,7 +16,7 @@ namespace XSDFrontend
     {
     public:
       Boolean
-      optional () const
+      optional_p () const
       {
         return optional_;
       }

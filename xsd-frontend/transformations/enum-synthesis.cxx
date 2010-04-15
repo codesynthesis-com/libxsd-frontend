@@ -161,8 +161,8 @@ namespace XSDFrontend
           schema_.add_edge_right (e, u.annotated ());
         }
 
-        schema_.reset_right_node (u.named_ (), e);
-        schema_.add_edge_right (e, u.named_ ());
+        schema_.reset_right_node (u.named (), e);
+        schema_.add_edge_right (e, u.named ());
 
         for (Type::ClassifiesIterator i (u.classifies_begin ()),
                end (u.classifies_end ()); i != end; ++i)

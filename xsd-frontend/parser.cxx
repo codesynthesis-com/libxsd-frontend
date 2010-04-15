@@ -477,14 +477,14 @@ namespace XSDFrontend
             // Transfer default and fixed values if we haven't already
             // gotten them.
             //
-            if (!m.default_ ())
+            if (!m.default_p ())
             {
-              if (ref.fixed ())
+              if (ref.fixed_p ())
                 m.fixed (ref.value ());
-              else if (ref.default_ ())
+              else if (ref.default_p ())
                 m.default_ (ref.value ());
 
-              if (m.default_ ())
+              if (m.default_p ())
               {
                 m.context ().set (
                   "dom-node",
@@ -500,7 +500,7 @@ namespace XSDFrontend
 
             // Type info.
             //
-            if (ref.typed ())
+            if (ref.typed_p ())
               s_.new_edge<Belongs> (m, ref.type ());
             else
             {
@@ -1075,19 +1075,19 @@ namespace XSDFrontend
 
         Element& copy (
         s_.new_node<Element> (
-          e.file (), e.line (), e.column (), e.global (), e.qualified ()));
+          e.file (), e.line (), e.column (), e.global_p (), e.qualified_p ()));
 
-        if (e.qualified ())
+        if (e.qualified_p ())
           s_.new_edge<BelongsToNamespace> (copy, e.namespace_ ());
 
         // Transfer default and fixed values.
         //
-        if (e.fixed ())
+        if (e.fixed_p ())
           copy.fixed (e.value ());
-        else if (e.default_ ())
+        else if (e.default_p ())
           copy.default_ (e.value ());
 
-        if (copy.default_ ())
+        if (copy.default_p ())
         {
           copy.context ().set (
             "dom-node",
@@ -1102,7 +1102,7 @@ namespace XSDFrontend
 
         // Belongs edge.
         //
-        if (e.typed ())
+        if (e.typed_p ())
           s_.new_edge<Belongs> (copy, e.type ());
         else
           assert (!valid_);
@@ -1143,25 +1143,25 @@ namespace XSDFrontend
                 s_.new_node<Attribute> (p->file (),
                                         p->line (),
                                         p->column (),
-                                        p->optional (),
-                                        p->global (),
-                                        p->qualified ()));
+                                        p->optional_p (),
+                                        p->global_p (),
+                                        p->qualified_p ()));
 
               NodeArgs<Scope, Scope::NamesIterator> na (s, pos);
               s_.new_edge<Names> (na, a, p->name ());
               ++pos;
 
-              if (p->qualified ())
+              if (p->qualified_p ())
                 s_.new_edge<BelongsToNamespace> (a, p->namespace_ ());
 
               // Transfer default and fixed values if any.
               //
-              if (p->fixed ())
+              if (p->fixed_p ())
                 a.fixed (p->value ());
-              else if (p->default_ ())
+              else if (p->default_p ())
                 a.default_ (p->value ());
 
-              if (a.default_ ())
+              if (a.default_p ())
               {
                 a.context ().set (
                   "dom-node",
@@ -1176,7 +1176,7 @@ namespace XSDFrontend
 
               // Belongs edge.
               //
-              if (p->typed ())
+              if (p->typed_p ())
                 s_.new_edge<Belongs> (a, p->type ());
               else
                 assert (!valid_);
@@ -1944,8 +1944,8 @@ namespace XSDFrontend
         Void
         traverse_member (SemanticGraph::Member& m)
         {
-          if (m.typed () &&
-              !m.type ().named () &&
+          if (m.typed_p () &&
+              !m.type ().named_p () &&
               !m.type ().context ().count ("seen"))
           {
             m.type().context ().set ("seen", true);
@@ -1970,7 +1970,7 @@ namespace XSDFrontend
         virtual Void
         traverse (SemanticGraph::Type& t)
         {
-          if (!t.named ())
+          if (!t.named_p ())
             base_.dispatch (t);
         }
 
@@ -2019,7 +2019,7 @@ namespace XSDFrontend
             //
             String ns (XML::ns_name (e, XML::prefix (v)));
 
-            if (m.fixed ())
+            if (m.fixed_p ())
               m.fixed (ns + L'#' + v);
             else
               m.default_ (ns + L'#' + v);
@@ -2191,8 +2191,8 @@ namespace XSDFrontend
         virtual Void
         traverse_member (SemanticGraph::Member& m)
         {
-          if (m.typed () &&
-              !m.type ().named () &&
+          if (m.typed_p () &&
+              !m.type ().named_p () &&
               !m.type ().context ().count ("seen"))
           {
             m.type().context ().set ("seen", true);
@@ -2217,7 +2217,7 @@ namespace XSDFrontend
         virtual Void
         traverse (SemanticGraph::Type& t)
         {
-          if (!t.named ())
+          if (!t.named_p ())
             base_.dispatch (t);
         }
 
@@ -2266,7 +2266,7 @@ namespace XSDFrontend
             //
             String ns (XML::ns_name (e, XML::prefix (v)));
 
-            if (m.fixed ())
+            if (m.fixed_p ())
               m.fixed (ns + L'#' + v);
             else
               m.default_ (ns + L'#' + v);
@@ -2514,7 +2514,7 @@ namespace XSDFrontend
       // Source'ed. I use this property to decide which edge to use.
       //
 
-      if (s.used () && s.used_begin ()->is_a<Sources> ())
+      if (s.used_p () && s.used_begin ()->is_a<Sources> ())
         s_->new_edge<Sources> (*cur_, s, path);
       else
         s_->new_edge<Includes> (*cur_, s, path);
@@ -3138,7 +3138,7 @@ namespace XSDFrontend
 
     Complex& node (s_->new_node<Complex> (file (), t.line (), t.column ()));
 
-    node.mixed (t["mixed"] == L"true" || t["mixed"] == L"1");
+    node.mixed_p (t["mixed"] == L"true" || t["mixed"] == L"1");
 
     if (String name = t["name"])
       s_->new_edge<Names> (scope (), node, name);
@@ -3361,7 +3361,7 @@ namespace XSDFrontend
   {
     if (c.attribute_p ("mixed"))
     {
-      type.mixed (c["mixed"] == L"true" || c["mixed"] == L"1");
+      type.mixed_p (c["mixed"] == L"true" || c["mixed"] == L"1");
     }
 
     push (c);
@@ -3715,7 +3715,7 @@ namespace XSDFrontend
       else if (e.attribute_p ("default"))
         node.default_ (e.attribute ("default"));
 
-      if (node.default_ ())
+      if (node.default_p ())
       {
         node.context ().set ("dom-node", e.dom_element ());
         default_values_.push_back (&node);
@@ -3840,7 +3840,7 @@ namespace XSDFrontend
       else if (e.attribute_p ("default"))
         node.default_ (e.attribute ("default"));
 
-      if (node.default_ ())
+      if (node.default_p ())
       {
         node.context ().set ("dom-node", e.dom_element ());
         default_values_.push_back (&node);
@@ -3883,14 +3883,14 @@ namespace XSDFrontend
         // Transfer default and fixed values if the ref declaration hasn't
         // defined its own.
         //
-        if (!node.default_ ())
+        if (!node.default_p ())
         {
-          if (prot.fixed ())
+          if (prot.fixed_p ())
             node.fixed (prot.value ());
-          else if (prot.default_ ())
+          else if (prot.default_p ())
             node.default_ (prot.value ());
 
-          if (node.default_ ())
+          if (node.default_p ())
           {
             node.context ().set (
               "dom-node",
@@ -3906,7 +3906,7 @@ namespace XSDFrontend
 
         // Set type information.
         //
-        if (prot.typed ())
+        if (prot.typed_p ())
         {
           s_->new_edge<Belongs> (node, prot.type ());
         }
@@ -4093,7 +4093,7 @@ namespace XSDFrontend
       else if (a.attribute_p ("default"))
         node.default_ (a.attribute ("default"));
 
-      if (node.default_ ())
+      if (node.default_p ())
       {
         node.context ().set ("dom-node", a.dom_element ());
         default_values_.push_back (&node);
@@ -4185,7 +4185,7 @@ namespace XSDFrontend
       else if (a.attribute_p ("default"))
         node.default_ (a.attribute ("default"));
 
-      if (node.default_ ())
+      if (node.default_p ())
       {
         node.context ().set ("dom-node", a.dom_element ());
         default_values_.push_back (&node);
@@ -4213,14 +4213,14 @@ namespace XSDFrontend
         // Transfer default and fixed values if the ref declaration hasn't
         // defined its own.
         //
-        if (!node.default_ ())
+        if (!node.default_p ())
         {
-          if (prot.fixed ())
+          if (prot.fixed_p ())
             node.fixed (prot.value ());
-          else if (prot.default_ ())
+          else if (prot.default_p ())
             node.default_ (prot.value ());
 
-          if (node.default_ ())
+          if (node.default_p ())
           {
             node.context ().set (
               "dom-node",
@@ -4236,7 +4236,7 @@ namespace XSDFrontend
 
         // Set type.
         //
-        if (prot.typed ())
+        if (prot.typed_p ())
         {
           s_->new_edge<Belongs> (node, prot.type ());
         }

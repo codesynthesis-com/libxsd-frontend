@@ -50,7 +50,7 @@ namespace
     virtual Void
     traverse (Type& l)
     {
-      if (l.annotated ())
+      if (l.annotated_p ())
         wcout << ind << "<" << l.annotation ().documentation () << ">"
               << endl;
 
@@ -80,7 +80,7 @@ namespace
     virtual Void
     traverse (Type& u)
     {
-      if (u.annotated ())
+      if (u.annotated_p ())
         wcout << ind << "<" << u.annotation ().documentation () << ">"
               << endl;
 
@@ -116,7 +116,7 @@ namespace
     virtual Void
     traverse (Type& e)
     {
-      if (e.annotated ())
+      if (e.annotated_p ())
         wcout << ind << "<" << e.annotation ().documentation () << ">"
               << endl;
 
@@ -129,7 +129,7 @@ namespace
     virtual Void
     traverse (Type& e)
     {
-      if (e.annotated ())
+      if (e.annotated_p ())
         wcout << ind << "<" << e.annotation ().documentation () << ">"
               << endl;
 
@@ -233,7 +233,7 @@ namespace
     virtual Void
     traverse (Type& a)
     {
-      if (a.annotated ())
+      if (a.annotated_p ())
         wcout << ind << "<" << a.annotation ().documentation () << ">"
               << endl;
 
@@ -268,7 +268,7 @@ namespace
     virtual Void
     traverse (Type& a)
     {
-      if (a.annotated ())
+      if (a.annotated_p ())
         wcout << ind << "<" << a.annotation ().documentation () << ">"
               << endl;
 
@@ -311,7 +311,7 @@ namespace
     virtual Void
     traverse (Type& e)
     {
-      if (e.annotated ())
+      if (e.annotated_p ())
         wcout << ind << "<" << e.annotation ().documentation () << ">"
               << endl;
 
@@ -340,7 +340,7 @@ namespace
     virtual Void
     traverse (Type& a)
     {
-      if (a.annotated ())
+      if (a.annotated_p ())
         wcout << ind << "<" << a.annotation ().documentation () << ">"
               << endl;
 
@@ -363,7 +363,7 @@ namespace
 
       c.context ().set ("seen", true);
 
-      if (c.annotated ())
+      if (c.annotated_p ())
         wcout << ind << "<" << c.annotation ().documentation () << ">"
               << endl;
 
@@ -391,7 +391,7 @@ namespace
     virtual Void
     traverse (Type& a)
     {
-      if (a.annotated ())
+      if (a.annotated_p ())
         wcout << ind << "<" << a.annotation ().documentation () << ">"
               << endl;
 
@@ -425,7 +425,7 @@ namespace
     virtual Void
     traverse (Type& e)
     {
-      if (e.annotated ())
+      if (e.annotated_p ())
         wcout << ind << "<" << e.annotation ().documentation () << ">"
               << endl;
 
@@ -519,7 +519,7 @@ namespace
 
       s.context ().set ("seen", true);
 
-      if (s.annotated ())
+      if (s.annotated_p ())
         wcout << ind << "<" << s.annotation ().documentation () << ">" << endl;
 
       wcout << ind << type << " " << u.path () << endl;
@@ -698,7 +698,7 @@ main (Int argc, Char* argv[])
 
     //
     //
-    if (tu->annotated ())
+    if (tu->annotated_p ())
       wcout << ind << "<" << tu->annotation ().documentation () << ">"
             << endl;
 

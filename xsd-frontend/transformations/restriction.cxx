@@ -356,7 +356,7 @@ namespace XSDFrontend
 
             // Transfer annotation.
             //
-            if (prot->annotated ())
+            if (prot->annotated_p ())
               schema_.new_edge<Annotates> (prot->annotation (), *a);
           }
 

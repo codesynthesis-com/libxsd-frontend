@@ -195,9 +195,15 @@ namespace XSDFrontend
 
     public:
       Boolean
-      annotated () const
+      annotated_p () const
       {
         return annotates_ != 0;
+      }
+
+      Annotates&
+      annotated () const
+      {
+        return *annotates_;
       }
 
       Annotation&
@@ -269,9 +275,15 @@ namespace XSDFrontend
 
     public:
       Boolean
-      annotated () const
+      annotated_p () const
       {
         return annotates_ != 0;
+      }
+
+      Annotates&
+      annotated () const
+      {
+        return *annotates_;
       }
 
       Annotation&
@@ -1186,9 +1198,23 @@ namespace XSDFrontend
       }
 
       void
+      clear_left_node (Type& n)
+      {
+        assert (type_ == &n);
+        type_ = 0;
+      }
+
+      void
       set_right_node (Specialization& s)
       {
         specialization_ = &s;
+      }
+
+      void
+      clear_right_node (Specialization& s)
+      {
+        assert (specialization_ == &s);
+        specialization_ = 0;
       }
 
     private:

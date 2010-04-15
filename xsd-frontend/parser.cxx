@@ -495,7 +495,7 @@ namespace XSDFrontend
 
             // Transfer annotation if we haven't already gotten it.
             //
-            if (!m.annotated () && ref.annotated ())
+            if (!m.annotated_p () && ref.annotated_p ())
               s_.new_edge<Annotates> (ref.annotation (), m);
 
             // Type info.
@@ -994,7 +994,7 @@ namespace XSDFrontend
 
         // Copy annotation.
         //
-        if (c.annotated ())
+        if (c.annotated_p ())
           s_.new_edge<Annotates> (c.annotation (), copy);
 
         for (Compositor::ContainsIterator i (c.contains_begin ());
@@ -1033,7 +1033,7 @@ namespace XSDFrontend
 
             // Transfer annotation.
             //
-            if (a.annotated ())
+            if (a.annotated_p ())
               s_.new_edge<Annotates> (a.annotation (), ac);
 
             // Any has no name so we have to come up with a fake one in
@@ -1097,7 +1097,7 @@ namespace XSDFrontend
 
         // Transfer annotation.
         //
-        if (e.annotated ())
+        if (e.annotated_p ())
           s_.new_edge<Annotates> (e.annotation (), copy);
 
         // Belongs edge.
@@ -1171,7 +1171,7 @@ namespace XSDFrontend
 
               // Transfer annotation.
               //
-              if (p->annotated ())
+              if (p->annotated_p ())
                 s_.new_edge<Annotates> (p->annotation (), a);
 
               // Belongs edge.
@@ -1195,7 +1195,7 @@ namespace XSDFrontend
 
               // Transfer annotation.
               //
-              if (p->annotated ())
+              if (p->annotated_p ())
                 s_.new_edge<Annotates> (p->annotation (), any);
 
               // AnyAttribute has no name so we have to come up with a fake
@@ -3901,7 +3901,7 @@ namespace XSDFrontend
 
         // Transfer annotation if the ref declaration hasn't defined its own.
         //
-        if (!node.annotated () && prot.annotated ())
+        if (!node.annotated_p () && prot.annotated_p ())
           s_->new_edge<Annotates> (prot.annotation (), node);
 
         // Set type information.
@@ -4231,7 +4231,7 @@ namespace XSDFrontend
 
         // Transfer annotation if the ref declaration hasn't defined its own.
         //
-        if (!node.annotated () && prot.annotated ())
+        if (!node.annotated_p () && prot.annotated_p ())
           s_->new_edge<Annotates> (prot.annotation (), node);
 
         // Set type.

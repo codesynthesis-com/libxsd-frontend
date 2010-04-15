@@ -626,6 +626,10 @@ namespace XSDFrontend
       Cult::Containers::Vector<Inherits*>
       Begets;
 
+      typedef
+      Cult::Containers::Set<Arguments*>
+      ArgumentsSet;
+
     public:
       typedef
       Bits::PointerIterator<Classifies::ConstIterator>
@@ -676,6 +680,24 @@ namespace XSDFrontend
         return begets_.end ();
       }
 
+      //
+      //
+      typedef
+      Bits::PointerIterator<ArgumentsSet::ConstIterator>
+      ArgumentsIterator;
+
+      ArgumentsIterator
+      arguments_begin () const
+      {
+        return arguments_.begin ();
+      }
+
+      ArgumentsIterator
+      arguments_end () const
+      {
+        return arguments_.end ();
+      }
+
     protected:
       friend class Bits::Graph<Node, Edge>;
 
@@ -699,9 +721,13 @@ namespace XSDFrontend
       using Nameable::add_edge_right;
 
       Void
-      add_edge_left (Arguments&)
+      add_edge_left (Arguments& a)
       {
+        arguments_.insert (&a);
       }
+
+      Void
+      remove_edge_left (Arguments&);
 
       Void
       add_edge_left (Inherits& e)
@@ -713,6 +739,7 @@ namespace XSDFrontend
       Inherits* inherits_;
       Begets begets_;
       Classifies classifies_;
+      ArgumentsSet arguments_;
     };
 
 
@@ -1118,6 +1145,9 @@ namespace XSDFrontend
       {
         argumented_.push_back (&a);
       }
+
+      Void
+      remove_edge_right (Arguments&);
 
     public:
       Void

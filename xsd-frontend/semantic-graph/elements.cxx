@@ -3,10 +3,12 @@
 // copyright : Copyright (c) 2005-2010 Code Synthesis Tools CC
 // license   : GNU GPL v2 + exceptions; see accompanying LICENSE file
 
+#include <algorithm>
+
 #include <xsd-frontend/semantic-graph/elements.hxx>
 #include <xsd-frontend/semantic-graph/annotation.hxx>
 
-#include <iostream>
+using namespace std;
 
 namespace XSDFrontend
 {
@@ -26,6 +28,30 @@ namespace XSDFrontend
     annotation ()
     {
       return annotates_->annotation ();
+    }
+
+    // Type
+    //
+    Void Type::
+    remove_edge_left (Arguments& a)
+    {
+      ArgumentsSet::Iterator i (arguments_.find (&a));
+      assert (i != arguments_.end ());
+      arguments_.erase (i);
+    }
+
+    // Specialization
+    //
+    Void Specialization::
+    remove_edge_right (Arguments& a)
+    {
+      // The number of entries should be small so linear search will do.
+      //
+      Argumented::Iterator i (
+        std::find (argumented_.begin (), argumented_.end (), &a));
+
+      assert (i != argumented_.end ());
+      argumented_.erase (i);
     }
 
     namespace RTTI = Cult::RTTI;
@@ -326,4 +352,3 @@ operator<< (std::wostream& os, XSDFrontend::SemanticGraph::Path const& path)
 {
   return os << path.native_file_string ().c_str ();
 }
-

@@ -410,6 +410,7 @@ namespace XSDFrontend
       {
         using SemanticGraph::Member;
         using SemanticGraph::Element;
+        using SemanticGraph::Attribute;
 
         try
         {
@@ -482,7 +483,17 @@ namespace XSDFrontend
               if (ref.fixed_p ())
                 m.fixed (ref.value ());
               else if (ref.default_p ())
-                m.default_ (ref.value ());
+              {
+                // Default value applies only if the attribute is optional.
+                //
+                if (Attribute* a = dynamic_cast<Attribute*> (&m))
+                {
+                  if (a->optional_p ())
+                    m.default_ (ref.value ());
+                }
+                else
+                  m.default_ (ref.value ());
+              }
 
               if (m.default_p ())
               {
@@ -4215,9 +4226,11 @@ namespace XSDFrontend
         //
         if (!node.default_p ())
         {
+          // Default value applies only if this attribute is optional.
+          //
           if (prot.fixed_p ())
             node.fixed (prot.value ());
-          else if (prot.default_p ())
+          else if (optional && prot.default_p ())
             node.default_ (prot.value ());
 
           if (node.default_p ())

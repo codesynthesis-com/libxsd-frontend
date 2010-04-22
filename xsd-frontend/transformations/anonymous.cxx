@@ -239,6 +239,7 @@ namespace XSDFrontend
     //
     //
     struct Type: Traversal::List,
+                 Traversal::Union,
                  Traversal::Complex,
                  protected virtual Context
     {
@@ -321,6 +322,91 @@ namespace XSDFrontend
                   << "the schemas that refer to it" << endl;
 
             failed = true;
+          }
+        }
+      }
+
+      virtual Void
+      traverse (SemanticGraph::Union& u)
+      {
+        String file_str;
+
+        for (SemanticGraph::Union::ArgumentedIterator i (
+               u.argumented_begin ()); i != u.argumented_end (); ++i)
+        {
+          SemanticGraph::Type& t (i->type ());
+
+          if (!t.named_p () &&
+              !t.is_a<SemanticGraph::Fundamental::IdRef> () &&
+              !t.is_a<SemanticGraph::Fundamental::IdRefs> ())
+          {
+            try
+            {
+              // Run the name through the translation service.
+              //
+
+              if (!file_str)
+              {
+                SemanticGraph::Path file (path (u));
+
+                // Try to use the portable representation of the path. If
+                // that fails, fall back to the native representation.
+                //
+                try
+                {
+                  file_str = file.string ();
+                }
+                catch (SemanticGraph::InvalidPath const&)
+                {
+                  file_str = file.native_file_string ();
+                }
+              }
+
+              String name (
+                trans.translate (
+                  file_str, ns->name (), u.name () + L"_member", xpath (u)));
+
+              // Make sure the name is unique.
+              //
+              UnsignedLong n (1);
+              String escaped (name);
+
+              while (conflict (escaped))
+              {
+                std::wostringstream os;
+                os << n++;
+                escaped = name + os.str ();
+              }
+
+              t.context ().set ("anonymous", true);
+              schema.new_edge<SemanticGraph::Names> (*ns, t, escaped);
+            }
+            catch (UnstableConflict const& ex)
+            {
+              SemanticGraph::Type& t (ex.type ());
+
+              wcerr << u.file () << ":" << u.line () << ":" << u.column ()
+                    << ": error: union type name '" << xpath (u) << "' "
+                    << "creates an unstable conflict when used as a base "
+                    << "for the member type name"
+                    << endl;
+
+              wcerr << t.file () << ":" << t.line () << ":" << t.column ()
+                    << ": info: conflicting type is defined here" << endl;
+
+              wcerr << u.file () << ":" << u.line () << ":" << u.column ()
+                    << ": info: "
+                    << "use --anonymous-regex to resolve this conflict"
+                    << endl;
+
+              wcerr << u.file () << ":" << u.line () << ":" << u.column ()
+                    << ": info: "
+                    << "and don't forget to pass the same option when "
+                    << "translating '" << u.file ().leaf () << "' and all "
+                    << "the schemas that refer to it" << endl;
+
+              failed = true;
+            }
           }
         }
       }

@@ -2,13 +2,13 @@ Prerequisites
 
   build-time:
 
-    - build                >= 0.3.2  http://www.codesynthesis.com/projects/build/
+    - build                >= 0.3.7  http://www.codesynthesis.com/projects/build/
     - g++                  >= 3.4.3  http://gcc.gnu.org
 
   run-time:
 
-    - libfrontend-elements >= 1.1.1  http://kolpackov.net/projects/libfrontend-elements/
-    - libcult              >= 1.4.1  http://kolpackov.net/projects/libcult/
+    - libfrontend-elements >= 1.1.4  http://kolpackov.net/projects/libfrontend-elements/
+    - libcult              >= 1.4.6  http://kolpackov.net/projects/libcult/
     - libxerces-c          >= 2.6.0  http://xerces.apache.org/xerces-c/
     - libboost_filesystem  >= 1.33.1 http://boost.org
 

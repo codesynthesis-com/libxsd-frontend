@@ -7,6 +7,19 @@ Version 1.17.0
     the empty string to the AnonymousNameTranslator::translate() function
     for the translation unit.
 
+  * Anonymous transformation now names anonymous union member types.
+
+  * Do not copy ref'ed default values for non-optional attributes.
+
+  * Change predicate names in the semantic graph to consistently end 
+    with _p.
+
+  * New transformation: enum synthesis.
+
+  * Add union information to the semantics graph.
+
+  * Add support for translating schema file paths.
+
 Version 1.16.0
   
   * New transformation: simplifier. It simplifies the schema graph

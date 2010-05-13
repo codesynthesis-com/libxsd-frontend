@@ -107,6 +107,43 @@ namespace XSDFrontend
       String name_;
     };
 
+    // Trim leading and trailing whitespaces.
+    //
+    template <typename C>
+    Cult::StringTemplate<C>
+    trim (Cult::StringTemplate<C> const& s)
+    {
+      typedef Cult::StringTemplate<C> String;
+
+      Size size (s.size ());
+
+      if (size == 0)
+        return s;
+
+      C const* f (s.c_str ());
+      C const* l (f + size);
+
+      C const* of (f);
+
+      while (f < l &&
+             (*f == C (0x20) || *f == C (0x0A) ||
+              *f == C (0x0D) || *f == C (0x09)))
+        ++f;
+
+      --l;
+
+      C const* ol (l);
+
+      while (l > f &&
+             (*l == C (0x20) || *l == C (0x0A) ||
+              *l == C (0x0D) || *l == C (0x09)))
+        --l;
+
+      if (f != of || l != ol)
+        return f <= l ? String (f, l - f + 1) : String ();
+      else
+        return s;
+    }
 
     // Name cache. We only support maximum two nodes with the same
     // name in the cache (e.g., element and type). For (rare) cases
@@ -1851,7 +1888,7 @@ namespace XSDFrontend
       throw InvalidSchema ();
 
     XML::Element root (d->getDocumentElement ());
-    String ns (root["targetNamespace"]);
+    String ns (trim (root["targetNamespace"]));
 
     if (trace_)
       wcout << "target namespace: " << ns << endl;
@@ -2093,7 +2130,7 @@ namespace XSDFrontend
         throw InvalidSchema ();
 
       XML::Element root (d->getDocumentElement ());
-      String ns (root["targetNamespace"]);
+      String ns (trim (root["targetNamespace"]));
 
       if (trace_)
         wcout << "target namespace: " << ns << endl;
@@ -2311,10 +2348,10 @@ namespace XSDFrontend
     Boolean old_qa (qualify_attribute_);
     Boolean old_qe (qualify_element_);
 
-    if (String af = s["attributeFormDefault"])
+    if (String af = trim (s["attributeFormDefault"]))
       qualify_attribute_ = af == L"qualified";
 
-    if (String ef = s["elementFormDefault"])
+    if (String ef = trim (s["elementFormDefault"]))
       qualify_element_ = ef == L"qualified";
 
     push (s);
@@ -2361,16 +2398,19 @@ namespace XSDFrontend
   import (XML::Element const& i)
   {
     NarrowString loc (
-      XML::transcode_to_narrow (
-        i.dom_element ()->getAttribute (
-          XML::XMLChString ("schemaLocation").c_str ())));
+      trim (
+        XML::transcode_to_narrow (
+          i.dom_element ()->getAttribute (
+            XML::XMLChString ("schemaLocation").c_str ()))));
 
     if (loc_translator_)
       loc = loc_translator_->translate (loc);
 
+    String ins (trim (i["namespace"]));
+
     // Ignore empty <import>.
     //
-    if (!loc && !i["namespace"])
+    if (!loc && !ins)
       return;
 
     Path path, rel_path, abs_path;
@@ -2409,7 +2449,7 @@ namespace XSDFrontend
       return;
     }
 
-    SchemaId schema_id (abs_path, i["namespace"]);
+    SchemaId schema_id (abs_path, ins);
 
     if (schema_map_.find (schema_id) != schema_map_.end ())
     {
@@ -2423,7 +2463,7 @@ namespace XSDFrontend
     if (XML::AutoPtr<Xerces::DOMDocument> d  = dom (abs_path, false))
     {
       XML::Element r (d->getDocumentElement ());
-      String ns (r["targetNamespace"]);
+      String ns (trim (r["targetNamespace"]));
 
       if (trace_)
         wcout << "target namespace: " << ns << endl;
@@ -2469,9 +2509,10 @@ namespace XSDFrontend
   include (XML::Element const& i)
   {
     NarrowString loc (
-      XML::transcode_to_narrow (
-        i.dom_element ()->getAttribute (
-          XML::XMLChString ("schemaLocation").c_str ())));
+      trim (
+        XML::transcode_to_narrow (
+          i.dom_element ()->getAttribute (
+            XML::XMLChString ("schemaLocation").c_str ()))));
 
     if (loc_translator_)
       loc = loc_translator_->translate (loc);
@@ -2539,7 +2580,7 @@ namespace XSDFrontend
     if (XML::AutoPtr<Xerces::DOMDocument> d  = dom (abs_path, false))
     {
       XML::Element r (d->getDocumentElement ());
-      String ns (r["targetNamespace"]), cur_ns;
+      String ns (trim (r["targetNamespace"])), cur_ns;
 
       Schema& s (s_->new_node<Schema> (rel_path, r.line (), r.column ()));
       s_->new_edge<Implies> (s, *xml_schema_, xml_schema_path_);
@@ -2599,7 +2640,7 @@ namespace XSDFrontend
   Void Parser::Impl::
   element_group (XML::Element const& g, Boolean in_compositor)
   {
-    if (String name = g["name"])
+    if (String name = trim (g["name"]))
     {
       ElementGroup& group (
         s_->new_node<ElementGroup> (file (), g.line (), g.column ()));
@@ -2639,7 +2680,7 @@ namespace XSDFrontend
       pop ();
       pop_scope ();
     }
-    else if (String ref = g["ref"])
+    else if (String ref = trim (g["ref"]))
     {
       if (trace_)
         wcout << "element-group-ref " << ref << endl;
@@ -2663,7 +2704,8 @@ namespace XSDFrontend
 
           ElementGroupRef ref (
             uq_name, ns_name,
-            parse_min (g["minOccurs"]), parse_max (g["maxOccurs"]),
+            parse_min (trim (g["minOccurs"])),
+            parse_max (trim (g["maxOccurs"])),
             c, scope ());
 
           if (!c.context ().count ("element-group-refs"))
@@ -2681,7 +2723,8 @@ namespace XSDFrontend
 
           ElementGroupRef ref (
             uq_name, ns_name,
-            parse_min (g["minOccurs"]), parse_max (g["maxOccurs"]),
+            parse_min (trim (g["minOccurs"])),
+            parse_max (trim (g["maxOccurs"])),
             s);
 
           s.context ().set ("element-group-ref", ref);
@@ -2762,7 +2805,7 @@ namespace XSDFrontend
 
     List& node (s_->new_node<List> (file (), t.line (), t.column ()));
 
-    if (String item_type = l["itemType"])
+    if (String item_type = trim (l["itemType"]))
     {
       if (trace_)
         wcout << "item type: " << fq_name (l, item_type) << endl;
@@ -2812,7 +2855,7 @@ namespace XSDFrontend
       pop ();
     }
 
-    if (String name = t["name"])
+    if (String name = trim (t["name"]))
       s_->new_edge<Names> (scope (), node, name);
 
     return &node;
@@ -2865,7 +2908,7 @@ namespace XSDFrontend
 
     Boolean has_members (false);
 
-    if (String members = u["memberTypes"])
+    if (String members = trim (u["memberTypes"]))
     {
       // Don't bother trying to resolve member types at this point
       // since the order is important so we would have to insert
@@ -2965,7 +3008,7 @@ namespace XSDFrontend
       valid_ = false;
     }
 
-    if (String name = t["name"])
+    if (String name = trim (t["name"]))
       s_->new_edge<Names> (scope (), node, name);
 
     return &node;
@@ -2974,7 +3017,7 @@ namespace XSDFrontend
   Type* Parser::Impl::
   restriction (XML::Element const& r, XML::Element const& t)
   {
-    String base (r["base"]);
+    String base (trim (r["base"]));
     Type* base_type (0);
 
     if (base)
@@ -3057,7 +3100,7 @@ namespace XSDFrontend
           else
             restricts = set_type<Restricts> (base, r, node);
 
-          if (String name = t["name"])
+          if (String name = trim (t["name"]))
             s_->new_edge<Names> (scope (), static_cast<Nameable&> (node), name);
 
           rv = &node;
@@ -3074,8 +3117,11 @@ namespace XSDFrontend
                name == L"length" ||
                name == L"minLength" ||
                name == L"maxLength" ||
-               name == L"whiteSpace" ||
-               name == L"pattern")
+               name == L"whiteSpace")
+      {
+        facets[name] = trim (e["value"]);
+      }
+      else if (name == L"pattern")
       {
         facets[name] = e["value"];
       }
@@ -3100,7 +3146,7 @@ namespace XSDFrontend
       else
         restricts = set_type<Restricts> (base, r, node);
 
-      if (String name = t["name"])
+      if (String name = trim (t["name"]))
         s_->new_edge<Names> (scope (), node, name);
 
       rv = &node;
@@ -3149,9 +3195,10 @@ namespace XSDFrontend
 
     Complex& node (s_->new_node<Complex> (file (), t.line (), t.column ()));
 
-    node.mixed_p (t["mixed"] == L"true" || t["mixed"] == L"1");
+    if (String m = trim (t["mixed"]))
+      node.mixed_p (m == L"true" || m == L"1");
 
-    if (String name = t["name"])
+    if (String name = trim (t["name"]))
       s_->new_edge<Names> (scope (), node, name);
 
     r = &node;
@@ -3192,7 +3239,10 @@ namespace XSDFrontend
 
         if (c)
           s_->new_edge<ContainsCompositor> (
-            node, *c, parse_min (e["minOccurs"]), parse_max (e["maxOccurs"]));
+            node,
+            *c,
+            parse_min (trim (e["minOccurs"])),
+            parse_max (trim (e["maxOccurs"])));
 
         while (more ())
         {
@@ -3264,8 +3314,10 @@ namespace XSDFrontend
     if (in_compositor)
     {
       s_->new_edge<ContainsParticle> (
-        compositor (), node,
-        parse_min (c["minOccurs"]), parse_max (c["maxOccurs"]));
+        compositor (),
+        node,
+        parse_min (trim (c["minOccurs"])),
+        parse_max (trim (c["maxOccurs"])));
     }
 
     push_compositor (node);
@@ -3308,8 +3360,10 @@ namespace XSDFrontend
     if (in_compositor)
     {
       s_->new_edge<ContainsParticle> (
-        compositor (), node,
-        parse_min (s["minOccurs"]), parse_max (s["maxOccurs"]));
+        compositor (),
+        node,
+        parse_min (trim (s["minOccurs"])),
+        parse_max (trim (s["maxOccurs"])));
     }
 
     push_compositor (node);
@@ -3370,10 +3424,8 @@ namespace XSDFrontend
   Void Parser::Impl::
   complex_content (XML::Element const& c, Complex& type)
   {
-    if (c.attribute_p ("mixed"))
-    {
-      type.mixed_p (c["mixed"] == L"true" || c["mixed"] == L"1");
-    }
+    if (String m = trim (c["mixed"]))
+      type.mixed_p (m == L"true" || m == L"1");
 
     push (c);
 
@@ -3401,7 +3453,7 @@ namespace XSDFrontend
     if (trace_)
       wcout << "extension base: " << fq_name (e, e["base"]) << endl;
 
-    set_type<Extends> (e["base"], e, dynamic_cast<Complex&> (scope ()));
+    set_type<Extends> (trim (e["base"]), e, dynamic_cast<Complex&> (scope ()));
 
     push (e);
 
@@ -3430,7 +3482,7 @@ namespace XSDFrontend
   Void Parser::Impl::
   simple_content_restriction (XML::Element const& r)
   {
-    String base (r["base"]);
+    String base (trim (r["base"]));
     Type* base_type (0);
 
     if (trace_ && base)
@@ -3512,8 +3564,11 @@ namespace XSDFrontend
                name == L"length" ||
                name == L"minLength" ||
                name == L"maxLength" ||
-               name == L"whiteSpace" ||
-               name == L"pattern")
+               name == L"whiteSpace")
+      {
+        facets[name] = trim (e["value"]);
+      }
+      else if (name == L"pattern")
       {
         facets[name] = e["value"];
       }
@@ -3562,7 +3617,7 @@ namespace XSDFrontend
     if (trace_)
       wcout << "extension base: " << fq_name (e, e["base"]) << endl;
 
-    set_type<Extends> (e["base"], e, dynamic_cast<Complex&> (scope ()));
+    set_type<Extends> (trim (e["base"]), e, dynamic_cast<Complex&> (scope ()));
 
     push (e);
 
@@ -3590,7 +3645,10 @@ namespace XSDFrontend
 
       if (c)
         s_->new_edge<ContainsCompositor> (
-          type, *c, parse_min (e["minOccurs"]), parse_max (e["maxOccurs"]));
+          type,
+          *c,
+          parse_min (trim (e["minOccurs"])),
+          parse_max (trim (e["maxOccurs"])));
 
       while (more ())
       {
@@ -3619,7 +3677,10 @@ namespace XSDFrontend
     if (trace_)
       wcout << "restriction base: " << fq_name (e, e["base"]) << endl;
 
-    set_type<Restricts> (e["base"], e, dynamic_cast<Complex&> (scope ()));
+    set_type<Restricts> (
+      trim (e["base"]),
+      e,
+      dynamic_cast<Complex&> (scope ()));
 
     // @@
     // For now we simply skip the contents unless the base is anyType
@@ -3630,7 +3691,7 @@ namespace XSDFrontend
     //
     if (!proper_restriction_)
     {
-      String base (e["base"]);
+      String base (trim (e["base"]));
       String uq_name (unqualified_name (base));
       String ns_name (namespace_name (e, base));
 
@@ -3664,7 +3725,10 @@ namespace XSDFrontend
 
       if (c)
         s_->new_edge<ContainsCompositor> (
-          type, *c, parse_min (e["minOccurs"]), parse_max (e["maxOccurs"]));
+          type,
+          *c,
+          parse_min (trim (e["minOccurs"])),
+          parse_max (trim (e["maxOccurs"])));
 
       while (more ())
       {
@@ -3692,13 +3756,13 @@ namespace XSDFrontend
   {
     Boolean qualified (global ? true : qualify_element_);
 
-    if (String form = e["form"])
+    if (String form = trim (e["form"]))
       qualified = form == L"qualified";
 
     if (trace_)
       wcout << "element qualified: " << qualified << endl;
 
-    if (String name = e["name"])
+    if (String name = trim (e["name"]))
     {
       if (trace_)
         wcout << "element name '" << name << "'" << endl;
@@ -3715,8 +3779,10 @@ namespace XSDFrontend
       if (!global)
       {
         s_->new_edge<ContainsParticle> (
-          compositor (), node,
-          parse_min (e["minOccurs"]), parse_max (e["maxOccurs"]));
+          compositor (),
+          node,
+          parse_min (trim (e["minOccurs"])),
+          parse_max (trim (e["maxOccurs"])));
       }
 
       // Default and fixed values are mutually exclusive.
@@ -3734,7 +3800,7 @@ namespace XSDFrontend
 
       if (global)
       {
-        if (String sg = e["substitutionGroup"])
+        if (String sg = trim (e["substitutionGroup"]))
         {
           if (trace_)
             wcout << "substitutes " << sg << endl;
@@ -3758,7 +3824,7 @@ namespace XSDFrontend
         }
       }
 
-      if (String type = e["type"])
+      if (String type = trim (e["type"]))
       {
         if (trace_)
           wcout << "element type " << fq_name (e, type) << endl;
@@ -3831,7 +3897,7 @@ namespace XSDFrontend
         pop ();
       }
     }
-    else if (String ref = e["ref"])
+    else if (String ref = trim (e["ref"]))
     {
       Element& node (
         s_->new_node<Element> (
@@ -3840,8 +3906,10 @@ namespace XSDFrontend
       // Ref can only be in compositor.
       //
       s_->new_edge<ContainsParticle> (
-        compositor (), node,
-        parse_min (e["minOccurs"]), parse_max (e["maxOccurs"]));
+        compositor (),
+        node,
+        parse_min (trim (e["minOccurs"])),
+        parse_max (trim (e["maxOccurs"])));
 
 
       // Default and fixed values are mutually exclusive.
@@ -4070,7 +4138,7 @@ namespace XSDFrontend
   {
     Boolean optional (true);
 
-    String use (a["use"]);
+    String use (trim (a["use"]));
 
     if (use == L"prohibited")
       return;
@@ -4079,10 +4147,10 @@ namespace XSDFrontend
 
     Boolean qualified (global ? true : qualify_attribute_);
 
-    if (String form = a["form"])
+    if (String form = trim (a["form"]))
       qualified = form == L"qualified";
 
-    if (String name = a["name"])
+    if (String name = trim (a["name"]))
     {
       if (trace_)
         wcout << "attribute '" << name << "'" << endl;
@@ -4110,7 +4178,7 @@ namespace XSDFrontend
         default_values_.push_back (&node);
       }
 
-      if (String type = a["type"])
+      if (String type = trim (a["type"]))
       {
         if (trace_)
           wcout << "attribute type: '" << fq_name (a, type) << "'" << endl;
@@ -4182,7 +4250,7 @@ namespace XSDFrontend
         pop ();
       }
     }
-    else if (String ref = a["ref"])
+    else if (String ref = trim (a["ref"]))
     {
       Attribute& node (
         s_->new_node<Attribute> (
@@ -4325,7 +4393,7 @@ namespace XSDFrontend
   Void Parser::Impl::
   attribute_group (XML::Element const& g)
   {
-    if (String name = g["name"])
+    if (String name = trim (g["name"]))
     {
       // Global definition.
       //
@@ -4364,7 +4432,7 @@ namespace XSDFrontend
       pop ();
       pop_scope ();
     }
-    else if (String ref = g["ref"])
+    else if (String ref = trim (g["ref"]))
     {
       if (trace_)
         wcout << "attribute-group-ref " << ref << endl;
@@ -4427,14 +4495,19 @@ namespace XSDFrontend
     if (trace_)
       wcout << "any" << endl;
 
-    String namespaces (a["namespace"] ? a["namespace"] : L"##any");
+    String namespaces (trim (a["namespace"]));
+
+    if (!namespaces)
+      namespaces = L"##any";
 
     Any& any (
       s_->new_node<Any> (file (), a.line (), a.column (), namespaces));
 
     s_->new_edge<ContainsParticle> (
-      compositor (), any,
-      parse_min (a["minOccurs"]), parse_max (a["maxOccurs"]));
+      compositor (),
+      any,
+      parse_min (trim (a["minOccurs"])),
+      parse_max (trim (a["maxOccurs"])));
 
     // Parse annotation.
     //
@@ -4471,7 +4544,10 @@ namespace XSDFrontend
     if (trace_)
       wcout << "anyAttribute" << endl;
 
-    String namespaces (a["namespace"] ? a["namespace"] : L"##any");
+    String namespaces (trim (a["namespace"]));
+
+    if (!namespaces)
+      namespaces = L"##any";
 
     AnyAttribute& any (
       s_->new_node<AnyAttribute> (
@@ -4553,7 +4629,7 @@ namespace XSDFrontend
       {
         // See if we've got 'xse:refType' attribute.
         //
-        if (String ref_type = e.attribute (xse, "refType"))
+        if (String ref_type = trim (e.attribute (xse, "refType")))
         {
           if (trace_)
             wcout << "found refType attribute '" << ref_type << "'" << endl;

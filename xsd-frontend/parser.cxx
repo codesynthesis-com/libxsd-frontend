@@ -1683,12 +1683,28 @@ namespace XSDFrontend
 
     // Path stack for diagnostic.
     //
-    Cult::Containers::Stack<SemanticGraph::Path> file_stack_;
+    struct PathPair
+    {
+      PathPair (SemanticGraph::Path const& r, SemanticGraph::Path const& a)
+          : rel (r), abs (a)
+      {
+      }
+
+      SemanticGraph::Path rel, abs;
+    };
+
+    Cult::Containers::Stack<PathPair> file_stack_;
 
     SemanticGraph::Path const&
     file ()
     {
-      return file_stack_.top ();
+      return file_stack_.top ().rel;
+    }
+
+    SemanticGraph::Path const&
+    abs_file ()
+    {
+      return file_stack_.top ().abs;
     }
 
     // Members with default/fixed values (needed for QName handling).
@@ -1914,7 +1930,7 @@ namespace XSDFrontend
 
       s_ = cur_ = rs.get ();
       {
-        file_stack_.push (tu);
+        file_stack_.push (PathPair (tu, abs_path));
 
         {
           push_scope (
@@ -2156,7 +2172,7 @@ namespace XSDFrontend
       cur_ = &s;
 
       {
-        file_stack_.push (tu);
+        file_stack_.push (PathPair (tu, abs_path));
 
         {
           push_scope (
@@ -2433,8 +2449,11 @@ namespace XSDFrontend
       }
       else
       {
+        // Use abs_file to construct the absolute path to avoid
+        // hitting system path limits with '..' directories.
+        //
         rel_path = file ().branch_path () / path;
-        abs_path = system_complete (rel_path);
+        abs_path = system_complete (abs_file ().branch_path () / path);
       }
 
       abs_path.normalize ();
@@ -2481,7 +2500,7 @@ namespace XSDFrontend
       cur_chameleon_ = false;
 
       {
-        file_stack_.push (rel_path);
+        file_stack_.push (PathPair (rel_path, abs_path));
 
         {
           push_scope (
@@ -2537,8 +2556,11 @@ namespace XSDFrontend
       }
       else
       {
+        // Use abs_file to construct the absolute path to avoid
+        // hitting system path limits with '..' directories.
+        //
         rel_path = file ().branch_path () / path;
-        abs_path = system_complete (rel_path);
+        abs_path = system_complete (abs_file ().branch_path () / path);
       }
 
       abs_path.normalize ();
@@ -2613,7 +2635,7 @@ namespace XSDFrontend
       cur_chameleon_ = chameleon;
 
       {
-        file_stack_.push (rel_path);
+        file_stack_.push (PathPair (rel_path, abs_path));
 
         {
           push_scope (

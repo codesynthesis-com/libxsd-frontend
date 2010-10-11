@@ -3096,6 +3096,7 @@ namespace XSDFrontend
 
     Facets facets;
     Restricts* restricts (0);
+    String pattern;
 
     while (more ())
     {
@@ -3145,7 +3146,10 @@ namespace XSDFrontend
       }
       else if (name == L"pattern")
       {
-        facets[name] = e["value"];
+        if (pattern)
+          pattern += L'|';
+
+        pattern += e["value"];
       }
       else
       {
@@ -3156,6 +3160,9 @@ namespace XSDFrontend
         valid_ = false;
       }
     }
+
+    if (pattern)
+      facets[L"pattern"] = pattern;
 
     if (enum_)
       pop_scope ();
@@ -3551,6 +3558,7 @@ namespace XSDFrontend
     }
 
     Facets facets;
+    String pattern;
 
     while (more ())
     {
@@ -3592,7 +3600,10 @@ namespace XSDFrontend
       }
       else if (name == L"pattern")
       {
-        facets[name] = e["value"];
+        if (pattern)
+          pattern += L'|';
+
+        pattern += e["value"];
       }
       else if (name == L"attribute")
       {
@@ -3618,6 +3629,9 @@ namespace XSDFrontend
         valid_ = false;
       }
     }
+
+    if (pattern)
+      facets[L"pattern"] = pattern;
 
     Complex& type (dynamic_cast<Complex&> (scope ()));
     Restricts* restricts = set_type<Restricts> (base, r, type);

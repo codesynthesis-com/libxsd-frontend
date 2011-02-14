@@ -1,3 +1,11 @@
+Version 1.18.0
+
+  * Add support for multiple pattern facets.
+
+  * Use normalized base path to construct absolute path.
+
+  * Trim leading and trailing whitespaces in XML Schema attributes.
+
 Version 1.17.0
 
   * Add support for resolving default/fixed values of QName type. Now 

@@ -862,12 +862,11 @@ namespace XSDFrontend
 
     class Restricts: public virtual Inherits
     {
-    protected:
+    public:
       typedef
       Cult::Containers::Map<WideString, WideString>
       Facets;
 
-    public:
       typedef
       Facets::Iterator
       FacetIterator;
@@ -900,6 +899,12 @@ namespace XSDFrontend
       facet_insert (String const& name, String const& value)
       {
         facets_[name] = value;
+      }
+
+      Facets const&
+      facets () const
+      {
+        return facets_;
       }
 
     protected:

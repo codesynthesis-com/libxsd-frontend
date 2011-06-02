@@ -46,12 +46,15 @@ namespace XSDFrontend
       // with the by_value_key key and it is true, then the schema
       // for this type is included "strongly".
       //
-      SchemaPerType (SchemaPerTypeTranslator&, Char const* by_value_key = 0);
+      SchemaPerType (SchemaPerTypeTranslator&,
+                     Boolean fat_type_file,
+                     Char const* by_value_key = 0);
 
       Cult::Containers::Vector<SemanticGraph::Schema*>
       transform (SemanticGraph::Schema&);
 
     private:
+      Boolean fat_type_file_;
       Char const* by_value_key_;
       SchemaPerTypeTranslator& trans_;
     };

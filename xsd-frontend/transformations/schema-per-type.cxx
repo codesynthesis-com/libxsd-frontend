@@ -103,6 +103,7 @@ namespace XSDFrontend
                     SemanticGraph::Schema& xsd,
                     TypeSchemaMap& tsm,
                     FileSet& file_set,
+                    Boolean fat_type_file,
                     Transformations::SchemaPerTypeTranslator& trans)
     {
       using namespace SemanticGraph;
@@ -191,6 +192,8 @@ namespace XSDFrontend
             throw Failed ();
           }
 
+          Type& t (dynamic_cast<Type&> (n));
+
           Schema& ts (root.new_node<Schema> (path, 1, 1));
           root.new_edge<Implies> (ts, xsd, xsd_path);
 
@@ -198,11 +201,43 @@ namespace XSDFrontend
           root.new_edge<Names> (ts, tns, ns.name ());
           root.new_edge<Names> (tns, n, name);
 
+          // If we are generating fat type files, then also move the global
+          // elements this type classifies to the new schema.
+          //
+          if (fat_type_file)
+          {
+            for (Type::ClassifiesIterator j (t.classifies_begin ());
+                 j != t.classifies_end (); ++j)
+            {
+              Instance& e (j->instance ());
+
+              // We can only move a global element from the same namespace.
+              //
+              if (e.is_a<Element> () &&
+                  e.scope ().is_a<Namespace> () &&
+                  e.scope ().name () == ns.name ())
+              {
+                Names& n (e.named ());
+                String name (n.name ());
+
+                // Watch out for the iterator validity: the edge we are
+                // about to remove can be from the same list we are
+                // currently iterating.
+                //
+                if (i != ns.names_end () && &*i == &n)
+                  ++i;
+
+                root.delete_edge (n.scope (), e, n);
+                root.new_edge<Names> (tns, e, name);
+              }
+            }
+          }
+
           // Add include to the original schema and enter into the
           // type-schema map.
           //
           root.new_edge<Includes> (s, ts, path);
-          tsm[&dynamic_cast<Type&> (n)] = &ts;
+          tsm[&t] = &ts;
         }
         else
           ++i;
@@ -308,8 +343,10 @@ namespace XSDFrontend
   namespace Transformations
   {
     SchemaPerType::
-    SchemaPerType (SchemaPerTypeTranslator& trans, Char const* by_value_key)
-        : by_value_key_ (by_value_key), trans_ (trans)
+    SchemaPerType (SchemaPerTypeTranslator& trans,
+                   Boolean fat,
+                   Char const* key)
+        : fat_type_file_ (fat), by_value_key_ (key), trans_ (trans)
     {
     }
 
@@ -409,7 +446,7 @@ namespace XSDFrontend
 
       for (Schemas::Iterator i (schemas.begin ()); i != schemas.end (); ++i)
       {
-        process_schema (**i, root, *xsd, tsm, file_set, trans_);
+        process_schema (**i, root, *xsd, tsm, file_set, fat_type_file_, trans_);
       }
 
       // wcerr << tsm.size () << " type schema nodes" << endl;

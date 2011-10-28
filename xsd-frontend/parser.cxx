@@ -1510,6 +1510,8 @@ namespace XSDFrontend
     }
 
   private:
+    static UnsignedLong const unbounded = ~static_cast<UnsignedLong> (0);
+
     UnsignedLong
     parse_min (String const& m)
     {
@@ -1530,7 +1532,7 @@ namespace XSDFrontend
         return 1;
 
       if (m == L"unbounded")
-        return 0;
+        return unbounded;
 
       UnsignedLong v;
       std::basic_istringstream<WideChar> is (m);
@@ -2724,11 +2726,15 @@ namespace XSDFrontend
         {
           Compositor& c (compositor ());
 
+          UnsignedLong min (parse_min (trim (g["minOccurs"])));
+          UnsignedLong max (parse_max (trim (g["maxOccurs"])));
+
           ElementGroupRef ref (
             uq_name, ns_name,
-            parse_min (trim (g["minOccurs"])),
-            parse_max (trim (g["maxOccurs"])),
-            c, scope ());
+            min,
+            max == unbounded ? 0 : max,
+            c,
+            scope ());
 
           if (!c.context ().count ("element-group-refs"))
             c.context ().set ("element-group-refs", ElementGroupRefs ());
@@ -2743,11 +2749,11 @@ namespace XSDFrontend
 
           Scope& s (scope ());
 
+          UnsignedLong min (parse_min (trim (g["minOccurs"])));
+          UnsignedLong max (parse_max (trim (g["maxOccurs"])));
+
           ElementGroupRef ref (
-            uq_name, ns_name,
-            parse_min (trim (g["minOccurs"])),
-            parse_max (trim (g["maxOccurs"])),
-            s);
+            uq_name, ns_name, min, max == unbounded ? 0 : max, s);
 
           s.context ().set ("element-group-ref", ref);
         }
@@ -3267,11 +3273,14 @@ namespace XSDFrontend
         }
 
         if (c)
-          s_->new_edge<ContainsCompositor> (
-            node,
-            *c,
-            parse_min (trim (e["minOccurs"])),
-            parse_max (trim (e["maxOccurs"])));
+        {
+          UnsignedLong min (parse_min (trim (e["minOccurs"])));
+          UnsignedLong max (parse_max (trim (e["maxOccurs"])));
+
+          if (!(min == 0 && max == 0))
+            s_->new_edge<ContainsCompositor> (
+              node, *c, min, max == unbounded ? 0 : max);
+        }
 
         while (more ())
         {
@@ -3342,11 +3351,12 @@ namespace XSDFrontend
 
     if (in_compositor)
     {
-      s_->new_edge<ContainsParticle> (
-        compositor (),
-        node,
-        parse_min (trim (c["minOccurs"])),
-        parse_max (trim (c["maxOccurs"])));
+      UnsignedLong min (parse_min (trim (c["minOccurs"])));
+      UnsignedLong max (parse_max (trim (c["maxOccurs"])));
+
+      if (!(min == 0 && max == 0))
+        s_->new_edge<ContainsParticle> (
+          compositor (), node, min, max == unbounded ? 0 : max);
     }
 
     push_compositor (node);
@@ -3388,11 +3398,12 @@ namespace XSDFrontend
 
     if (in_compositor)
     {
-      s_->new_edge<ContainsParticle> (
-        compositor (),
-        node,
-        parse_min (trim (s["minOccurs"])),
-        parse_max (trim (s["maxOccurs"])));
+      UnsignedLong min (parse_min (trim (s["minOccurs"])));
+      UnsignedLong max (parse_max (trim (s["maxOccurs"])));
+
+      if (!(min == 0 && max == 0))
+        s_->new_edge<ContainsParticle> (
+          compositor (), node, min, max == unbounded ? 0 : max);
     }
 
     push_compositor (node);
@@ -3680,11 +3691,14 @@ namespace XSDFrontend
       }
 
       if (c)
-        s_->new_edge<ContainsCompositor> (
-          type,
-          *c,
-          parse_min (trim (e["minOccurs"])),
-          parse_max (trim (e["maxOccurs"])));
+      {
+        UnsignedLong min (parse_min (trim (e["minOccurs"])));
+        UnsignedLong max (parse_max (trim (e["maxOccurs"])));
+
+        if (!(min == 0 && max == 0))
+          s_->new_edge<ContainsCompositor> (
+            type, *c, min, max == unbounded ? 0 : max);
+      }
 
       while (more ())
       {
@@ -3760,11 +3774,14 @@ namespace XSDFrontend
       }
 
       if (c)
-        s_->new_edge<ContainsCompositor> (
-          type,
-          *c,
-          parse_min (trim (e["minOccurs"])),
-          parse_max (trim (e["maxOccurs"])));
+      {
+        UnsignedLong min (parse_min (trim (e["minOccurs"])));
+        UnsignedLong max (parse_max (trim (e["maxOccurs"])));
+
+        if (!(min == 0 && max == 0))
+          s_->new_edge<ContainsCompositor> (
+            type, *c, min, max == unbounded ? 0 : max);
+      }
 
       while (more ())
       {
@@ -3807,19 +3824,24 @@ namespace XSDFrontend
         s_->new_node<Element> (
           file (), e.line (), e.column (), global, qualified));
 
-      s_->new_edge<Names> (scope (), node, name);
+      if (!global)
+      {
+        UnsignedLong min (parse_min (trim (e["minOccurs"])));
+        UnsignedLong max (parse_max (trim (e["maxOccurs"])));
+
+        if (!(min == 0 && max == 0))
+        {
+          s_->new_edge<Names> (scope (), node, name);
+
+          s_->new_edge<ContainsParticle> (
+            compositor (), node, min, max == unbounded ? 0 : max);
+        }
+      }
+      else
+        s_->new_edge<Names> (scope (), node, name);
 
       if (qualified)
         s_->new_edge<BelongsToNamespace> (node, cur_ns ());
-
-      if (!global)
-      {
-        s_->new_edge<ContainsParticle> (
-          compositor (),
-          node,
-          parse_min (trim (e["minOccurs"])),
-          parse_max (trim (e["maxOccurs"])));
-      }
 
       // Default and fixed values are mutually exclusive.
       //
@@ -3939,14 +3961,8 @@ namespace XSDFrontend
         s_->new_node<Element> (
           file (), e.line (), e.column (), true, true));
 
-      // Ref can only be in compositor.
-      //
-      s_->new_edge<ContainsParticle> (
-        compositor (),
-        node,
-        parse_min (trim (e["minOccurs"])),
-        parse_max (trim (e["maxOccurs"])));
-
+      UnsignedLong min (parse_min (trim (e["minOccurs"])));
+      UnsignedLong max (parse_max (trim (e["maxOccurs"])));
 
       // Default and fixed values are mutually exclusive.
       //
@@ -3970,118 +3986,126 @@ namespace XSDFrontend
 
       pop ();
 
-      // Try to resolve the prototype.
-      //
-      try
+      if (!(min == 0 && max == 0))
       {
-        String uq_name (unqualified_name (ref));
-        String ns_name (namespace_name (e, ref));
-
-        s_->new_edge<Names> (scope (), node, uq_name);
-
-        Element& prot (resolve<Element> (ns_name, uq_name, *s_, *cache_));
-        s_->new_edge<BelongsToNamespace> (node, prot.namespace_ ());
-
-        // Copy substitution group information if any.
+        // Ref can only be in compositor.
         //
-        if (prot.context ().count ("substitution-ns-name"))
-        {
-          node.context ().set (
-            "substitution-ns-name",
-            prot.context ().get<String> ("substitution-ns-name"));
+        s_->new_edge<ContainsParticle> (
+          compositor (), node, min, max == unbounded ? 0 : max);
 
-          node.context ().set (
-            "substitution-uq-name",
-            prot.context ().get<String> ("substitution-uq-name"));
-        }
-
-        // Transfer default and fixed values if the ref declaration hasn't
-        // defined its own.
+        // Try to resolve the prototype.
         //
-        if (!node.default_p ())
+        try
         {
-          if (prot.fixed_p ())
-            node.fixed (prot.value ());
-          else if (prot.default_p ())
-            node.default_ (prot.value ());
+          String uq_name (unqualified_name (ref));
+          String ns_name (namespace_name (e, ref));
 
-          if (node.default_p ())
+          s_->new_edge<Names> (scope (), node, uq_name);
+
+          Element& prot (resolve<Element> (ns_name, uq_name, *s_, *cache_));
+          s_->new_edge<BelongsToNamespace> (node, prot.namespace_ ());
+
+          // Copy substitution group information if any.
+          //
+          if (prot.context ().count ("substitution-ns-name"))
           {
             node.context ().set (
-              "dom-node",
-              prot.context ().get<Xerces::DOMElement*> ("dom-node"));
-            default_values_.push_back (&node);
+              "substitution-ns-name",
+              prot.context ().get<String> ("substitution-ns-name"));
+
+            node.context ().set (
+              "substitution-uq-name",
+              prot.context ().get<String> ("substitution-uq-name"));
+          }
+
+          // Transfer default and fixed values if the ref declaration hasn't
+          // defined its own.
+          //
+          if (!node.default_p ())
+          {
+            if (prot.fixed_p ())
+              node.fixed (prot.value ());
+            else if (prot.default_p ())
+              node.default_ (prot.value ());
+
+            if (node.default_p ())
+            {
+              node.context ().set (
+                "dom-node",
+                prot.context ().get<Xerces::DOMElement*> ("dom-node"));
+              default_values_.push_back (&node);
+            }
+          }
+
+          // Transfer annotation if the ref declaration hasn't defined its own.
+          //
+          if (!node.annotated_p () && prot.annotated_p ())
+            s_->new_edge<Annotates> (prot.annotation (), node);
+
+          // Set type information.
+          //
+          if (prot.typed_p ())
+          {
+            s_->new_edge<Belongs> (node, prot.type ());
+          }
+          else if (prot.context ().count ("type-ns-name"))
+          {
+            String ns_name (prot.context ().get<String> ("type-ns-name"));
+            String uq_name (prot.context ().get<String> ("type-uq-name"));
+
+            node.context ().set ("type-ns-name", ns_name);
+            node.context ().set ("type-uq-name", uq_name);
+            node.context ().set ("edge-type-id", TypeId (typeid (Belongs)));
+
+            if (trace_)
+              wcout << "element '" << ref << "' is not typed" << endl
+                    << "deferring resolution until later" << endl;
+          }
+          else
+          {
+            // This could be a recursive reference to an element who's
+            // (anonymous) type is being defined. We are going to let
+            // resolver sort out this case.
+            //
+            node.context ().set ("instance-ns-name", ns_name);
+            node.context ().set ("instance-uq-name", uq_name);
+
+            if (trace_)
+              wcout << "looks like a recursive reference to an element '"
+                    << ns_name << "#" << uq_name << "' which is being "
+                    << "defined" << endl
+                    << "deferring resolution until later" << endl;
           }
         }
-
-        // Transfer annotation if the ref declaration hasn't defined its own.
-        //
-        if (!node.annotated_p () && prot.annotated_p ())
-          s_->new_edge<Annotates> (prot.annotation (), node);
-
-        // Set type information.
-        //
-        if (prot.typed_p ())
+        catch (NotNamespace const& ex)
         {
-          s_->new_edge<Belongs> (node, prot.type ());
+          if (valid_)
+          {
+            wcerr << file () << ":" << e.line () << ":" << e.column () << ": "
+                  << "ice: unable to resolve namespace '" << ex.ns () << "'"
+                  << endl;
+
+            abort ();
+          }
         }
-        else if (prot.context ().count ("type-ns-name"))
+        catch (NotName const& ex)
         {
-          String ns_name (prot.context ().get<String> ("type-ns-name"));
-          String uq_name (prot.context ().get<String> ("type-uq-name"));
-
-          node.context ().set ("type-ns-name", ns_name);
-          node.context ().set ("type-uq-name", uq_name);
-          node.context ().set ("edge-type-id", TypeId (typeid (Belongs)));
+          node.context ().set ("instance-ns-name", ex.ns ());
+          node.context ().set ("instance-uq-name", ex.name ());
 
           if (trace_)
-            wcout << "element '" << ref << "' is not typed" << endl
+            wcout << "unable to resolve name '" << ex.name ()
+                  << "' inside namespace '" << ex.ns () << "'" << endl
                   << "deferring resolution until later" << endl;
         }
-        else
-        {
-          // This could be a recursive reference to an element who's
-          // (anonymous) type is being defined. We are going to let
-          // resolver sort out this case.
-          //
-          node.context ().set ("instance-ns-name", ns_name);
-          node.context ().set ("instance-uq-name", uq_name);
-
-          if (trace_)
-            wcout << "looks like a recursive reference to an element '"
-                  << ns_name << "#" << uq_name << "' which is being "
-                  << "defined" << endl
-                  << "deferring resolution until later" << endl;
-        }
-      }
-      catch (NotNamespace const& ex)
-      {
-        if (valid_)
+        catch (XML::NoMapping const& ex)
         {
           wcerr << file () << ":" << e.line () << ":" << e.column () << ": "
-                << "ice: unable to resolve namespace '" << ex.ns () << "'"
-                << endl;
+                << "error: unable to resolve namespace prefix '"
+                << ex.prefix () << "' in '" << ref << "'" << endl;
 
-          abort ();
+          valid_ = false;
         }
-      }
-      catch (NotName const& ex)
-      {
-        node.context ().set ("instance-ns-name", ex.ns ());
-        node.context ().set ("instance-uq-name", ex.name ());
-
-        if (trace_)
-          wcout << "unable to resolve name '" << ex.name ()
-                << "' inside namespace '" << ex.ns () << "'" << endl
-                << "deferring resolution until later" << endl;
-      }
-      catch (XML::NoMapping const& ex)
-      {
-        wcerr << file () << ":" << e.line () << ":" << e.column () << ": "
-              << "error: unable to resolve namespace prefix '"
-              << ex.prefix () << "' in '" << ref << "'" << endl;
-
-        valid_ = false;
       }
     }
     else
@@ -4539,11 +4563,8 @@ namespace XSDFrontend
     Any& any (
       s_->new_node<Any> (file (), a.line (), a.column (), namespaces));
 
-    s_->new_edge<ContainsParticle> (
-      compositor (),
-      any,
-      parse_min (trim (a["minOccurs"])),
-      parse_max (trim (a["maxOccurs"])));
+    UnsignedLong min (parse_min (trim (a["minOccurs"])));
+    UnsignedLong max (parse_max (trim (a["maxOccurs"])));
 
     // Parse annotation.
     //
@@ -4554,24 +4575,30 @@ namespace XSDFrontend
 
     pop ();
 
-    // Any has no name so we have to come up with a fake one in order to
-    // put it into the scope.
-    //
-    UnsignedLong count;
-    FrontendElements::Context& ctx (scope ().context ());
-
-    if (!ctx.count ("any-name-count"))
+    if (!(min == 0 && max == 0))
     {
-      count = 0;
-      ctx.set ("any-name-count", count);
+      s_->new_edge<ContainsParticle> (
+        compositor (), any, min, max == unbounded ? 0 : max);
+
+      // Any has no name so we have to come up with a fake one in order to
+      // put it into the scope.
+      //
+      UnsignedLong count;
+      FrontendElements::Context& ctx (scope ().context ());
+
+      if (!ctx.count ("any-name-count"))
+      {
+        count = 0;
+        ctx.set ("any-name-count", count);
+      }
+      else
+        count = ++(ctx.get<UnsignedLong> ("any-name-count"));
+
+      std::basic_ostringstream<WideChar> os;
+      os << "any #" << count;
+
+      s_->new_edge<Names> (scope (), any, os.str ());
     }
-    else
-      count = ++(ctx.get<UnsignedLong> ("any-name-count"));
-
-    std::basic_ostringstream<WideChar> os;
-    os << "any #" << count;
-
-    s_->new_edge<Names> (scope (), any, os.str ());
   }
 
   Void Parser::Impl::

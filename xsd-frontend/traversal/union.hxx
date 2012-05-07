@@ -25,7 +25,7 @@ namespace XSDFrontend
       argumented (Type&);
 
       virtual Void
-      argumented (Type&, EdgeDispatcherBase& d);
+      argumented (Type&, EdgeDispatcher& d);
 
       virtual Void
       name (Type&);

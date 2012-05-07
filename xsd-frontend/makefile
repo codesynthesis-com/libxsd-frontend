@@ -68,23 +68,23 @@ $(call import,\
   l: xerces_c.l,cpp-options: xerces_c.l.cpp-options)
 
 $(call import,\
+  $(scf_root)/import/libcutl/stub.make,\
+  l: cutl.l,cpp-options: cutl.l.cpp-options)
+
+$(call import,\
   $(scf_root)/import/libcult/stub.make,\
   l: cult.l,cpp-options: cult.l.cpp-options)
 
-$(call import,\
-  $(scf_root)/import/libfrontend-elements/stub.make,\
-  l: fe.l,cpp-options: fe.l.cpp-options)
-
 # what to build
 #
-$(xsd_frontend.l): $(cxx_obj) $(fe.l) $(cult.l) $(xerces_c.l) $(fs.l)
+$(xsd_frontend.l): $(cxx_obj) $(cult.l) $(cutl.l) $(xerces_c.l) $(fs.l)
 
 $(xsd_frontend.l.cpp-options): prefix := xsd-frontend/ $(out_root)/
 $(xsd_frontend.l.cpp-options): value := -I$(src_root) -I$(out_root)
 $(xsd_frontend.l.cpp-options):  \
   $(fs.l.cpp-options)           \
-  $(fe.l.cpp-options)           \
-  $(cult.l.cpp-options)
+  $(cult.l.cpp-options)         \
+  $(cutl.l.cpp-options)
 
 #@@ This can be further optimized since only parser depends on xerces.
 #

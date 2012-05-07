@@ -3,35 +3,33 @@
 // copyright : Copyright (c) 2005-2011 Code Synthesis Tools CC
 // license   : GNU GPL v2 + exceptions; see accompanying LICENSE file
 
+#include <cutl/compiler/type-info.hxx>
+
 #include <xsd-frontend/semantic-graph/list.hxx>
 
 namespace XSDFrontend
 {
   namespace SemanticGraph
   {
-    namespace RTTI = Cult::RTTI;
-
-    using RTTI::Access;
-    using RTTI::TypeInfo;
-
-    namespace
-    {
-      struct ListInit
-      {
-        ListInit ()
-        {
-          TypeInfo ti (typeid (List));
-          ti.add_base (Access::public_, true, typeid (Specialization));
-          RTTI::insert (ti);
-        }
-
-      } list_init_;
-    }
-
     List::
     List (Path const& file, UnsignedLong line, UnsignedLong column)
         : Node (file, line, column)
     {
+    }
+
+    namespace
+    {
+      using compiler::type_info;
+
+      struct ListInit
+      {
+        ListInit ()
+        {
+          type_info ti (typeid (List));
+          ti.add_base (typeid (Specialization));
+          insert (ti);
+        }
+      } list_init_;
     }
   }
 }

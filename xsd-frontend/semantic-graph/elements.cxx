@@ -5,6 +5,8 @@
 
 #include <algorithm>
 
+#include <cutl/compiler/type-info.hxx>
+
 #include <xsd-frontend/semantic-graph/elements.hxx>
 #include <xsd-frontend/semantic-graph/annotation.hxx>
 
@@ -46,10 +48,7 @@ namespace XSDFrontend
       argumented_.erase (i);
     }
 
-    namespace RTTI = Cult::RTTI;
-
-    using RTTI::Access;
-    using RTTI::TypeInfo;
+    using compiler::type_info;
 
     namespace
     {
@@ -59,12 +58,10 @@ namespace XSDFrontend
       {
         EdgeInit ()
         {
-          TypeInfo ti (typeid (Edge));
-          RTTI::insert (ti);
+          type_info ti (typeid (Edge));
+          insert (ti);
         }
-
       } edge_init_;
-
 
       // Node
       //
@@ -72,12 +69,10 @@ namespace XSDFrontend
       {
         NodeInit ()
         {
-          TypeInfo ti (typeid (Node));
-          RTTI::insert (ti);
+          type_info ti (typeid (Node));
+          insert (ti);
         }
-
       } node_init_;
-
 
       // Names
       //
@@ -85,13 +80,11 @@ namespace XSDFrontend
       {
         NamesInit ()
         {
-          TypeInfo ti (typeid (Names));
-          ti.add_base (Access::public_, true, typeid (Edge));
-          RTTI::insert (ti);
+          type_info ti (typeid (Names));
+          ti.add_base (typeid (Edge));
+          insert (ti);
         }
-
       } names_init_;
-
 
       // Nameable
       //
@@ -99,13 +92,11 @@ namespace XSDFrontend
       {
         NameableInit ()
         {
-          TypeInfo ti (typeid (Nameable));
-          ti.add_base (Access::public_, true, typeid (Node));
-          RTTI::insert (ti);
+          type_info ti (typeid (Nameable));
+          ti.add_base (typeid (Node));
+          insert (ti);
         }
-
       } nameable_init_;
-
 
       // Scope
       //
@@ -113,13 +104,11 @@ namespace XSDFrontend
       {
         ScopeInit ()
         {
-          TypeInfo ti (typeid (Scope));
-          ti.add_base (Access::public_, true, typeid (Nameable));
-          RTTI::insert (ti);
+          type_info ti (typeid (Scope));
+          ti.add_base (typeid (Nameable));
+          insert (ti);
         }
-
       } scope_init_;
-
 
       // Type
       //
@@ -127,13 +116,11 @@ namespace XSDFrontend
       {
         TypeInit ()
         {
-          TypeInfo ti (typeid (Type));
-          ti.add_base (Access::public_, true, typeid (Nameable));
-          RTTI::insert (ti);
+          type_info ti (typeid (Type));
+          ti.add_base (typeid (Nameable));
+          insert (ti);
         }
-
       } type_init_;
-
 
       // Instance
       //
@@ -141,13 +128,11 @@ namespace XSDFrontend
       {
         InstanceInit ()
         {
-          TypeInfo ti (typeid (Instance));
-          ti.add_base (Access::public_, true, typeid (Nameable));
-          RTTI::insert (ti);
+          type_info ti (typeid (Instance));
+          ti.add_base (typeid (Nameable));
+          insert (ti);
         }
-
       } instance_init_;
-
 
       // Belongs
       //
@@ -155,14 +140,11 @@ namespace XSDFrontend
       {
         BelongsInit ()
         {
-          TypeInfo ti (typeid (Belongs));
-          ti.add_base (Access::public_, true, typeid (Edge));
-          RTTI::insert (ti);
+          type_info ti (typeid (Belongs));
+          ti.add_base (typeid (Edge));
+          insert (ti);
         }
-
       } belongs_init_;
-
-
 
       // Inherits
       //
@@ -170,13 +152,11 @@ namespace XSDFrontend
       {
         InheritsInit ()
         {
-          TypeInfo ti (typeid (Inherits));
-          ti.add_base (Access::public_, true, typeid (Edge));
-          RTTI::insert (ti);
+          type_info ti (typeid (Inherits));
+          ti.add_base (typeid (Edge));
+          insert (ti);
         }
-
       } inherits_init_;
-
 
       // Extends
       //
@@ -184,13 +164,11 @@ namespace XSDFrontend
       {
         ExtendsInit ()
         {
-          TypeInfo ti (typeid (Extends));
-          ti.add_base (Access::public_, true, typeid (Inherits));
-          RTTI::insert (ti);
+          type_info ti (typeid (Extends));
+          ti.add_base (typeid (Inherits));
+          insert (ti);
         }
-
       } extends_init_;
-
 
       // Restricts
       //
@@ -198,13 +176,11 @@ namespace XSDFrontend
       {
         RestrictsInit ()
         {
-          TypeInfo ti (typeid (Restricts));
-          ti.add_base (Access::public_, true, typeid (Inherits));
-          RTTI::insert (ti);
+          type_info ti (typeid (Restricts));
+          ti.add_base (typeid (Inherits));
+          insert (ti);
         }
-
       } restricts_init_;
-
 
       // BelongsToNamespace
       //
@@ -212,13 +188,11 @@ namespace XSDFrontend
       {
         BelongsToNamespaceInit ()
         {
-          TypeInfo ti (typeid (BelongsToNamespace));
-          ti.add_base (Access::public_, true, typeid (Edge));
-          RTTI::insert (ti);
+          type_info ti (typeid (BelongsToNamespace));
+          ti.add_base (typeid (Edge));
+          insert (ti);
         }
-
       } belongs_to_namespace_init_;
-
 
       // Member
       //
@@ -226,13 +200,11 @@ namespace XSDFrontend
       {
         MemberInit ()
         {
-          TypeInfo ti (typeid (Member));
-          ti.add_base (Access::public_, true, typeid (Instance));
-          RTTI::insert (ti);
+          type_info ti (typeid (Member));
+          ti.add_base (typeid (Instance));
+          insert (ti);
         }
-
       } member_init_;
-
 
       // Specialization
       //
@@ -240,13 +212,11 @@ namespace XSDFrontend
       {
         SpecializationInit ()
         {
-          TypeInfo ti (typeid (Specialization));
-          ti.add_base (Access::public_, true, typeid (Type));
-          RTTI::insert (ti);
+          type_info ti (typeid (Specialization));
+          ti.add_base (typeid (Type));
+          insert (ti);
         }
-
       } specialization_init_;
-
 
       // Arguments
       //
@@ -254,13 +224,11 @@ namespace XSDFrontend
       {
         ArgumentsInit ()
         {
-          TypeInfo ti (typeid (Arguments));
-          ti.add_base (Access::public_, true, typeid (Edge));
-          RTTI::insert (ti);
+          type_info ti (typeid (Arguments));
+          ti.add_base (typeid (Edge));
+          insert (ti);
         }
-
       } arguments_init_;
-
 
       /*
       // Contains
@@ -269,13 +237,11 @@ namespace XSDFrontend
       {
         ContainsInit ()
         {
-          TypeInfo ti (typeid (Contains));
-          ti.add_base (Access::public_, true, typeid (Edge));
-          RTTI::insert (ti);
+          type_info ti (typeid (Contains));
+          ti.add_base (typeid (Edge));
+          insert (ti);
         }
-
       } contains_init_;
-
 
       // Container
       //
@@ -283,49 +249,37 @@ namespace XSDFrontend
       {
         ContainerInit ()
         {
-          TypeInfo ti (typeid (Container));
-          ti.add_base (Access::public_, true, typeid (Node));
-          RTTI::insert (ti);
+          type_info ti (typeid (Container));
+          ti.add_base (typeid (Node));
+          insert (ti);
         }
-
       } container_init_;
       */
 
-
       // AnyType
       //
-      namespace
+      struct AnyTypeInit
       {
-        struct AnyTypeInit
+        AnyTypeInit ()
         {
-          AnyTypeInit ()
-          {
-            TypeInfo ti (typeid (AnyType));
-            ti.add_base (Access::public_, true, typeid (SemanticGraph::Type));
-            RTTI::insert (ti);
-          }
-
-        } any_type_init_;
-      }
-
+          type_info ti (typeid (AnyType));
+          ti.add_base (typeid (SemanticGraph::Type));
+            insert (ti);
+        }
+      } any_type_init_;
 
       // AnySimpleType
       //
-      namespace
+      struct AnySimpleTypeInit
       {
-        struct AnySimpleTypeInit
+        AnySimpleTypeInit ()
         {
-          AnySimpleTypeInit ()
-          {
-            TypeInfo ti (typeid (AnySimpleType));
-            ti.add_base (Access::public_, true, typeid (Type));
-            RTTI::insert (ti);
-          }
-
-        } any_simple_type_init_;
-      }
+          type_info ti (typeid (AnySimpleType));
+          ti.add_base (typeid (Type));
+            insert (ti);
+        }
+      } any_simple_type_init_;
     }
-
 
     // Instance
     //

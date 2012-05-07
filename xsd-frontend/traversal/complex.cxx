@@ -37,7 +37,7 @@ namespace XSDFrontend
     }
 
     Void Complex::
-    inherits (Type& c, EdgeDispatcherBase& d)
+    inherits (Type& c, EdgeDispatcher& d)
     {
       if (c.inherits_p ())
         d.dispatch (c.inherits ());
@@ -50,7 +50,7 @@ namespace XSDFrontend
     }
 
     Void Complex::
-    contains_compositor (Type& c, EdgeDispatcherBase& d)
+    contains_compositor (Type& c, EdgeDispatcher& d)
     {
       if (c.contains_compositor_p ())
         d.dispatch (c.contains_compositor ());

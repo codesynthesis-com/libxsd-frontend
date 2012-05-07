@@ -28,13 +28,13 @@ namespace XSDFrontend
       inherits (Type&);
 
       Void
-      inherits (Type&, EdgeDispatcherBase&);
+      inherits (Type&, EdgeDispatcher&);
 
       virtual Void
       contains_compositor (Type&);
 
       Void
-      contains_compositor (Type&, EdgeDispatcherBase&);
+      contains_compositor (Type&, EdgeDispatcher&);
 
       virtual Void
       post (Type&);

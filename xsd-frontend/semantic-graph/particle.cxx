@@ -3,33 +3,16 @@
 // copyright : Copyright (c) 2006-2011 Code Synthesis Tools CC
 // license   : GNU GPL v2 + exceptions; see accompanying LICENSE file
 
+#include <cutl/compiler/type-info.hxx>
+
 #include <xsd-frontend/semantic-graph/particle.hxx>
 
 namespace XSDFrontend
 {
   namespace SemanticGraph
   {
-    namespace RTTI = Cult::RTTI;
-
-    using RTTI::Access;
-    using RTTI::TypeInfo;
-
     // ContainsParticle
     //
-    namespace
-    {
-      struct ContainsParticleInit
-      {
-        ContainsParticleInit ()
-        {
-          TypeInfo ti (typeid (ContainsParticle));
-          ti.add_base (Access::public_, true, typeid (Edge));
-          RTTI::insert (ti);
-        }
-
-      } contains_particle_init_;
-    }
-
     ContainsParticle::
     ContainsParticle (UnsignedLong min, UnsignedLong max)
         : particle_ (0), compositor_ (0), min_ (min), max_ (max)
@@ -38,24 +21,35 @@ namespace XSDFrontend
 
     // Particle
     //
-    namespace
-    {
-      struct ParticleInit
-      {
-        ParticleInit ()
-        {
-          TypeInfo ti (typeid (Particle));
-          ti.add_base (Access::public_, true, typeid (Node));
-          RTTI::insert (ti);
-        }
-
-      } particle_init_;
-    }
-
     Particle::
     Particle ()
         : contained_particle_ (0)
     {
+    }
+
+    namespace
+    {
+      using compiler::type_info;
+
+      struct ContainsParticleInit
+      {
+        ContainsParticleInit ()
+        {
+          type_info ti (typeid (ContainsParticle));
+          ti.add_base (typeid (Edge));
+          insert (ti);
+        }
+      } contains_particle_init_;
+
+      struct ParticleInit
+      {
+        ParticleInit ()
+        {
+          type_info ti (typeid (Particle));
+          ti.add_base (typeid (Node));
+          insert (ti);
+        }
+      } particle_init_;
     }
   }
 }

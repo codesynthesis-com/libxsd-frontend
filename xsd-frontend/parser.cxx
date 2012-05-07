@@ -1089,7 +1089,7 @@ namespace XSDFrontend
             // the name from the prototype.
 
             UnsignedLong count;
-            FrontendElements::Context& ctx (scope.context ());
+            SemanticGraph::Context& ctx (scope.context ());
 
             if (!ctx.count ("any-name-count"))
             {
@@ -1251,7 +1251,7 @@ namespace XSDFrontend
               // reuse the name from the attribute group.
 
               UnsignedLong count;
-              FrontendElements::Context& ctx (s.context ());
+              SemanticGraph::Context& ctx (s.context ());
 
               if (!ctx.count ("any-attribute-name-count"))
               {
@@ -1990,7 +1990,7 @@ namespace XSDFrontend
                               Traversal::Element,
                               Traversal::Member
       {
-        AnonymousMember (Traversal::NodeDispatcherBase& d)
+        AnonymousMember (Traversal::NodeDispatcher& d)
         {
           belongs_.node_traverser (d);
         }
@@ -2028,7 +2028,7 @@ namespace XSDFrontend
 
       struct AnonymousBase: Traversal::Type
       {
-        AnonymousBase (Traversal::NodeDispatcherBase& d)
+        AnonymousBase (Traversal::NodeDispatcher& d)
             : base_ (d)
         {
         }
@@ -2041,7 +2041,7 @@ namespace XSDFrontend
         }
 
       private:
-        Traversal::NodeDispatcherBase& base_;
+        Traversal::NodeDispatcher& base_;
       } anonymous_base (resolver);
 
       ns_names >> resolver;
@@ -2237,7 +2237,7 @@ namespace XSDFrontend
                               Traversal::Element,
                               Traversal::Member
       {
-        AnonymousMember (Traversal::NodeDispatcherBase& d)
+        AnonymousMember (Traversal::NodeDispatcher& d)
         {
           belongs_.node_traverser (d);
         }
@@ -2275,7 +2275,7 @@ namespace XSDFrontend
 
       struct AnonymousBase: Traversal::Type
       {
-        AnonymousBase (Traversal::NodeDispatcherBase& d)
+        AnonymousBase (Traversal::NodeDispatcher& d)
             : base_ (d)
         {
         }
@@ -2288,7 +2288,7 @@ namespace XSDFrontend
         }
 
       private:
-        Traversal::NodeDispatcherBase& base_;
+        Traversal::NodeDispatcher& base_;
       } anonymous_base (resolver);
 
       ns_names >> resolver;
@@ -3523,7 +3523,6 @@ namespace XSDFrontend
   simple_content_restriction (XML::Element const& r)
   {
     String base (trim (r["base"]));
-    Type* base_type (0);
 
     if (trace_ && base)
       wcout << "restriction base: " << fq_name (r, base) << endl;
@@ -3543,7 +3542,7 @@ namespace XSDFrontend
         if (trace_)
           wcout << name << endl;
 
-        if (name == L"simpleType")  base_type = simple_type (e); else
+        if (name == L"simpleType") simple_type (e); else
         {
           wcerr << file () << ":" << e.line () << ":" << e.column () << ": "
                 << "error: expected 'simpleType' instead of "
@@ -4584,7 +4583,7 @@ namespace XSDFrontend
       // put it into the scope.
       //
       UnsignedLong count;
-      FrontendElements::Context& ctx (scope ().context ());
+      SemanticGraph::Context& ctx (scope ().context ());
 
       if (!ctx.count ("any-name-count"))
       {
@@ -4630,7 +4629,7 @@ namespace XSDFrontend
     //
 
     UnsignedLong count;
-    FrontendElements::Context& ctx (scope ().context ());
+    SemanticGraph::Context& ctx (scope ().context ());
 
     if (!ctx.count ("any-attribute-name-count"))
     {

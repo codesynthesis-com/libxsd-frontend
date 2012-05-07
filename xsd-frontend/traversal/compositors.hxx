@@ -62,7 +62,7 @@ namespace XSDFrontend
       contains (Type&);
 
       virtual Void
-      contains (Type&, EdgeDispatcherBase&);
+      contains (Type&, EdgeDispatcher&);
 
       virtual Void
       post (Type&);
@@ -83,7 +83,7 @@ namespace XSDFrontend
       contains (Type&);
 
       virtual Void
-      contains (Type&, EdgeDispatcherBase&);
+      contains (Type&, EdgeDispatcher&);
 
       virtual Void
       post (Type&);
@@ -104,7 +104,7 @@ namespace XSDFrontend
       contains (Type&);
 
       virtual Void
-      contains (Type&, EdgeDispatcherBase&);
+      contains (Type&, EdgeDispatcher&);
 
       virtual Void
       post (Type&);
@@ -125,7 +125,7 @@ namespace XSDFrontend
       contains (Type&);
 
       virtual Void
-      contains (Type&, EdgeDispatcherBase&);
+      contains (Type&, EdgeDispatcher&);
 
       virtual Void
       post (Type&);

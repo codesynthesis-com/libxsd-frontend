@@ -432,14 +432,14 @@ namespace XSDFrontend
     struct Anonymous : Traversal::Element,
                        Traversal::Attribute
     {
-      Anonymous (Traversal::NodeDispatcherBase& d1)
+      Anonymous (Traversal::NodeDispatcher& d1)
           : complex_ (&d1, 0)
       {
         *this >> belongs_ >> complex_;
       }
 
-      Anonymous (Traversal::NodeDispatcherBase& d1,
-                 Traversal::NodeDispatcherBase& d2)
+      Anonymous (Traversal::NodeDispatcher& d1,
+                 Traversal::NodeDispatcher& d2)
           : complex_ (&d1, &d2)
       {
         *this >> belongs_ >> complex_;
@@ -501,8 +501,8 @@ namespace XSDFrontend
     private:
       struct Complex : Traversal::Complex
       {
-        Complex (Traversal::NodeDispatcherBase* d1,
-                 Traversal::NodeDispatcherBase* d2)
+        Complex (Traversal::NodeDispatcher* d1,
+                 Traversal::NodeDispatcher* d2)
             : d1_ (d1), d2_ (d2)
         {
         }
@@ -518,8 +518,8 @@ namespace XSDFrontend
         }
 
       private:
-        Traversal::NodeDispatcherBase* d1_;
-        Traversal::NodeDispatcherBase* d2_;
+        Traversal::NodeDispatcher* d1_;
+        Traversal::NodeDispatcher* d2_;
 
       } complex_;
 

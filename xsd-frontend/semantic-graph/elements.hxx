@@ -14,8 +14,6 @@
 
 #include <cult/types.hxx>
 
-#include <cult/rtti/type-info.hxx>
-
 #include <cult/containers/set.hxx>
 #include <cult/containers/map.hxx>
 #include <cult/containers/list.hxx>
@@ -23,12 +21,14 @@
 #include <cult/containers/graph.hxx>
 #include <cult/containers/vector.hxx>
 
-#include <frontend-elements/context.hxx>
+#include <cutl/compiler/context.hxx>
 
 namespace XSDFrontend
 {
   namespace SemanticGraph
   {
+    using namespace cutl;
+
     using namespace Cult::Types;
 
     namespace Bits
@@ -164,7 +164,7 @@ namespace XSDFrontend
     Paths;
 
     typedef
-    FrontendElements::Context
+    compiler::context
     Context;
 
     //

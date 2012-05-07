@@ -30,7 +30,7 @@ namespace XSDFrontend
     }
 
     Void Union::
-    argumented (Type& u, EdgeDispatcherBase& d)
+    argumented (Type& u, EdgeDispatcher& d)
     {
       iterate_and_dispatch (u.argumented_begin (), u.argumented_end (), d);
     }

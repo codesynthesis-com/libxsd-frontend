@@ -24,7 +24,7 @@ namespace XSDFrontend
       pre (Type&);
 
       virtual Void
-      belongs (Type&, EdgeDispatcherBase&);
+      belongs (Type&, EdgeDispatcher&);
 
       virtual Void
       belongs (Type&);

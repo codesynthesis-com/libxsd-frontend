@@ -25,7 +25,7 @@ namespace XSDFrontend
     }
 
     Void Instance::
-    belongs (Type& a, EdgeDispatcherBase& d)
+    belongs (Type& a, EdgeDispatcher& d)
     {
       d.dispatch (a.belongs ());
     }
@@ -58,7 +58,7 @@ namespace XSDFrontend
     }
 
     Void Member::
-    belongs (Type& a, EdgeDispatcherBase& d)
+    belongs (Type& a, EdgeDispatcher& d)
     {
       d.dispatch (a.belongs ());
     }

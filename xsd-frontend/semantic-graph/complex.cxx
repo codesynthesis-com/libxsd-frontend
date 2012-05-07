@@ -3,32 +3,14 @@
 // copyright : Copyright (c) 2005-2011 Code Synthesis Tools CC
 // license   : GNU GPL v2 + exceptions; see accompanying LICENSE file
 
+#include <cutl/compiler/type-info.hxx>
+
 #include <xsd-frontend/semantic-graph/complex.hxx>
 
 namespace XSDFrontend
 {
   namespace SemanticGraph
   {
-    namespace RTTI = Cult::RTTI;
-
-    using RTTI::Access;
-    using RTTI::TypeInfo;
-
-    namespace
-    {
-      struct ComplexInit
-      {
-        ComplexInit ()
-        {
-          TypeInfo ti (typeid (Complex));
-          ti.add_base (Access::public_, true, typeid (Type));
-          ti.add_base (Access::public_, true, typeid (Scope));
-          RTTI::insert (ti);
-        }
-
-      } complex_init_;
-    }
-
     Complex::
     Complex ()
         : mixed_ (false), contains_compositor_ (0)
@@ -40,6 +22,22 @@ namespace XSDFrontend
         : Node (file, line, column),
           mixed_ (false), contains_compositor_ (0)
     {
+    }
+
+    namespace
+    {
+      using compiler::type_info;
+
+      struct ComplexInit
+      {
+        ComplexInit ()
+        {
+          type_info ti (typeid (Complex));
+          ti.add_base (typeid (Type));
+          ti.add_base (typeid (Scope));
+          insert (ti);
+        }
+      } complex_init_;
     }
   }
 }

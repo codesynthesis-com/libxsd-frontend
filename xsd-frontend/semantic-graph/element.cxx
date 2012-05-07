@@ -3,51 +3,16 @@
 // copyright : Copyright (c) 2005-2011 Code Synthesis Tools CC
 // license   : GNU GPL v2 + exceptions; see accompanying LICENSE file
 
+#include <cutl/compiler/type-info.hxx>
+
 #include <xsd-frontend/semantic-graph/element.hxx>
 
 namespace XSDFrontend
 {
   namespace SemanticGraph
   {
-    namespace RTTI = Cult::RTTI;
-
-    using RTTI::Access;
-    using RTTI::TypeInfo;
-
-
-    // Substitutes
-    //
-    namespace
-    {
-      struct SubstitutesInit
-      {
-        SubstitutesInit ()
-        {
-          TypeInfo ti (typeid (Substitutes));
-          ti.add_base (Access::public_, true, typeid (Edge));
-          RTTI::insert (ti);
-        }
-
-      } substitutes_init_;
-    }
-
     // Element
     //
-    namespace
-    {
-      struct ElementInit
-      {
-        ElementInit ()
-        {
-          TypeInfo ti (typeid (Element));
-          ti.add_base (Access::public_, true, typeid (Member));
-          ti.add_base (Access::public_, true, typeid (Particle));
-          RTTI::insert (ti);
-        }
-
-      } element_init_;
-    }
-
     Element::
     Element (Path const& file,
              UnsignedLong line,
@@ -58,6 +23,32 @@ namespace XSDFrontend
           Member (global, qualified),
           substitutes_ (0)
     {
+    }
+
+    namespace
+    {
+      using compiler::type_info;
+
+      struct SubstitutesInit
+      {
+        SubstitutesInit ()
+        {
+          type_info ti (typeid (Substitutes));
+          ti.add_base (typeid (Edge));
+          insert (ti);
+        }
+      } substitutes_init_;
+
+      struct ElementInit
+      {
+        ElementInit ()
+        {
+          type_info ti (typeid (Element));
+          ti.add_base (typeid (Member));
+          ti.add_base (typeid (Particle));
+          insert (ti);
+        }
+      } element_init_;
     }
   }
 }

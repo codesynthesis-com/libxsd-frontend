@@ -25,7 +25,7 @@ namespace XSDFrontend
       contains_compositor (Type&);
 
       virtual Void
-      contains_compositor (Type&, EdgeDispatcherBase&);
+      contains_compositor (Type&, EdgeDispatcher&);
 
       virtual Void
       post (Type&);

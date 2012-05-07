@@ -8,7 +8,7 @@
 
 #include <cult/types.hxx>
 
-#include <frontend-elements/traversal.hxx>
+#include <cutl/compiler/traversal.hxx>
 
 #include <xsd-frontend/semantic-graph/elements.hxx>
 
@@ -16,150 +16,85 @@ namespace XSDFrontend
 {
   namespace Traversal
   {
+    using namespace cutl;
     using namespace Cult::Types;
 
-    namespace Bits
-    {
-      using FrontendElements::Traversal::TraverserBase;
-      using FrontendElements::Traversal::Traverser;
-
-      using FrontendElements::Traversal::DispatcherBase;
-      using FrontendElements::Traversal::Dispatcher;
-
-    }
-
-    typedef Bits::DispatcherBase<SemanticGraph::Node> NodeDispatcherBase;
-    typedef Bits::DispatcherBase<SemanticGraph::Edge> EdgeDispatcherBase;
-
+    typedef compiler::dispatcher<SemanticGraph::Node> NodeDispatcher;
+    typedef compiler::dispatcher<SemanticGraph::Edge> EdgeDispatcher;
 
     //
     //
-    struct NodeBase : virtual Bits::Dispatcher<SemanticGraph::Node>,
-                      virtual Bits::Dispatcher<SemanticGraph::Edge>
+    struct NodeBase: NodeDispatcher, EdgeDispatcher
     {
       Void
-      edge_traverser (EdgeDispatcherBase& d)
+      edge_traverser (EdgeDispatcher& d)
       {
-        Bits::Dispatcher<SemanticGraph::Edge>::traverser (d);
+        EdgeDispatcher::traverser (d);
       }
 
-      EdgeDispatcherBase&
+      EdgeDispatcher&
       edge_traverser ()
       {
         return *this;
       }
 
-    public:
-      using Bits::Dispatcher<SemanticGraph::Node>::dispatch;
-      using Bits::Dispatcher<SemanticGraph::Edge>::dispatch;
+      using NodeDispatcher::dispatch;
+      using EdgeDispatcher::dispatch;
 
-      using Bits::Dispatcher<SemanticGraph::Node>::map;
-
-      using Bits::Dispatcher<SemanticGraph::Edge>::iterate_and_dispatch;
+      using EdgeDispatcher::iterate_and_dispatch;
     };
 
-
-    //
-    //
-    template <typename T>
-    struct Node : Bits::TraverserBase<SemanticGraph::Node>, virtual NodeBase
-    {
-      typedef
-      T
-      Type;
-
-      Node ()
-      {
-        map (typeid (Type), *this);
-      }
-
-      virtual Void
-      traverse (Type&) = 0;
-
-      virtual Void
-      trampoline (SemanticGraph::Node& i)
-      {
-        traverse (dynamic_cast<Type&> (i));
-      }
-
-      virtual Void
-      trampoline (SemanticGraph::Node const&)
-      {
-        abort ();
-      }
-    };
-
-
-    //
-    //
-    struct EdgeBase : virtual Bits::Dispatcher<SemanticGraph::Edge>,
-                      virtual Bits::Dispatcher<SemanticGraph::Node>
+    struct EdgeBase: EdgeDispatcher, NodeDispatcher
     {
       Void
-      node_traverser (NodeDispatcherBase& d)
+      node_traverser (NodeDispatcher& d)
       {
-        Bits::Dispatcher<SemanticGraph::Node>::traverser (d);
+        NodeDispatcher::traverser (d);
       }
 
-      NodeDispatcherBase&
+      NodeDispatcher&
       node_traverser ()
       {
         return *this;
       }
 
-    public:
-      using Bits::Dispatcher<SemanticGraph::Edge>::dispatch;
-      using Bits::Dispatcher<SemanticGraph::Node>::dispatch;
+      using EdgeDispatcher::dispatch;
+      using NodeDispatcher::dispatch;
 
-      using Bits::Dispatcher<SemanticGraph::Edge>::map;
-
-      using Bits::Dispatcher<SemanticGraph::Node>::iterate_and_dispatch;
+      using NodeDispatcher::iterate_and_dispatch;
     };
 
-    template <typename T>
-    struct Edge : Bits::TraverserBase<SemanticGraph::Edge>, virtual EdgeBase
-    {
-      typedef
-      T
-      Type;
-
-      Edge ()
-      {
-        map (typeid (Type), *this);
-      }
-
-      virtual Void
-      traverse (Type&) = 0;
-
-      virtual Void
-      trampoline (SemanticGraph::Edge& i)
-      {
-        traverse (dynamic_cast<Type&> (i));
-      }
-
-      virtual Void
-      trampoline (SemanticGraph::Edge const&)
-      {
-        abort ();
-      }
-    };
-
-    inline
-    EdgeBase&
+    inline EdgeBase&
     operator>> (NodeBase& n, EdgeBase& e)
     {
       n.edge_traverser (e);
       return e;
     }
 
-    inline
-    NodeBase&
+    inline NodeBase&
     operator>> (EdgeBase& e, NodeBase& n)
     {
       e.node_traverser (n);
       return n;
     }
 
+    //
+    //
+    template <typename T>
+    struct Node: compiler::traverser_impl<T, SemanticGraph::Node>,
+                 virtual NodeBase
+    {
+      typedef T Type;
+    };
+
+    template <typename T>
+    struct Edge: compiler::traverser_impl<T, SemanticGraph::Edge>,
+                 virtual EdgeBase
+    {
+      typedef T Type;
+    };
+
+    //
     // Edges
     //
 
@@ -204,10 +139,9 @@ namespace XSDFrontend
       }
     };
 
-
+    //
     // Nodes
     //
-
 
     //
     //
@@ -231,7 +165,7 @@ namespace XSDFrontend
       template<typename X>
       Void
       names (T& s,
-             EdgeDispatcherBase& d,
+             EdgeDispatcher& d,
              Void (X::*pre_) (T&) = (Void (ScopeTemplate<T>::*)(T&)) (0),
              Void (X::*post_) (T&) = (Void (ScopeTemplate<T>::*)(T&)) (0),
              Void (X::*none_) (T&) = (Void (ScopeTemplate<T>::*)(T&)) (0),
@@ -267,7 +201,7 @@ namespace XSDFrontend
       }
 
       virtual Void
-      names (T& s, EdgeDispatcherBase& d)
+      names (T& s, EdgeDispatcher& d)
       {
         names<ScopeTemplate<T> > (s, d);
       }
@@ -332,7 +266,7 @@ namespace XSDFrontend
       pre (Type&);
 
       virtual Void
-      belongs (Type&, EdgeDispatcherBase&);
+      belongs (Type&, EdgeDispatcher&);
 
       virtual Void
       belongs (Type&);
@@ -353,7 +287,7 @@ namespace XSDFrontend
       pre (Type&);
 
       virtual Void
-      belongs (Type&, EdgeDispatcherBase&);
+      belongs (Type&, EdgeDispatcher&);
 
       virtual Void
       belongs (Type&);

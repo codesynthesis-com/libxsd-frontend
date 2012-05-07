@@ -30,7 +30,7 @@ namespace XSDFrontend
     }
 
     Void List::
-    argumented (Type& l, EdgeDispatcherBase& d)
+    argumented (Type& l, EdgeDispatcher& d)
     {
       d.dispatch (l.argumented ());
     }

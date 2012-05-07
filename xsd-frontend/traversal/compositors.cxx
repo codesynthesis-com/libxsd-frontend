@@ -50,7 +50,7 @@ namespace XSDFrontend
     }
 
     Void Compositor::
-    contains (Type& c, EdgeDispatcherBase& d)
+    contains (Type& c, EdgeDispatcher& d)
     {
       iterate_and_dispatch (c.contains_begin (), c.contains_end (), d);
     }
@@ -84,7 +84,7 @@ namespace XSDFrontend
     }
 
     Void All::
-    contains (Type& c, EdgeDispatcherBase& d)
+    contains (Type& c, EdgeDispatcher& d)
     {
       iterate_and_dispatch (c.contains_begin (), c.contains_end (), d);
     }
@@ -118,7 +118,7 @@ namespace XSDFrontend
     }
 
     Void Choice::
-    contains (Type& c, EdgeDispatcherBase& d)
+    contains (Type& c, EdgeDispatcher& d)
     {
       iterate_and_dispatch (c.contains_begin (), c.contains_end (), d);
     }
@@ -152,7 +152,7 @@ namespace XSDFrontend
     }
 
     Void Sequence::
-    contains (Type& c, EdgeDispatcherBase& d)
+    contains (Type& c, EdgeDispatcher& d)
     {
       iterate_and_dispatch (c.contains_begin (), c.contains_end (), d);
     }

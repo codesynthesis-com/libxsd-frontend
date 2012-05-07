@@ -24,7 +24,7 @@ namespace XSDFrontend
     }
 
     Void Element::
-    belongs (Type& m, EdgeDispatcherBase& d)
+    belongs (Type& m, EdgeDispatcher& d)
     {
       d.dispatch (m.belongs ());
     }

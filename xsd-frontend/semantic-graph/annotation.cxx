@@ -3,17 +3,15 @@
 // copyright : Copyright (c) 2006-2011 Code Synthesis Tools CC
 // license   : GNU GPL v2 + exceptions; see accompanying LICENSE file
 
+#include <cutl/compiler/type-info.hxx>
+
 #include <xsd-frontend/semantic-graph/annotation.hxx>
 
 namespace XSDFrontend
 {
   namespace SemanticGraph
   {
-    namespace RTTI = Cult::RTTI;
-
-    using RTTI::Access;
-    using RTTI::TypeInfo;
-
+    using compiler::type_info;
 
     // Annotates
     //
@@ -23,11 +21,10 @@ namespace XSDFrontend
       {
         AnnotatesInit ()
         {
-          TypeInfo ti (typeid (Annotates));
-          ti.add_base (Access::public_, true, typeid (Edge));
-          RTTI::insert (ti);
+          type_info ti (typeid (Annotates));
+          ti.add_base (typeid (Edge));
+          insert (ti);
         }
-
       } annotates_init_;
     }
 
@@ -39,11 +36,10 @@ namespace XSDFrontend
       {
         AnnotationInit ()
         {
-          TypeInfo ti (typeid (Annotation));
-          ti.add_base (Access::public_, true, typeid (Node));
-          RTTI::insert (ti);
+          type_info ti (typeid (Annotation));
+          ti.add_base (typeid (Node));
+          insert (ti);
         }
-
       } annotation_init_;
     }
   }

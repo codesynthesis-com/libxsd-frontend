@@ -3,31 +3,14 @@
 // copyright : Copyright (c) 2005-2011 Code Synthesis Tools CC
 // license   : GNU GPL v2 + exceptions; see accompanying LICENSE file
 
+#include <cutl/compiler/type-info.hxx>
+
 #include <xsd-frontend/semantic-graph/attribute.hxx>
 
 namespace XSDFrontend
 {
   namespace SemanticGraph
   {
-    namespace RTTI = Cult::RTTI;
-
-    using RTTI::Access;
-    using RTTI::TypeInfo;
-
-    namespace
-    {
-      struct AttributeInit
-      {
-        AttributeInit ()
-        {
-          TypeInfo ti (typeid (Attribute));
-          ti.add_base (Access::public_, true, typeid (Member));
-          RTTI::insert (ti);
-        }
-
-      } attribute_init_;
-    }
-
     Attribute::
     Attribute (Path const& file,
                UnsignedLong line,
@@ -39,6 +22,21 @@ namespace XSDFrontend
           Member (global, qualified),
           optional_ (optional)
     {
+    }
+
+    namespace
+    {
+      using compiler::type_info;
+
+      struct AttributeInit
+      {
+        AttributeInit ()
+        {
+          type_info ti (typeid (Attribute));
+          ti.add_base (typeid (Member));
+          insert (ti);
+        }
+      } attribute_init_;
     }
   }
 }

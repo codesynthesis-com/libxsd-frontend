@@ -38,7 +38,7 @@ namespace XSDFrontend
     }
 
     Void Enumeration::
-    inherits (Type& e, EdgeDispatcherBase& d)
+    inherits (Type& e, EdgeDispatcher& d)
     {
       if (e.inherits_p ())
         d.dispatch (e.inherits ());
@@ -67,7 +67,7 @@ namespace XSDFrontend
     }
 
     Void Enumerator::
-    belongs (Type& e, EdgeDispatcherBase& d)
+    belongs (Type& e, EdgeDispatcher& d)
     {
       d.dispatch (e.belongs ());
     }

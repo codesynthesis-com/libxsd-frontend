@@ -24,7 +24,7 @@ namespace XSDFrontend
     }
 
     Void ElementGroup::
-    contains_compositor (Type& g, EdgeDispatcherBase& d)
+    contains_compositor (Type& g, EdgeDispatcher& d)
     {
       d.dispatch (g.contains_compositor ());
     }

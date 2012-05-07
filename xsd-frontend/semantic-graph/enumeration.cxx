@@ -3,30 +3,44 @@
 // copyright : Copyright (c) 2005-2011 Code Synthesis Tools CC
 // license   : GNU GPL v2 + exceptions; see accompanying LICENSE file
 
+#include <cutl/compiler/type-info.hxx>
+
 #include <xsd-frontend/semantic-graph/enumeration.hxx>
 
 namespace XSDFrontend
 {
   namespace SemanticGraph
   {
-    namespace RTTI = Cult::RTTI;
+    // Enumeration
+    //
+    Enumeration::
+    Enumeration (Path const& file, UnsignedLong line, UnsignedLong column)
+        : Node (file, line, column)
+    {
+    }
 
-    using RTTI::Access;
-    using RTTI::TypeInfo;
+    // Enumerator
+    //
+    Enumerator::
+    Enumerator (Path const& file, UnsignedLong line, UnsignedLong column)
+        : Node (file, line, column)
+    {
+    }
 
     namespace
     {
+      using compiler::type_info;
+
       // Enumeration
       //
       struct EnumerationInit
       {
         EnumerationInit ()
         {
-          TypeInfo ti (typeid (Enumeration));
-          ti.add_base (Access::public_, true, typeid (Complex));
-          RTTI::insert (ti);
+          type_info ti (typeid (Enumeration));
+          ti.add_base (typeid (Complex));
+          insert (ti);
         }
-
       } enumeration_init_;
 
 
@@ -36,32 +50,11 @@ namespace XSDFrontend
       {
         EnumeratorInit ()
         {
-          TypeInfo ti (typeid (Enumerator));
-          ti.add_base (Access::public_, true, typeid (Instance));
-          RTTI::insert (ti);
+          type_info ti (typeid (Enumerator));
+          ti.add_base (typeid (Instance));
+          insert (ti);
         }
-
       } enumerator_init_;
-    }
-
-
-    // Enumeration
-    //
-
-    Enumeration::
-    Enumeration (Path const& file, UnsignedLong line, UnsignedLong column)
-        : Node (file, line, column)
-    {
-    }
-
-
-    // Enumerator
-    //
-
-    Enumerator::
-    Enumerator (Path const& file, UnsignedLong line, UnsignedLong column)
-        : Node (file, line, column)
-    {
     }
   }
 }

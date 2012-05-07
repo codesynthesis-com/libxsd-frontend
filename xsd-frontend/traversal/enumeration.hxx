@@ -28,7 +28,7 @@ namespace XSDFrontend
       inherits (Type&);
 
       Void
-      inherits (Type&, EdgeDispatcherBase&);
+      inherits (Type&, EdgeDispatcher&);
 
       virtual Void
       post (Type&);
@@ -43,7 +43,7 @@ namespace XSDFrontend
       pre (Type&);
 
       virtual Void
-      belongs (Type&, EdgeDispatcherBase&);
+      belongs (Type&, EdgeDispatcher&);
 
       virtual Void
       belongs (Type&);

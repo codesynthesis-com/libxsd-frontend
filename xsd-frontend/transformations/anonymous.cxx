@@ -139,7 +139,7 @@ namespace XSDFrontend
 
 
       virtual Void
-      traverse (SemanticGraph::List& x)
+      traverse (SemanticGraph::List&)
       {
         using SemanticGraph::List;
 

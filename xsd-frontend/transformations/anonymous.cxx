@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <typeinfo>
 
 using std::wcerr;
 using std::endl;
@@ -24,6 +25,263 @@ namespace XSDFrontend
   {
     using Transformations::AnonymousNameTranslator;
 
+    //
+    //
+    struct CompareMembers: Traversal::Element,
+                           Traversal::Attribute,
+                           Traversal::Any,
+                           Traversal::AnyAttribute
+    {
+      CompareMembers (SemanticGraph::Nameable& m, Boolean& r)
+          : member_ (m), result_ (r)
+      {
+      }
+
+      virtual Void
+      traverse (SemanticGraph::Element& x)
+      {
+        using SemanticGraph::Element;
+
+        Element& y (dynamic_cast<Element&> (member_));
+
+        // Check cardinalities.
+        //
+        if (x.min () != y.min () || x.max () != y.max ())
+          return;
+
+        traverse_member (x);
+      }
+
+      virtual Void
+      traverse (SemanticGraph::Attribute& x)
+      {
+        using SemanticGraph::Attribute;
+
+        Attribute& y (dynamic_cast<Attribute&> (member_));
+
+        // Check cardinalities.
+        //
+        if (x.optional_p () != y.optional_p ())
+          return;
+
+        traverse_member (x);
+      }
+
+      virtual Void
+      traverse_member (SemanticGraph::Member& x)
+      {
+        using SemanticGraph::Member;
+
+        Member& y (dynamic_cast<Member&> (member_));
+
+        // Check name.
+        //
+        if (x.name () != y.name ())
+          return;
+
+        // Check namespace.
+        //
+        if (x.qualified_p () || y.qualified_p ())
+        {
+          if (!x.qualified_p () || !y.qualified_p ())
+            return;
+
+          if (x.namespace_ ().name () != y.namespace_ ().name ())
+            return;
+        }
+
+        // Check type.
+        //
+        // @@ What if types are anonymous and structurally equal?
+        //
+        if (&x.type () != &y.type ())
+          return;
+
+        // Check default/fixed values.
+        //
+        if (x.default_p () != y.default_p () || x.fixed_p () != y.fixed_p ())
+          return;
+
+        if (x.default_p () && x.value () != y.value ())
+          return;
+
+        result_ = true;
+      }
+
+      virtual Void
+      traverse (SemanticGraph::Any&)
+      {
+        //@@ TODO
+      }
+
+      virtual Void
+      traverse (SemanticGraph::AnyAttribute&)
+      {
+        //@@ TODO
+      }
+
+    private:
+      SemanticGraph::Nameable& member_;
+      Boolean& result_;
+    };
+
+    // Compare two types for structural equality.
+    //
+    struct CompareTypes: Traversal::List,
+                         Traversal::Union,
+                         Traversal::Enumeration,
+                         Traversal::Complex
+    {
+      CompareTypes (SemanticGraph::Type& t, Boolean& r)
+          : type_ (t), result_ (r)
+      {
+      }
+
+
+      virtual Void
+      traverse (SemanticGraph::List& x)
+      {
+        using SemanticGraph::List;
+
+        //List& y (dynamic_cast<List&> (type_));
+      }
+
+      virtual Void
+      traverse (SemanticGraph::Union& x)
+      {
+        using SemanticGraph::Union;
+
+        Union& y (dynamic_cast<Union&> (type_));
+
+        Union::ArgumentedIterator ix (x.argumented_begin ()),
+          iy (y.argumented_begin ());
+
+        for (; ix != x.argumented_end () && iy != y.argumented_end ();
+             ++ix, ++iy)
+        {
+          // @@ Anon structurally equivalent.
+          //
+          if (&iy->type () != &ix->type ())
+            return;
+        }
+
+        result_ = true;
+      }
+
+      virtual Void
+      traverse (SemanticGraph::Enumeration& x)
+      {
+        using SemanticGraph::Enumeration;
+
+        Enumeration& y (dynamic_cast<Enumeration&> (type_));
+
+        // Bases should be the same.
+        //
+        if (&x.inherits ().base () != &y.inherits ().base ())
+          return;
+
+        // Make sure facets match.
+        //
+        using SemanticGraph::Restricts;
+
+        Restricts& rx (dynamic_cast<Restricts&> (x.inherits ()));
+        Restricts& ry (dynamic_cast<Restricts&> (y.inherits ()));
+
+        if (rx.facets () != ry.facets ())
+          return;
+
+        // Compare enumerators.
+        //
+        using SemanticGraph::Scope;
+
+        Scope::NamesIterator ix (x.names_begin ()), iy (y.names_begin ());
+        for (; ix != x.names_end () && iy != y.names_end (); ++ix, ++iy)
+        {
+          if (ix->name () != iy->name ())
+            return;
+        }
+
+        if (ix != x.names_end () || iy != y.names_end ())
+          return;
+
+        result_ = true;
+      }
+
+      virtual Void
+      traverse (SemanticGraph::Complex& x)
+      {
+        using SemanticGraph::Complex;
+
+        Complex& y (dynamic_cast<Complex&> (type_));
+
+        // Check inheritance.
+        //
+        if (x.inherits_p () || y.inherits_p ())
+        {
+          // They both must inherits.
+          //
+          if (!x.inherits_p () || !y.inherits_p ())
+            return;
+
+          // With the same kind of inheritance (restriction or extension).
+          //
+          if (typeid (x.inherits ()) != typeid (y.inherits ()))
+            return;
+
+          // Bases should be the same.
+          //
+          // @@ What if bases are anonymous?
+          //
+          if (&x.inherits ().base () != &y.inherits ().base ())
+            return;
+
+          // If it is a restriction, make sure facets match.
+          //
+          using SemanticGraph::Restricts;
+
+          if (x.inherits ().is_a<Restricts> ())
+          {
+            Restricts& rx (dynamic_cast<Restricts&> (x.inherits ()));
+            Restricts& ry (dynamic_cast<Restricts&> (y.inherits ()));
+
+            if (rx.facets () != ry.facets ())
+              return;
+          }
+        }
+
+        // Check the member list.
+        //
+        // @@ Ignoring compositors at the moment.
+        //
+        using SemanticGraph::Scope;
+
+        Scope::NamesIterator ix (x.names_begin ()), iy (y.names_begin ());
+        for (; ix != x.names_end () && iy != y.names_end (); ++ix, ++iy)
+        {
+          if (typeid (ix->named ()) != typeid (iy->named ()))
+            return;
+
+          Boolean equal (false);
+          CompareMembers t (iy->named (), equal);
+          t.dispatch (ix->named ());
+
+          if (!equal)
+            return;
+        }
+
+        if (ix != x.names_end () || iy != y.names_end ())
+          return;
+
+        result_ = true;
+      }
+
+    private:
+      SemanticGraph::Type& type_;
+      Boolean& result_;
+    };
+
+    //
+    //
     class Context
     {
     public:
@@ -56,6 +314,19 @@ namespace XSDFrontend
       }
 
     public:
+
+      bool
+      structurally_equal (SemanticGraph::Type& x, SemanticGraph::Type& y)
+      {
+        if (typeid (x) != typeid (y))
+           return false;
+
+        Boolean r (false);
+        CompareTypes t (y, r);
+        t.dispatch (x);
+        return r;
+      }
+
       struct UnstableConflict
       {
         UnstableConflict (SemanticGraph::Type& type)
@@ -73,7 +344,7 @@ namespace XSDFrontend
         SemanticGraph::Type& type_;
       };
 
-      Boolean
+      SemanticGraph::Type*
       conflict (String const& name)
       {
         using SemanticGraph::Type;
@@ -96,10 +367,10 @@ namespace XSDFrontend
               throw UnstableConflict (*t1);
           }
 
-          return true;
+          return t1;
         }
 
-        return false;
+        return 0;
       }
 
       SemanticGraph::Type*
@@ -645,13 +916,36 @@ namespace XSDFrontend
         String name (
           trans.translate (file_str, ns->name (), m.name (), xpath (m)));
 
-        // Make sure the name is unique.
+        // Check if this name conflicts.
         //
         UnsignedLong n (1);
         String escaped (name);
 
-        while (conflict (escaped))
+        while (SemanticGraph::Type* other = conflict (escaped))
         {
+          // First see if we should just use the other type. It should
+          // also have been anonymous and structurally equal to our type.
+          //
+          if (other->context ().count ("anonymous"))
+          {
+            if (structurally_equal (t, *other))
+            {
+              // Reset the elements that are classified by this type to point
+              // to the other type.
+              //
+              for (Type::ClassifiesIterator i (t.classifies_begin ());
+                   i != t.classifies_end (); ++i)
+              {
+                schema.reset_right_node (*i, *other);
+              }
+
+              //wcerr << "equal " << name << endl;
+              return;
+            }
+            //else
+              //wcerr << "unequal " << name << endl;
+          }
+
           std::wostringstream os;
           os << n++;
           escaped = name + os.str ();

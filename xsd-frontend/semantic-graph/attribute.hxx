@@ -15,7 +15,7 @@ namespace XSDFrontend
     class Attribute: public virtual Member
     {
     public:
-      Boolean
+      bool
       optional_p () const
       {
         return optional_;
@@ -23,13 +23,13 @@ namespace XSDFrontend
 
     public:
       Attribute (Path const& file,
-                 UnsignedLong line,
-                 UnsignedLong column,
-                 Boolean optional,
-                 Boolean global,
-                 Boolean qualified);
+                 unsigned long line,
+                 unsigned long column,
+                 bool optional,
+                 bool global,
+                 bool qualified);
     private:
-      Boolean optional_;
+      bool optional_;
     };
   }
 }

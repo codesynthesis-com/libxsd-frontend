@@ -27,7 +27,7 @@ namespace XSDFrontend
                                 NamesConstIterator (names_.end ()));
     }
 
-    Void Schema::
+    void Schema::
     find_ (Name const& name, NamesList& names, SchemaSet& set) const
     {
       set.insert (this);

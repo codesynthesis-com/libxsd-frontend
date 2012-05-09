@@ -15,19 +15,19 @@ namespace XSDFrontend
   {
     struct ElementGroup: ScopeTemplate<SemanticGraph::ElementGroup>
     {
-      virtual Void
+      virtual void
       traverse (Type&);
 
-      virtual Void
+      virtual void
       pre (Type&);
 
-      virtual Void
+      virtual void
       contains_compositor (Type&);
 
-      virtual Void
+      virtual void
       contains_compositor (Type&, EdgeDispatcher&);
 
-      virtual Void
+      virtual void
       post (Type&);
     };
   }

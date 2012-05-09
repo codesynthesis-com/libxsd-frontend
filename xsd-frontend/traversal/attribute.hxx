@@ -17,22 +17,22 @@ namespace XSDFrontend
   {
     struct Attribute : Node<SemanticGraph::Attribute>
     {
-      virtual Void
+      virtual void
       traverse (Type&);
 
-      virtual Void
+      virtual void
       pre (Type&);
 
-      virtual Void
+      virtual void
       belongs (Type&, EdgeDispatcher&);
 
-      virtual Void
+      virtual void
       belongs (Type&);
 
-      virtual Void
+      virtual void
       name (Type&);
 
-      virtual Void
+      virtual void
       post (Type&);
     };
   }

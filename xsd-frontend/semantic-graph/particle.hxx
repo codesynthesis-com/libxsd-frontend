@@ -36,41 +36,41 @@ namespace XSDFrontend
       }
 
     public:
-      UnsignedLong
+      unsigned long
       min () const
       {
         return min_;
       }
 
-      UnsignedLong
+      unsigned long
       max () const
       {
         return max_;
       }
 
     public:
-      ContainsParticle (UnsignedLong min, UnsignedLong max);
+      ContainsParticle (unsigned long min, unsigned long max);
 
-      Void
+      void
       set_left_node (Compositor& n)
       {
         compositor_ = &n;
       }
 
-      Void
+      void
       set_right_node (Particle& n)
       {
         particle_ = &n;
       }
 
-      Void
+      void
       clear_left_node (Compositor& n)
       {
         assert (compositor_ == &n);
         compositor_ = 0;
       }
 
-      Void
+      void
       clear_right_node (Particle& n)
       {
         assert (particle_ == &n);
@@ -80,7 +80,7 @@ namespace XSDFrontend
     private:
       Particle* particle_;
       Compositor* compositor_;
-      UnsignedLong min_, max_;
+      unsigned long min_, max_;
     };
 
     //
@@ -88,7 +88,7 @@ namespace XSDFrontend
     class Particle: public virtual Node
     {
     public:
-      Boolean
+      bool
       contained_particle_p ()
       {
         return contained_particle_ != 0;
@@ -102,14 +102,14 @@ namespace XSDFrontend
       }
 
     public:
-      UnsignedLong
+      unsigned long
       min () const
       {
         assert (contained_particle_ != 0);
         return contained_particle_->min ();
       }
 
-      UnsignedLong
+      unsigned long
       max () const
       {
         assert (contained_particle_ != 0);
@@ -119,13 +119,13 @@ namespace XSDFrontend
     public:
       Particle ();
 
-      Void
+      void
       add_edge_right (ContainsParticle& e)
       {
         contained_particle_ = &e;
       }
 
-      Void
+      void
       remove_edge_right (ContainsParticle& e)
       {
         assert (contained_particle_ == &e);

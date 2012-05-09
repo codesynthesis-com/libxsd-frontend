@@ -11,7 +11,7 @@ namespace XSDFrontend
   {
     // Instance
     //
-    Void Instance::
+    void Instance::
     traverse (Type& a)
     {
       pre (a);
@@ -19,24 +19,24 @@ namespace XSDFrontend
       post (a);
     }
 
-    Void Instance::
+    void Instance::
     pre (Type&)
     {
     }
 
-    Void Instance::
+    void Instance::
     belongs (Type& a, EdgeDispatcher& d)
     {
       d.dispatch (a.belongs ());
     }
 
-    Void Instance::
+    void Instance::
     belongs (Type& a)
     {
       belongs (a, edge_traverser ());
     }
 
-    Void Instance::
+    void Instance::
     post (Type&)
     {
     }
@@ -44,7 +44,7 @@ namespace XSDFrontend
 
     // Member
     //
-    Void Member::
+    void Member::
     traverse (Type& a)
     {
       pre (a);
@@ -52,24 +52,24 @@ namespace XSDFrontend
       post (a);
     }
 
-    Void Member::
+    void Member::
     pre (Type&)
     {
     }
 
-    Void Member::
+    void Member::
     belongs (Type& a, EdgeDispatcher& d)
     {
       d.dispatch (a.belongs ());
     }
 
-    Void Member::
+    void Member::
     belongs (Type& a)
     {
       belongs (a, edge_traverser ());
     }
 
-    Void Member::
+    void Member::
     post (Type&)
     {
     }

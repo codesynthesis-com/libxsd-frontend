@@ -15,7 +15,7 @@ namespace XSDFrontend
     class List: public virtual Specialization
     {
     public:
-      List (Path const& file, UnsignedLong line, UnsignedLong column);
+      List (Path const& file, unsigned long line, unsigned long column);
     };
   }
 }

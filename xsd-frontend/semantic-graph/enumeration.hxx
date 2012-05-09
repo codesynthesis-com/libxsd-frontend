@@ -16,14 +16,14 @@ namespace XSDFrontend
     class Enumeration: public virtual Complex
     {
     public:
-      Enumeration (Path const& file, UnsignedLong line, UnsignedLong column);
+      Enumeration (Path const& file, unsigned long line, unsigned long column);
     };
 
 
     class Enumerator: public virtual Instance
     {
     public:
-      Enumerator (Path const& file, UnsignedLong line, UnsignedLong column);
+      Enumerator (Path const& file, unsigned long line, unsigned long column);
     };
   }
 }

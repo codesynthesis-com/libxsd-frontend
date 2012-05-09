@@ -26,7 +26,7 @@ namespace XSDFrontend
         node_traverser (n);
       }
 
-      virtual Void
+      virtual void
       traverse (Type& e)
       {
         dispatch (e.schema ());
@@ -46,7 +46,7 @@ namespace XSDFrontend
         node_traverser (n);
       }
 
-      virtual Void
+      virtual void
       traverse (Type& e)
       {
         dispatch (e.schema ());
@@ -67,7 +67,7 @@ namespace XSDFrontend
         node_traverser (n);
       }
 
-      virtual Void
+      virtual void
       traverse (Type& e)
       {
         dispatch (e.schema ());
@@ -88,7 +88,7 @@ namespace XSDFrontend
         node_traverser (n);
       }
 
-      virtual Void
+      virtual void
       traverse (Type& e)
       {
         dispatch (e.schema ());
@@ -109,7 +109,7 @@ namespace XSDFrontend
         node_traverser (n);
       }
 
-      virtual Void
+      virtual void
       traverse (Type& e)
       {
         dispatch (e.schema ());
@@ -121,7 +121,7 @@ namespace XSDFrontend
     //
     struct Schema: ScopeTemplate<SemanticGraph::Schema>
     {
-      virtual Void
+      virtual void
       traverse (Type& s)
       {
         pre (s);
@@ -134,12 +134,12 @@ namespace XSDFrontend
         post (s);
       }
 
-      virtual Void
+      virtual void
       pre (Type&)
       {
       }
 
-      virtual Void
+      virtual void
       post (Type&)
       {
       }

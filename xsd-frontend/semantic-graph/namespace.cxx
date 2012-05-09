@@ -12,7 +12,7 @@ namespace XSDFrontend
   namespace SemanticGraph
   {
     Namespace::
-    Namespace (Path const& file, UnsignedLong line, UnsignedLong column)
+    Namespace (Path const& file, unsigned long line, unsigned long column)
         : Node (file, line, column)
     {
     }

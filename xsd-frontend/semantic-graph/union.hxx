@@ -15,7 +15,7 @@ namespace XSDFrontend
     class Union: public virtual Specialization
     {
     public:
-      Union (Path const& file, UnsignedLong line, UnsignedLong column);
+      Union (Path const& file, unsigned long line, unsigned long column);
     };
   }
 }

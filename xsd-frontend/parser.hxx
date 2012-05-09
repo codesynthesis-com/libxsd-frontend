@@ -7,6 +7,7 @@
 #define XSD_FRONTEND_PARSER_HXX
 
 #include <set>
+#include <memory> // std::auto_ptr
 
 #include <cult/types.hxx>
 
@@ -38,39 +39,39 @@ namespace XSDFrontend
   public:
     ~Parser ();
 
-    Parser (Boolean proper_restriction,
-            Boolean multiple_imports,
-            Boolean full_schema_check);
+    Parser (bool proper_restriction,
+            bool multiple_imports,
+            bool full_schema_check);
 
-    Parser (Boolean proper_restriction,
-            Boolean multiple_imports,
-            Boolean full_schema_check,
+    Parser (bool proper_restriction,
+            bool multiple_imports,
+            bool full_schema_check,
             LocationTranslator&,
             const WarningSet& disabled);
 
   public:
     // Parse a schema file. Throws InvalidSchema in case of a failure.
     //
-    Evptr<SemanticGraph::Schema>
+    std::auto_ptr<SemanticGraph::Schema>
     parse (SemanticGraph::Path const&);
 
     // Parse a number of schema files all into one semantic graph.
     // Each schema file is imported from an unnamed root translation
     // unit. Throws InvalidSchema in case of a failure.
     //
-    Evptr<SemanticGraph::Schema>
+    std::auto_ptr<SemanticGraph::Schema>
     parse (SemanticGraph::Paths const&);
 
     // Returns a schema graph that corresponds to the XML Schema
     // namespace with built-in type definitions. The path is fake
     // and is only used as a lable.
     //
-    Evptr<SemanticGraph::Schema>
+    std::auto_ptr<SemanticGraph::Schema>
     xml_schema (SemanticGraph::Path const&);
 
   private:
     class Impl;
-    Evptr<Impl> impl_;
+    std::auto_ptr<Impl> impl_;
   };
 }
 

@@ -9,7 +9,7 @@ namespace XSDFrontend
 {
   namespace Traversal
   {
-    Void Union::
+    void Union::
     traverse (Type& u)
     {
       pre (u);
@@ -18,29 +18,29 @@ namespace XSDFrontend
       post (u);
     }
 
-    Void Union::
+    void Union::
     pre (Type&)
     {
     }
 
-    Void Union::
+    void Union::
     argumented (Type& u)
     {
       argumented (u, *this);
     }
 
-    Void Union::
+    void Union::
     argumented (Type& u, EdgeDispatcher& d)
     {
       iterate_and_dispatch (u.argumented_begin (), u.argumented_end (), d);
     }
 
-    Void Union::
+    void Union::
     name (Type&)
     {
     }
 
-    Void Union::
+    void Union::
     post (Type&)
     {
     }

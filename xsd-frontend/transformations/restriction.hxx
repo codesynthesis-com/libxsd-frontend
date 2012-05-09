@@ -30,7 +30,7 @@ namespace XSDFrontend
     public:
       struct Failed {};
 
-      Void
+      void
       transform (SemanticGraph::Schema&, SemanticGraph::Path const&);
     };
   }

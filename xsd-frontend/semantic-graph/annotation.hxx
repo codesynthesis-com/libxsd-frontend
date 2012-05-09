@@ -28,16 +28,16 @@ namespace XSDFrontend
     public:
       Annotates (): annotation_ (0) {}
 
-      Void
+      void
       set_left_node (Annotation& a)
       {
         annotation_ = &a;
       }
 
-      Void
+      void
       set_right_node (Node&) {}
 
-      Void
+      void
       set_right_node (Edge&) {}
 
     private:
@@ -57,14 +57,14 @@ namespace XSDFrontend
 
     public:
       Annotation (Path const& file,
-                  UnsignedLong line,
-                  UnsignedLong column,
+                  unsigned long line,
+                  unsigned long column,
                   WideString const& documentation)
           : Node (file, line, column), documentation_ (documentation)
       {
       }
 
-      Void
+      void
       add_edge_left (Annotates&) {}
 
     private:

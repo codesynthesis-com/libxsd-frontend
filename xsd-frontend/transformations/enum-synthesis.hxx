@@ -24,7 +24,7 @@ namespace XSDFrontend
     class EnumSynthesis
     {
     public:
-      Void
+      void
       transform (SemanticGraph::Schema&, SemanticGraph::Path const&);
     };
   }

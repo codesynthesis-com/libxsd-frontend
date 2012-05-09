@@ -14,7 +14,7 @@ namespace XSDFrontend
     // ContainsParticle
     //
     ContainsParticle::
-    ContainsParticle (UnsignedLong min, UnsignedLong max)
+    ContainsParticle (unsigned long min, unsigned long max)
         : particle_ (0), compositor_ (0), min_ (min), max_ (max)
     {
     }

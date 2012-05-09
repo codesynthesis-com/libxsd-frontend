@@ -26,7 +26,7 @@ namespace XSDFrontend
         node_traverser (n);
       }
 
-      virtual Void
+      virtual void
       traverse (Type&);
     };
 
@@ -44,7 +44,7 @@ namespace XSDFrontend
         node_traverser (n);
       }
 
-      virtual Void
+      virtual void
       traverse (Type&);
     };
 
@@ -52,19 +52,19 @@ namespace XSDFrontend
     //
     struct Compositor : Node<SemanticGraph::Compositor>
     {
-      virtual Void
+      virtual void
       traverse (Type&);
 
-      virtual Void
+      virtual void
       pre (Type&);
 
-      virtual Void
+      virtual void
       contains (Type&);
 
-      virtual Void
+      virtual void
       contains (Type&, EdgeDispatcher&);
 
-      virtual Void
+      virtual void
       post (Type&);
     };
 
@@ -73,19 +73,19 @@ namespace XSDFrontend
     //
     struct All : Node<SemanticGraph::All>
     {
-      virtual Void
+      virtual void
       traverse (Type&);
 
-      virtual Void
+      virtual void
       pre (Type&);
 
-      virtual Void
+      virtual void
       contains (Type&);
 
-      virtual Void
+      virtual void
       contains (Type&, EdgeDispatcher&);
 
-      virtual Void
+      virtual void
       post (Type&);
     };
 
@@ -94,19 +94,19 @@ namespace XSDFrontend
     //
     struct Choice : Node<SemanticGraph::Choice>
     {
-      virtual Void
+      virtual void
       traverse (Type&);
 
-      virtual Void
+      virtual void
       pre (Type&);
 
-      virtual Void
+      virtual void
       contains (Type&);
 
-      virtual Void
+      virtual void
       contains (Type&, EdgeDispatcher&);
 
-      virtual Void
+      virtual void
       post (Type&);
     };
 
@@ -115,19 +115,19 @@ namespace XSDFrontend
     //
     struct Sequence : Node<SemanticGraph::Sequence>
     {
-      virtual Void
+      virtual void
       traverse (Type&);
 
-      virtual Void
+      virtual void
       pre (Type&);
 
-      virtual Void
+      virtual void
       contains (Type&);
 
-      virtual Void
+      virtual void
       contains (Type&, EdgeDispatcher&);
 
-      virtual Void
+      virtual void
       post (Type&);
     };
   }

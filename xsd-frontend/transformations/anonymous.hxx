@@ -46,10 +46,10 @@ namespace XSDFrontend
 
       Anonymous (AnonymousNameTranslator&);
 
-      Void
+      void
       transform (SemanticGraph::Schema&,
                  SemanticGraph::Path const&,
-                 Boolean detect_unstable_conflicts);
+                 bool detect_unstable_conflicts);
 
     private:
       AnonymousNameTranslator& trans_;

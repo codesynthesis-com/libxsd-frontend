@@ -9,7 +9,7 @@ namespace XSDFrontend
 {
   namespace Traversal
   {
-    Void Element::
+    void Element::
     traverse (Type& m)
     {
       pre (m);
@@ -18,29 +18,29 @@ namespace XSDFrontend
       post (m);
     }
 
-    Void Element::
+    void Element::
     pre (Type&)
     {
     }
 
-    Void Element::
+    void Element::
     belongs (Type& m, EdgeDispatcher& d)
     {
       d.dispatch (m.belongs ());
     }
 
-    Void Element::
+    void Element::
     belongs (Type& m)
     {
       belongs (m, edge_traverser ());
     }
 
-    Void Element::
+    void Element::
     name (Type&)
     {
     }
 
-    Void Element::
+    void Element::
     post (Type&)
     {
     }

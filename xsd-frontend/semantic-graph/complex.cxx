@@ -18,7 +18,7 @@ namespace XSDFrontend
     }
 
     Complex::
-    Complex (Path const& file, UnsignedLong line, UnsignedLong column)
+    Complex (Path const& file, unsigned long line, unsigned long column)
         : Node (file, line, column),
           mixed_ (false), contains_compositor_ (0)
     {

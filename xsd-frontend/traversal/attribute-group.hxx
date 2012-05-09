@@ -15,13 +15,13 @@ namespace XSDFrontend
   {
     struct AttributeGroup: ScopeTemplate<SemanticGraph::AttributeGroup>
     {
-      virtual Void
+      virtual void
       traverse (Type&);
 
-      virtual Void
+      virtual void
       pre (Type&);
 
-      virtual Void
+      virtual void
       post (Type&);
     };
   }

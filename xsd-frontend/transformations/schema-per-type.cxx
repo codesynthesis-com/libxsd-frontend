@@ -36,7 +36,7 @@ namespace XSDFrontend
   //
   struct FileComparator
   {
-    Boolean
+    bool
     operator() (NarrowString const& x, NarrowString const& y) const
     {
       return strcasecmp (x.c_str (), y.c_str ()) < 0;
@@ -60,7 +60,7 @@ namespace XSDFrontend
         xsd_ = 0;
       }
 
-      virtual Void
+      virtual void
       traverse (SemanticGraph::Includes& i)
       {
         SemanticGraph::Schema& s (i.schema ());
@@ -73,7 +73,7 @@ namespace XSDFrontend
         }
       }
 
-      virtual Void
+      virtual void
       traverse (SemanticGraph::Imports& i)
       {
         SemanticGraph::Schema& s (i.schema ());
@@ -86,7 +86,7 @@ namespace XSDFrontend
         }
       }
 
-      virtual Void
+      virtual void
       traverse (SemanticGraph::Implies& i)
       {
         if (xsd_ == 0)
@@ -98,13 +98,13 @@ namespace XSDFrontend
       SemanticGraph::Schema*& xsd_;
     };
 
-    Void
+    void
     process_schema (SemanticGraph::Schema& s,
                     SemanticGraph::Schema& root,
                     SemanticGraph::Schema& xsd,
                     TypeSchemaMap& tsm,
                     FileSet& file_set,
-                    Boolean fat_type_file,
+                    bool fat_type_file,
                     Transformations::SchemaPerTypeTranslator& trans)
     {
       using namespace SemanticGraph;
@@ -155,7 +155,7 @@ namespace XSDFrontend
             //
             NarrowString file_name (base);
 
-            for (UnsignedLong i (1);
+            for (unsigned long i (1);
                  file_set.find (file_name) != file_set.end ();
                  ++i)
             {
@@ -261,7 +261,7 @@ namespace XSDFrontend
         *this >> names_ >> *this;
       }
 
-      virtual Void
+      virtual void
       traverse (SemanticGraph::List& l)
       {
         // Treat item type as base type since it is impossible
@@ -271,7 +271,7 @@ namespace XSDFrontend
         set_dep (t, false);
       }
 
-      virtual Void
+      virtual void
       traverse (SemanticGraph::Complex& c)
       {
         if (c.inherits_p ())
@@ -280,22 +280,22 @@ namespace XSDFrontend
         Traversal::Complex::names (c);
       }
 
-      virtual Void
+      virtual void
       traverse (SemanticGraph::Member& m)
       {
         SemanticGraph::Type& t (m.type ());
 
-        Boolean weak (
+        bool weak (
           by_value_key_ == 0 ||
           !t.context ().count (by_value_key_) ||
-          !t.context ().get<Boolean> (by_value_key_));
+          !t.context ().get<bool> (by_value_key_));
 
         set_dep (t, weak);
       }
 
     private:
-      Void
-      set_dep (SemanticGraph::Type& t, Boolean weak)
+      void
+      set_dep (SemanticGraph::Type& t, bool weak)
       {
         using namespace SemanticGraph;
 
@@ -345,7 +345,7 @@ namespace XSDFrontend
   {
     SchemaPerType::
     SchemaPerType (SchemaPerTypeTranslator& trans,
-                   Boolean fat,
+                   bool fat,
                    Char const* key)
         : fat_type_file_ (fat), by_value_key_ (key), trans_ (trans)
     {
@@ -402,7 +402,7 @@ namespace XSDFrontend
         NarrowString tf (trans_.translate_schema (abs_path));
         NarrowString file (tf ? tf : path.leaf ());
 
-        Size p (file.rfind ('.'));
+        size_t p (file.rfind ('.'));
         NarrowString ext (
           p != NarrowString::npos ? NarrowString (file, p) : "");
 
@@ -413,7 +413,7 @@ namespace XSDFrontend
         //
         NarrowString new_name (base);
 
-        for (UnsignedLong n (1);
+        for (unsigned long n (1);
              file_set.find (new_name) != file_set.end ();
              ++n)
         {

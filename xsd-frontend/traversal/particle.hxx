@@ -15,13 +15,13 @@ namespace XSDFrontend
   {
     struct Particle : Node<SemanticGraph::Particle>
     {
-      virtual Void
+      virtual void
       traverse (Type&);
 
-      virtual Void
+      virtual void
       pre (Type&);
 
-      virtual Void
+      virtual void
       post (Type&);
     };
   }

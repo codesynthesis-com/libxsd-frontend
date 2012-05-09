@@ -26,7 +26,7 @@ namespace XSDFrontend
 
     // Type
     //
-    Void Type::
+    void Type::
     remove_edge_left (Arguments& a)
     {
       ArgumentsSet::iterator i (arguments_.find (&a));
@@ -36,7 +36,7 @@ namespace XSDFrontend
 
     // Specialization
     //
-    Void Specialization::
+    void Specialization::
     remove_edge_right (Arguments& a)
     {
       // The number of entries should be small so linear search will do.

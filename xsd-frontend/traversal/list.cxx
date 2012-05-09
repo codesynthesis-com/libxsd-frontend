@@ -9,7 +9,7 @@ namespace XSDFrontend
 {
   namespace Traversal
   {
-    Void List::
+    void List::
     traverse (Type& l)
     {
       pre (l);
@@ -18,29 +18,29 @@ namespace XSDFrontend
       post (l);
     }
 
-    Void List::
+    void List::
     pre (Type&)
     {
     }
 
-    Void List::
+    void List::
     argumented (Type& l)
     {
       argumented (l, *this);
     }
 
-    Void List::
+    void List::
     argumented (Type& l, EdgeDispatcher& d)
     {
       d.dispatch (l.argumented ());
     }
 
-    Void List::
+    void List::
     name (Type&)
     {
     }
 
-    Void List::
+    void List::
     post (Type&)
     {
     }

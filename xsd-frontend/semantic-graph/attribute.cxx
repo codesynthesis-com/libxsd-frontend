@@ -13,11 +13,11 @@ namespace XSDFrontend
   {
     Attribute::
     Attribute (Path const& file,
-               UnsignedLong line,
-               UnsignedLong column,
-               Boolean optional,
-               Boolean global,
-               Boolean qualified)
+               unsigned long line,
+               unsigned long column,
+               bool optional,
+               bool global,
+               bool qualified)
         : Node (file, line, column),
           Member (global, qualified),
           optional_ (optional)

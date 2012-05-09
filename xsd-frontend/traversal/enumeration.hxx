@@ -15,43 +15,43 @@ namespace XSDFrontend
   {
     struct Enumeration : ScopeTemplate<SemanticGraph::Enumeration>
     {
-      virtual Void
+      virtual void
       traverse (Type&);
 
-      virtual Void
+      virtual void
       pre (Type&);
 
-      virtual Void
+      virtual void
       name (Type&);
 
-      virtual Void
+      virtual void
       inherits (Type&);
 
-      Void
+      void
       inherits (Type&, EdgeDispatcher&);
 
-      virtual Void
+      virtual void
       post (Type&);
     };
 
     struct Enumerator : Node<SemanticGraph::Enumerator>
     {
-      virtual Void
+      virtual void
       traverse (Type&);
 
-      virtual Void
+      virtual void
       pre (Type&);
 
-      virtual Void
+      virtual void
       belongs (Type&, EdgeDispatcher&);
 
-      virtual Void
+      virtual void
       belongs (Type&);
 
-      virtual Void
+      virtual void
       name (Type&);
 
-      virtual Void
+      virtual void
       post (Type&);
     };
   }

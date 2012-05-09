@@ -17,8 +17,8 @@ define(`fundamental_type_impl', `
       {
       public:
         $1 (Path const& file,
-            SemanticGraph::UnsignedLong line,
-            SemanticGraph::UnsignedLong column);
+            unsigned long line,
+            unsigned long column);
       };')
 divert(0)dnl
 dnl
@@ -104,8 +104,8 @@ fundamental_type(`id')
       {
       public:
         IdRef (Path const& file,
-               SemanticGraph::UnsignedLong line,
-               SemanticGraph::UnsignedLong column);
+               unsigned long line,
+               unsigned long column);
       };
 
 
@@ -116,8 +116,8 @@ fundamental_type(`id')
       {
       public:
         IdRefs (Path const& file,
-                SemanticGraph::UnsignedLong line,
-                SemanticGraph::UnsignedLong column);
+                unsigned long line,
+                unsigned long column);
       };
 dnl
 dnl URI.

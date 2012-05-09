@@ -35,7 +35,7 @@ namespace XSDFrontend
       }
 
     public:
-      Boolean
+      bool
       prototype_p ()
       {
         return prototype_ != 0;
@@ -48,7 +48,7 @@ namespace XSDFrontend
         return *prototype_;
       }
 
-      Void
+      void
       prototype (AnyAttribute& a)
       {
         assert (prototype_ == 0);
@@ -61,13 +61,13 @@ namespace XSDFrontend
 
     public:
       AnyAttribute (Path const& file,
-                    UnsignedLong line,
-                    UnsignedLong column,
+                    unsigned long line,
+                    unsigned long column,
                     WideString const& namespaces);
 
       AnyAttribute (Path const& file,
-                    UnsignedLong line,
-                    UnsignedLong column,
+                    unsigned long line,
+                    unsigned long column,
                     NamespaceIterator begin,
                     NamespaceIterator end);
 

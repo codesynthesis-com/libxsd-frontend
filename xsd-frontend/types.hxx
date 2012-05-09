@@ -6,10 +6,14 @@
 #ifndef XSD_FRONTEND_TYPES_HXX
 #define XSD_FRONTEND_TYPES_HXX
 
+#include <cstddef> // std::size_t
+
 #include <cult/types.hxx>
 
 namespace XSDFrontend
 {
+  using std::size_t;
+
   using namespace Cult::Types;
 
   typedef Cult::WideString String;

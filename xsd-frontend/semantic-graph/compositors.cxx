@@ -14,7 +14,7 @@ namespace XSDFrontend
     // ContainsCompositor
     //
     ContainsCompositor::
-    ContainsCompositor (UnsignedLong min, UnsignedLong max)
+    ContainsCompositor (unsigned long min, unsigned long max)
         : compositor_ (0), container_ (0), min_ (min), max_ (max)
     {
     }
@@ -22,7 +22,7 @@ namespace XSDFrontend
     // All
     //
     All::
-    All (Path const& file, UnsignedLong line, UnsignedLong column)
+    All (Path const& file, unsigned long line, unsigned long column)
         : Node (file, line, column)
     {
     }
@@ -30,7 +30,7 @@ namespace XSDFrontend
     // Choice
     //
     Choice::
-    Choice (Path const& file, UnsignedLong line, UnsignedLong column)
+    Choice (Path const& file, unsigned long line, unsigned long column)
         : Node (file, line, column)
     {
     }
@@ -38,7 +38,7 @@ namespace XSDFrontend
     // Sequence
     //
     Sequence::
-    Sequence (Path const& file, UnsignedLong line, UnsignedLong column)
+    Sequence (Path const& file, unsigned long line, unsigned long column)
         : Node (file, line, column)
     {
     }

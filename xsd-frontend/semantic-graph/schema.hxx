@@ -42,13 +42,13 @@ namespace XSDFrontend
     public:
       Uses (Path const& path): path_ (path) {}
 
-      Void
+      void
       set_left_node (Schema& s)
       {
         user_ = &s;
       }
 
-      Void
+      void
       set_right_node (Schema& s)
       {
         schema_ = &s;
@@ -104,7 +104,7 @@ namespace XSDFrontend
       typedef std::vector<Uses*> UsedList;
 
     public:
-      Schema (Path const& file, UnsignedLong line, UnsignedLong column)
+      Schema (Path const& file, unsigned long line, unsigned long column)
           : Node (file, line, column), graph_ (*this)
       {
       }
@@ -143,7 +143,7 @@ namespace XSDFrontend
         return used_.end ();
       }
 
-      Boolean
+      bool
       used_p () const
       {
         return used_begin () != used_end ();
@@ -163,14 +163,14 @@ namespace XSDFrontend
 
       template <typename T>
       T&
-      new_node (Path const& file, UnsignedLong line, UnsignedLong column)
+      new_node (Path const& file, unsigned long line, unsigned long column)
       {
         return graph_.new_node<T> (file, line, column);
       }
 
       template <typename T, typename A0>
       T&
-      new_node (Path const& file, UnsignedLong line, UnsignedLong column,
+      new_node (Path const& file, unsigned long line, unsigned long column,
                 A0 const& a0)
       {
         return graph_.new_node<T> (file, line, column, a0);
@@ -178,7 +178,7 @@ namespace XSDFrontend
 
       template <typename T, typename A0, typename A1>
       T&
-      new_node (Path const& file, UnsignedLong line, UnsignedLong column,
+      new_node (Path const& file, unsigned long line, unsigned long column,
                 A0 const& a0, A1 const& a1)
       {
         return graph_.new_node<T> (file, line, column, a0, a1);
@@ -186,7 +186,7 @@ namespace XSDFrontend
 
       template <typename T, typename A0, typename A1, typename A2>
       T&
-      new_node (Path const& file, UnsignedLong line, UnsignedLong column,
+      new_node (Path const& file, unsigned long line, unsigned long column,
                 A0 const& a0, A1 const& a1, A2 const& a2)
       {
         return graph_.new_node<T> (file, line, column, a0, a1, a2);
@@ -195,7 +195,7 @@ namespace XSDFrontend
       template <typename T, typename A0, typename A1, typename A2,
                 typename A3>
       T&
-      new_node (Path const& file, UnsignedLong line, UnsignedLong column,
+      new_node (Path const& file, unsigned long line, unsigned long column,
                 A0 const& a0, A1 const& a1, A2 const& a2, A3 const& a3)
       {
         return graph_.new_node<T> (file, line, column, a0, a1, a2, a3);
@@ -205,13 +205,13 @@ namespace XSDFrontend
       using Scope::add_edge_left;
       using Node::add_edge_right;
 
-      Void
+      void
       add_edge_left (Uses& e)
       {
         uses_.push_back (&e);
       }
 
-      Void
+      void
       add_edge_right (Uses& e)
       {
         used_.push_back (&e);
@@ -220,7 +220,7 @@ namespace XSDFrontend
     private:
       typedef std::set<Schema const*> SchemaSet;
 
-      Void
+      void
       find_ (Name const& name, NamesList&, SchemaSet&) const;
 
     private:

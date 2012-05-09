@@ -9,7 +9,7 @@ namespace XSDFrontend
 {
   namespace Traversal
   {
-    Void Attribute::
+    void Attribute::
     traverse (Type& a)
     {
       pre (a);
@@ -18,29 +18,29 @@ namespace XSDFrontend
       post (a);
     }
 
-    Void Attribute::
+    void Attribute::
     pre (Type&)
     {
     }
 
-    Void Attribute::
+    void Attribute::
     belongs (Type& a, EdgeDispatcher& d)
     {
       d.dispatch (a.belongs ());
     }
 
-    Void Attribute::
+    void Attribute::
     belongs (Type& a)
     {
       belongs (a, *this);
     }
 
-    Void Attribute::
+    void Attribute::
     name (Type&)
     {
     }
 
-    Void Attribute::
+    void Attribute::
     post (Type&)
     {
     }

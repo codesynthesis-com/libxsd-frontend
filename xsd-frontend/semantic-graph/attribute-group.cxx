@@ -12,7 +12,7 @@ namespace XSDFrontend
   namespace SemanticGraph
   {
     AttributeGroup::
-    AttributeGroup (Path const& file, UnsignedLong line, UnsignedLong column)
+    AttributeGroup (Path const& file, unsigned long line, unsigned long column)
         : Node (file, line, column)
     {
     }

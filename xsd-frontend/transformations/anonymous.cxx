@@ -32,12 +32,12 @@ namespace XSDFrontend
                            Traversal::Any,
                            Traversal::AnyAttribute
     {
-      CompareMembers (SemanticGraph::Nameable& m, Boolean& r)
+      CompareMembers (SemanticGraph::Nameable& m, bool& r)
           : member_ (m), result_ (r)
       {
       }
 
-      virtual Void
+      virtual void
       traverse (SemanticGraph::Element& x)
       {
         using SemanticGraph::Element;
@@ -52,7 +52,7 @@ namespace XSDFrontend
         traverse_member (x);
       }
 
-      virtual Void
+      virtual void
       traverse (SemanticGraph::Attribute& x)
       {
         using SemanticGraph::Attribute;
@@ -67,7 +67,7 @@ namespace XSDFrontend
         traverse_member (x);
       }
 
-      virtual Void
+      virtual void
       traverse_member (SemanticGraph::Member& x)
       {
         using SemanticGraph::Member;
@@ -108,13 +108,13 @@ namespace XSDFrontend
         result_ = true;
       }
 
-      virtual Void
+      virtual void
       traverse (SemanticGraph::Any&)
       {
         //@@ TODO
       }
 
-      virtual Void
+      virtual void
       traverse (SemanticGraph::AnyAttribute&)
       {
         //@@ TODO
@@ -122,7 +122,7 @@ namespace XSDFrontend
 
     private:
       SemanticGraph::Nameable& member_;
-      Boolean& result_;
+      bool& result_;
     };
 
     // Compare two types for structural equality.
@@ -132,13 +132,13 @@ namespace XSDFrontend
                          Traversal::Enumeration,
                          Traversal::Complex
     {
-      CompareTypes (SemanticGraph::Type& t, Boolean& r)
+      CompareTypes (SemanticGraph::Type& t, bool& r)
           : type_ (t), result_ (r)
       {
       }
 
 
-      virtual Void
+      virtual void
       traverse (SemanticGraph::List&)
       {
         using SemanticGraph::List;
@@ -146,7 +146,7 @@ namespace XSDFrontend
         //List& y (dynamic_cast<List&> (type_));
       }
 
-      virtual Void
+      virtual void
       traverse (SemanticGraph::Union& x)
       {
         using SemanticGraph::Union;
@@ -168,7 +168,7 @@ namespace XSDFrontend
         result_ = true;
       }
 
-      virtual Void
+      virtual void
       traverse (SemanticGraph::Enumeration& x)
       {
         using SemanticGraph::Enumeration;
@@ -207,7 +207,7 @@ namespace XSDFrontend
         result_ = true;
       }
 
-      virtual Void
+      virtual void
       traverse (SemanticGraph::Complex& x)
       {
         using SemanticGraph::Complex;
@@ -261,7 +261,7 @@ namespace XSDFrontend
           if (typeid (ix->named ()) != typeid (iy->named ()))
             return;
 
-          Boolean equal (false);
+          bool equal (false);
           CompareMembers t (iy->named (), equal);
           t.dispatch (ix->named ());
 
@@ -277,7 +277,7 @@ namespace XSDFrontend
 
     private:
       SemanticGraph::Type& type_;
-      Boolean& result_;
+      bool& result_;
     };
 
     //
@@ -288,7 +288,7 @@ namespace XSDFrontend
       Context (SemanticGraph::Schema& schema_,
                SemanticGraph::Path const& file,
                AnonymousNameTranslator& trans_,
-               Boolean du)
+               bool du)
           : schema_path_ (file),
             ns_ (0),
             failed_ (false),
@@ -321,7 +321,7 @@ namespace XSDFrontend
         if (typeid (x) != typeid (y))
            return false;
 
-        Boolean r (false);
+        bool r (false);
         CompareTypes t (y, r);
         t.dispatch (x);
         return r;
@@ -450,17 +450,17 @@ namespace XSDFrontend
     private:
       SemanticGraph::Path const schema_path_;
       SemanticGraph::Namespace* ns_;
-      Boolean failed_;
+      bool failed_;
 
     public:
       AnonymousNameTranslator& trans;
-      Boolean detect_unstable;
+      bool detect_unstable;
 
     public:
       SemanticGraph::Schema& schema;
       SemanticGraph::Path const& schema_path;
       SemanticGraph::Namespace*& ns;
-      Boolean& failed;
+      bool& failed;
     };
 
 
@@ -469,7 +469,7 @@ namespace XSDFrontend
     //
     struct Uses: Traversal::Uses
     {
-      virtual Void
+      virtual void
       traverse (Type& u)
       {
         SemanticGraph::Schema& s (u.schema ());
@@ -491,13 +491,13 @@ namespace XSDFrontend
       {
       }
 
-      Void
+      void
       pre (SemanticGraph::Namespace& ns)
       {
         ns_ = &ns;
       }
 
-      Void
+      void
       post (SemanticGraph::Namespace&)
       {
         ns_ = 0;
@@ -519,7 +519,7 @@ namespace XSDFrontend
       {
       }
 
-      virtual Void
+      virtual void
       traverse (SemanticGraph::List& l)
       {
         SemanticGraph::Type& t (l.argumented ().type ());
@@ -555,7 +555,7 @@ namespace XSDFrontend
 
             // Make sure the name is unique.
             //
-            UnsignedLong n (1);
+            unsigned long n (1);
             String escaped (name);
 
             while (conflict (escaped))
@@ -597,7 +597,7 @@ namespace XSDFrontend
         }
       }
 
-      virtual Void
+      virtual void
       traverse (SemanticGraph::Union& u)
       {
         String file_str;
@@ -639,7 +639,7 @@ namespace XSDFrontend
 
               // Make sure the name is unique.
               //
-              UnsignedLong n (1);
+              unsigned long n (1);
               String escaped (name);
 
               while (conflict (escaped))
@@ -682,7 +682,7 @@ namespace XSDFrontend
         }
       }
 
-      virtual Void
+      virtual void
       traverse (SemanticGraph::Complex& c)
       {
         if (!c.inherits_p ())
@@ -721,7 +721,7 @@ namespace XSDFrontend
 
             // Make sure the name is unique.
             //
-            UnsignedLong n (1);
+            unsigned long n (1);
             String escaped (name);
 
             while (conflict (escaped))
@@ -776,7 +776,7 @@ namespace XSDFrontend
       {
       }
 
-      virtual Void
+      virtual void
       traverse (SemanticGraph::Element& e)
       {
         SemanticGraph::Type& t (e.type ());
@@ -819,7 +819,7 @@ namespace XSDFrontend
         }
       }
 
-      virtual Void
+      virtual void
       traverse (SemanticGraph::Attribute& a)
       {
         SemanticGraph::Type& t (a.type ());
@@ -862,7 +862,7 @@ namespace XSDFrontend
         }
       }
 
-      Void
+      void
       traverse_ (SemanticGraph::Member& m)
       {
         using SemanticGraph::Type;
@@ -918,7 +918,7 @@ namespace XSDFrontend
 
         // Check if this name conflicts.
         //
-        UnsignedLong n (1);
+        unsigned long n (1);
         String escaped (name);
 
         while (SemanticGraph::Type* other = conflict (escaped))
@@ -965,10 +965,10 @@ namespace XSDFrontend
     {
     }
 
-    Void Anonymous::
+    void Anonymous::
     transform (SemanticGraph::Schema& s,
                SemanticGraph::Path const& f,
-               Boolean duc)
+               bool duc)
     {
       Context ctx (s, f, trans_, duc);
 

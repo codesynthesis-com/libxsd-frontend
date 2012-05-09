@@ -15,10 +15,10 @@ namespace XSDFrontend
     //
     Element::
     Element (Path const& file,
-             UnsignedLong line,
-             UnsignedLong column,
-             Boolean global,
-             Boolean qualified)
+             unsigned long line,
+             unsigned long column,
+             bool global,
+             bool qualified)
         : Node (file, line, column),
           Member (global, qualified),
           substitutes_ (0)

@@ -15,28 +15,28 @@ namespace XSDFrontend
   {
     struct Complex : ScopeTemplate<SemanticGraph::Complex>
     {
-      virtual Void
+      virtual void
       traverse (Type&);
 
-      virtual Void
+      virtual void
       pre (Type&);
 
-      virtual Void
+      virtual void
       name (Type&);
 
-      virtual Void
+      virtual void
       inherits (Type&);
 
-      Void
+      void
       inherits (Type&, EdgeDispatcher&);
 
-      virtual Void
+      virtual void
       contains_compositor (Type&);
 
-      Void
+      void
       contains_compositor (Type&, EdgeDispatcher&);
 
-      virtual Void
+      virtual void
       post (Type&);
     };
   }

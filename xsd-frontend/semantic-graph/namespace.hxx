@@ -15,9 +15,9 @@ namespace XSDFrontend
     class Namespace : public virtual Scope
     {
     public:
-      Namespace (Path const& file, UnsignedLong line, UnsignedLong column);
+      Namespace (Path const& file, unsigned long line, unsigned long column);
 
-      Void
+      void
       add_edge_right (BelongsToNamespace&) {}
 
       using Scope::add_edge_right;

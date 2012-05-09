@@ -33,41 +33,41 @@ namespace XSDFrontend
       }
 
     public:
-      UnsignedLong
+      unsigned long
       min () const
       {
         return min_;
       }
 
-      UnsignedLong
+      unsigned long
       max () const
       {
         return max_;
       }
 
     public:
-      ContainsCompositor (UnsignedLong min, UnsignedLong max);
+      ContainsCompositor (unsigned long min, unsigned long max);
 
-      Void
+      void
       set_left_node (Node& n)
       {
         container_ = &n;
       }
 
-      Void
+      void
       set_right_node (Compositor& n)
       {
         compositor_ = &n;
       }
 
-      Void
+      void
       clear_left_node (Node& n)
       {
         assert (container_ == &n);
         container_ = 0;
       }
 
-      Void
+      void
       clear_right_node (Compositor& n)
       {
         assert (compositor_ == &n);
@@ -77,7 +77,7 @@ namespace XSDFrontend
     private:
       Compositor* compositor_;
       Node* container_;
-      UnsignedLong min_, max_;
+      unsigned long min_, max_;
     };
 
     //
@@ -117,7 +117,7 @@ namespace XSDFrontend
       }
 
     public:
-      Boolean
+      bool
       contained_compositor_p ()
       {
         return contained_compositor_ != 0;
@@ -131,7 +131,7 @@ namespace XSDFrontend
       }
 
     public:
-      UnsignedLong
+      unsigned long
       min () const
       {
         if (contained_compositor_ != 0)
@@ -140,7 +140,7 @@ namespace XSDFrontend
           return Particle::min ();
       }
 
-      UnsignedLong
+      unsigned long
       max () const
       {
         if (contained_compositor_ != 0)
@@ -152,13 +152,13 @@ namespace XSDFrontend
     public:
       Compositor (): contained_compositor_ (0) {}
 
-      Void
+      void
       add_edge_left (ContainsParticle& e)
       {
         contains_.push_back (&e);
       }
 
-      Void
+      void
       add_edge_left (ContainsParticle& e, ContainsIterator const& after)
       {
         if (after.base () == contains_.end ())
@@ -170,7 +170,7 @@ namespace XSDFrontend
         }
       }
 
-      Void
+      void
       remove_edge_left (ContainsParticle& e)
       {
         for (ContainsList::iterator i (contains_.begin ());
@@ -184,13 +184,13 @@ namespace XSDFrontend
         }
       }
 
-      Void
+      void
       add_edge_right (ContainsCompositor& e)
       {
         contained_compositor_ = &e;
       }
 
-      Void
+      void
       remove_edge_right (ContainsCompositor& e)
       {
         assert (contained_compositor_ == &e);
@@ -211,7 +211,7 @@ namespace XSDFrontend
     class All: public virtual Compositor
     {
     public:
-      All (Path const& file, UnsignedLong line, UnsignedLong column);
+      All (Path const& file, unsigned long line, unsigned long column);
     };
 
     //
@@ -219,7 +219,7 @@ namespace XSDFrontend
     class Choice: public virtual Compositor
     {
     public:
-      Choice (Path const& file, UnsignedLong line, UnsignedLong column);
+      Choice (Path const& file, unsigned long line, unsigned long column);
     };
 
     //
@@ -227,7 +227,7 @@ namespace XSDFrontend
     class Sequence: public virtual Compositor
     {
     public:
-      Sequence (Path const& file, UnsignedLong line, UnsignedLong column);
+      Sequence (Path const& file, unsigned long line, unsigned long column);
     };
   }
 }

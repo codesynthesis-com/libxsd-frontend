@@ -16,14 +16,14 @@ namespace XSDFrontend
     class Complex: public virtual Type, public virtual Scope
     {
     public:
-      Boolean
+      bool
       mixed_p () const
       {
         return mixed_;
       }
 
     public:
-      Boolean
+      bool
       contains_compositor_p ()
       {
         return contains_compositor_ != 0;
@@ -37,22 +37,22 @@ namespace XSDFrontend
       }
 
     public:
-      Void
-      mixed_p (Boolean m)
+      void
+      mixed_p (bool m)
       {
         mixed_ = m;
       }
 
     public:
-      Complex (Path const& file, UnsignedLong line, UnsignedLong column);
+      Complex (Path const& file, unsigned long line, unsigned long column);
 
-      Void
+      void
       add_edge_left (ContainsCompositor& e)
       {
         contains_compositor_ = &e;
       }
 
-      Void
+      void
       remove_edge_left (ContainsCompositor& e)
       {
         assert (contains_compositor_ == &e);
@@ -67,7 +67,7 @@ namespace XSDFrontend
       Complex (); // For virtual inheritance (Enumeration).
 
     private:
-      Boolean mixed_;
+      bool mixed_;
       ContainsCompositor* contains_compositor_;
     };
   }

@@ -26,7 +26,7 @@ namespace XSDFrontend
     //
     struct NodeBase: NodeDispatcher, EdgeDispatcher
     {
-      Void
+      void
       edge_traverser (EdgeDispatcher& d)
       {
         EdgeDispatcher::traverser (d);
@@ -46,7 +46,7 @@ namespace XSDFrontend
 
     struct EdgeBase: EdgeDispatcher, NodeDispatcher
     {
-      Void
+      void
       node_traverser (NodeDispatcher& d)
       {
         NodeDispatcher::traverser (d);
@@ -111,7 +111,7 @@ namespace XSDFrontend
         node_traverser (n);
       }
 
-      virtual Void
+      virtual void
       traverse (Type& e)
       {
         dispatch (e.named ());
@@ -132,7 +132,7 @@ namespace XSDFrontend
         node_traverser (n);
       }
 
-      virtual Void
+      virtual void
       traverse (Type& e)
       {
         dispatch (e.type ());
@@ -156,20 +156,20 @@ namespace XSDFrontend
     struct ScopeTemplate : Node<T>
     {
     public:
-      virtual Void
+      virtual void
       traverse (T& s)
       {
         names (s);
       }
 
       template<typename X>
-      Void
+      void
       names (T& s,
              EdgeDispatcher& d,
-             Void (X::*pre_) (T&) = (Void (ScopeTemplate<T>::*)(T&)) (0),
-             Void (X::*post_) (T&) = (Void (ScopeTemplate<T>::*)(T&)) (0),
-             Void (X::*none_) (T&) = (Void (ScopeTemplate<T>::*)(T&)) (0),
-             Void (X::*next_) (T&) = (Void (ScopeTemplate<T>::*)(T&)) (0))
+             void (X::*pre_) (T&) = (void (ScopeTemplate<T>::*)(T&)) (0),
+             void (X::*post_) (T&) = (void (ScopeTemplate<T>::*)(T&)) (0),
+             void (X::*none_) (T&) = (void (ScopeTemplate<T>::*)(T&)) (0),
+             void (X::*next_) (T&) = (void (ScopeTemplate<T>::*)(T&)) (0))
       {
         X* this_ (dynamic_cast<X*> (this));
 
@@ -200,13 +200,13 @@ namespace XSDFrontend
         }
       }
 
-      virtual Void
+      virtual void
       names (T& s, EdgeDispatcher& d)
       {
         names<ScopeTemplate<T> > (s, d);
       }
 
-      virtual Void
+      virtual void
       names (T& s)
       {
         names (s,
@@ -217,22 +217,22 @@ namespace XSDFrontend
                &ScopeTemplate<T>::names_next);
       }
 
-      virtual Void
+      virtual void
       names_pre (T&)
       {
       }
 
-      virtual Void
+      virtual void
       names_next (T&)
       {
       }
 
-      virtual Void
+      virtual void
       names_post (T&)
       {
       }
 
-      virtual Void
+      virtual void
       names_none (T&)
       {
       }
@@ -250,7 +250,7 @@ namespace XSDFrontend
     //
     struct Type : Node<SemanticGraph::Type>
     {
-      virtual Void
+      virtual void
       traverse (SemanticGraph::Type&) = 0;
     };
 
@@ -259,19 +259,19 @@ namespace XSDFrontend
     //
     struct Instance : Node<SemanticGraph::Instance>
     {
-      virtual Void
+      virtual void
       traverse (Type&);
 
-      virtual Void
+      virtual void
       pre (Type&);
 
-      virtual Void
+      virtual void
       belongs (Type&, EdgeDispatcher&);
 
-      virtual Void
+      virtual void
       belongs (Type&);
 
-      virtual Void
+      virtual void
       post (Type&);
     };
 
@@ -280,19 +280,19 @@ namespace XSDFrontend
     //
     struct Member : Node<SemanticGraph::Member>
     {
-      virtual Void
+      virtual void
       traverse (Type&);
 
-      virtual Void
+      virtual void
       pre (Type&);
 
-      virtual Void
+      virtual void
       belongs (Type&, EdgeDispatcher&);
 
-      virtual Void
+      virtual void
       belongs (Type&);
 
-      virtual Void
+      virtual void
       post (Type&);
     };
 
@@ -310,7 +310,7 @@ namespace XSDFrontend
         node_traverser (n);
       }
 
-      virtual Void
+      virtual void
       traverse (Type& e)
       {
         dispatch (e.base ());
@@ -331,7 +331,7 @@ namespace XSDFrontend
         node_traverser (n);
       }
 
-      virtual Void
+      virtual void
       traverse (Type& e)
       {
         dispatch (e.base ());
@@ -352,7 +352,7 @@ namespace XSDFrontend
         node_traverser (n);
       }
 
-      virtual Void
+      virtual void
       traverse (Type& e)
       {
         dispatch (e.base ());
@@ -373,7 +373,7 @@ namespace XSDFrontend
         node_traverser (n);
       }
 
-      virtual Void
+      virtual void
       traverse (Type& a)
       {
         dispatch (a.type ());
@@ -386,7 +386,7 @@ namespace XSDFrontend
     //
     struct Contains : Edge<SemanticGraph::Contains>
     {
-      virtual Void
+      virtual void
       traverse (Type& e)
       {
         dispatch (e.element ());

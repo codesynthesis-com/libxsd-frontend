@@ -15,22 +15,22 @@ namespace XSDFrontend
   {
     struct List: Node<SemanticGraph::List>
     {
-      virtual Void
+      virtual void
       traverse (Type&);
 
-      virtual Void
+      virtual void
       pre (Type&);
 
-      virtual Void
+      virtual void
       argumented (Type&);
 
-      virtual Void
+      virtual void
       argumented (Type&, EdgeDispatcher& d);
 
-      virtual Void
+      virtual void
       name (Type&);
 
-      virtual Void
+      virtual void
       post (Type&);
     };
   }

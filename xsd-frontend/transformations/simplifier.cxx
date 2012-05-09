@@ -23,7 +23,7 @@ namespace XSDFrontend
       {
       }
 
-      virtual Void
+      virtual void
       traverse (SemanticGraph::All& a)
       {
         // The all compositor cannot contain compositors.
@@ -32,7 +32,7 @@ namespace XSDFrontend
           remove (a);
       }
 
-      virtual Void
+      virtual void
       traverse (SemanticGraph::Choice& c)
       {
         // Do the depth-first traversal so that we take into account
@@ -52,7 +52,7 @@ namespace XSDFrontend
           remove (c);
       }
 
-      virtual Void
+      virtual void
       traverse (SemanticGraph::Sequence& s)
       {
         // Do the depth-first traversal so that we take into account
@@ -71,7 +71,7 @@ namespace XSDFrontend
       }
 
     private:
-      virtual Void
+      virtual void
       remove (SemanticGraph::Compositor& c)
       {
         using SemanticGraph::Node;
@@ -104,7 +104,7 @@ namespace XSDFrontend
     //
     struct Type: Traversal::Complex
     {
-      virtual Void
+      virtual void
       traverse (SemanticGraph::Complex& c)
       {
         if (c.contains_compositor_p ())
@@ -117,7 +117,7 @@ namespace XSDFrontend
     //
     struct Uses: Traversal::Uses
     {
-      virtual Void
+      virtual void
       traverse (Type& u)
       {
         SemanticGraph::Schema& s (u.schema ());
@@ -133,7 +133,7 @@ namespace XSDFrontend
 
   namespace Transformations
   {
-    Void Simplifier::
+    void Simplifier::
     transform (SemanticGraph::Schema& s, SemanticGraph::Path const&)
     {
       Traversal::Schema schema;

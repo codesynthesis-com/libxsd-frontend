@@ -12,7 +12,7 @@ namespace XSDFrontend
   namespace SemanticGraph
   {
     Union::
-    Union (Path const& file, UnsignedLong line, UnsignedLong column)
+    Union (Path const& file, unsigned long line, unsigned long column)
         : Node (file, line, column)
     {
     }

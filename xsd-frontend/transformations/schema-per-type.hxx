@@ -48,14 +48,14 @@ namespace XSDFrontend
       // for this type is included "strongly".
       //
       SchemaPerType (SchemaPerTypeTranslator&,
-                     Boolean fat_type_file,
+                     bool fat_type_file,
                      Char const* by_value_key = 0);
 
       std::vector<SemanticGraph::Schema*>
       transform (SemanticGraph::Schema&);
 
     private:
-      Boolean fat_type_file_;
+      bool fat_type_file_;
       Char const* by_value_key_;
       SchemaPerTypeTranslator& trans_;
     };

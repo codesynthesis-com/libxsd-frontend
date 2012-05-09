@@ -28,7 +28,7 @@ namespace XSDFrontend
       {
       }
 
-      virtual Void
+      virtual void
       traverse (Type& e)
       {
         String const& name (e.name ());
@@ -64,7 +64,7 @@ namespace XSDFrontend
       {
       }
 
-      virtual Void
+      virtual void
       traverse (Type& u)
       {
         using SemanticGraph::Enumeration;
@@ -208,7 +208,7 @@ namespace XSDFrontend
     //
     struct Uses: Traversal::Uses
     {
-      virtual Void
+      virtual void
       traverse (Type& u)
       {
         SemanticGraph::Schema& s (u.schema ());
@@ -224,7 +224,7 @@ namespace XSDFrontend
 
   namespace Transformations
   {
-    Void EnumSynthesis::
+    void EnumSynthesis::
     transform (SemanticGraph::Schema& s, SemanticGraph::Path const&)
     {
       Traversal::Schema schema;

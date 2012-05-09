@@ -14,8 +14,8 @@ namespace XSDFrontend
   {
     AnyAttribute::
     AnyAttribute (Path const& file,
-                  UnsignedLong line,
-                  UnsignedLong column,
+                  unsigned long line,
+                  unsigned long column,
                   WideString const& namespaces)
         : Node (file, line, column),
           prototype_ (0)
@@ -24,7 +24,7 @@ namespace XSDFrontend
       // chararcter.
       //
 
-      for (Size i (0), j (namespaces.find (L' '));;)
+      for (size_t i (0), j (namespaces.find (L' '));;)
       {
         if (j != WideString::npos)
         {
@@ -45,8 +45,8 @@ namespace XSDFrontend
 
     AnyAttribute::
     AnyAttribute (Path const& file,
-                  UnsignedLong line,
-                  UnsignedLong column,
+                  unsigned long line,
+                  unsigned long column,
                   NamespaceIterator begin,
                   NamespaceIterator end)
         : Node (file, line, column),

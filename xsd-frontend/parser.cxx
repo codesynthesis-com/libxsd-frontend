@@ -6,6 +6,8 @@
 #include <map>
 #include <stack>
 #include <vector>
+#include <iostream>
+#include <sstream>
 
 #include <cutl/compiler/type-id.hxx>
 
@@ -39,13 +41,7 @@
 #include <xercesc/framework/LocalFileInputSource.hpp>
 #include <xercesc/framework/Wrapper4InputSource.hpp>
 
-#include <iostream>
-#include <sstream>
-#include <memory>   // std::auto_ptr
-
-using std::wcout;
-using std::wcerr;
-using std::endl;
+using namespace std;
 
 using cutl::compiler::type_id;
 
@@ -56,7 +52,7 @@ namespace XSDFrontend
 
   //@@ Port to tracing facility.
   //
-  Boolean trace_ = false;
+  bool trace_ = false;
 
   String const xsd = L"http://www.w3.org/2001/XMLSchema";
   String const xse = L"http://www.codesynthesis.com/xmlns/xml-schema-extension";
@@ -116,7 +112,7 @@ namespace XSDFrontend
     {
       typedef Cult::StringTemplate<C> String;
 
-      Size size (s.size ());
+      size_t size (s.size ());
 
       if (size == 0)
         return s;
@@ -228,7 +224,7 @@ namespace XSDFrontend
     //
     typedef std::map<String, String> Facets;
 
-    Void
+    void
     copy_facets (Restricts& r, Facets const& f)
     {
       for (Facets::const_iterator i (f.begin ()), e (f.end ()); i != e; ++i)
@@ -255,7 +251,7 @@ namespace XSDFrontend
     struct ElementGroupRef
     {
       ElementGroupRef (String const& uq_name_, String const& ns_name_,
-                       UnsignedLong min_, UnsignedLong max_,
+                       unsigned long min_, unsigned long max_,
                        Compositor& compositor, Scope& scope)
           : uq_name (uq_name_), ns_name (ns_name_),
             min (min_), max (max_)
@@ -270,7 +266,7 @@ namespace XSDFrontend
       }
 
       ElementGroupRef (String const& uq_name_, String const& ns_name_,
-                       UnsignedLong min_, UnsignedLong max_,
+                       unsigned long min_, unsigned long max_,
                        Scope& scope)
           : uq_name (uq_name_), ns_name (ns_name_),
             min (min_), max (max_)
@@ -282,7 +278,7 @@ namespace XSDFrontend
 
       String uq_name;
       String ns_name;
-      UnsignedLong min, max;
+      unsigned long min, max;
       Compositor::ContainsIterator contains_pos;
       Scope::NamesIterator names_pos;
     };
@@ -327,14 +323,14 @@ namespace XSDFrontend
       }
 
       template <typename E>
-      Void
+      void
       add_edge_left (E& e)
       {
         node_.add_edge_left (e, arg_);
       }
 
       template <typename E>
-      Void
+      void
       add_edge_right (E& e)
       {
         node_.add_edge_right (e, arg_);
@@ -361,7 +357,7 @@ namespace XSDFrontend
                       Traversal::Compositor
     {
       Resolver (Schema& s,
-                Boolean& valid,
+                bool& valid,
                 NamespaceMap& cache,
                 DefaultValues& default_values)
           : s_ (s),
@@ -372,7 +368,7 @@ namespace XSDFrontend
         *this >> contains_compositor >> *this;
       }
 
-      Void
+      void
       traverse (SemanticGraph::Attribute& a)
       {
         // Avoid traversing attribute more than once.
@@ -385,13 +381,13 @@ namespace XSDFrontend
         }
       }
 
-      Void
+      void
       traverse (SemanticGraph::Element& e)
       {
         resolve_element (e);
       }
 
-      Void
+      void
       resolve_element (SemanticGraph::Element& e)
       {
         // Avoid resolving element more than once.
@@ -442,7 +438,7 @@ namespace XSDFrontend
         }
       }
 
-      Void
+      void
       resolve_member (SemanticGraph::Member& m)
       {
         using SemanticGraph::Member;
@@ -581,19 +577,19 @@ namespace XSDFrontend
         }
       }
 
-      Void
+      void
       traverse (SemanticGraph::Fundamental::IdRef& i)
       {
         ref_type (i);
       }
 
-      Void
+      void
       traverse (SemanticGraph::Fundamental::IdRefs& i)
       {
         ref_type (i);
       }
 
-      Void
+      void
       ref_type (SemanticGraph::Specialization& s)
       {
         if (s.context ().count ("type-ns-name"))
@@ -621,7 +617,7 @@ namespace XSDFrontend
         }
       }
 
-      Void
+      void
       traverse (SemanticGraph::List& l)
       {
         if (l.context ().count ("type-ns-name"))
@@ -651,7 +647,7 @@ namespace XSDFrontend
         Traversal::List::traverse (l);
       }
 
-      Void
+      void
       traverse (SemanticGraph::Union& u)
       {
         using SemanticGraph::Union;
@@ -692,7 +688,7 @@ namespace XSDFrontend
         Traversal::Union::traverse (u);
       }
 
-      Void
+      void
       traverse (SemanticGraph::Complex& c)
       {
         // Avoid traversing complex type more than once.
@@ -791,7 +787,7 @@ namespace XSDFrontend
         Traversal::Complex::traverse (c);
       }
 
-      Void
+      void
       traverse (SemanticGraph::Enumeration& e)
       {
         // Resolve base type if any.
@@ -832,7 +828,7 @@ namespace XSDFrontend
         Traversal::Enumeration::traverse (e);
       }
 
-      Void
+      void
       traverse (SemanticGraph::ElementGroup& g)
       {
         // Avoid traversing groups more than once.
@@ -853,7 +849,7 @@ namespace XSDFrontend
       // We need a "shallow" resolve to break possible recursing:
       // group->element->complexType->group.
       //
-      Void
+      void
       resolve_element_group (SemanticGraph::ElementGroup& g)
       {
         using SemanticGraph::Scope;
@@ -876,7 +872,7 @@ namespace XSDFrontend
         }
       }
 
-      Void
+      void
       traverse (SemanticGraph::AttributeGroup& g)
       {
         // Avoid traversing groups more than once.
@@ -908,7 +904,7 @@ namespace XSDFrontend
         Traversal::AttributeGroup::traverse (g);
       }
 
-      Void
+      void
       traverse (SemanticGraph::Compositor& c)
       {
         using SemanticGraph::Compositor;
@@ -1086,7 +1082,7 @@ namespace XSDFrontend
             // order to put it into the scope. Note that we cannot reuse
             // the name from the prototype.
 
-            UnsignedLong count;
+            unsigned long count;
             SemanticGraph::Context& ctx (scope.context ());
 
             if (!ctx.count ("any-name-count"))
@@ -1095,9 +1091,9 @@ namespace XSDFrontend
               ctx.set ("any-name-count", count);
             }
             else
-              count = ++(ctx.get<UnsignedLong> ("any-name-count"));
+              count = ++(ctx.get<unsigned long> ("any-name-count"));
 
-            std::basic_ostringstream<WideChar> os;
+            std::basic_ostringstream<wchar_t> os;
             os << "any #" << count;
 
             NodeArgs<Scope, Scope::NamesIterator> na (scope, pos);
@@ -1161,7 +1157,7 @@ namespace XSDFrontend
         return copy;
       }
 
-      Void
+      void
       clone_attribute_group_content (AttributeGroupRef& ref,
                                      SemanticGraph::Scope& s)
       {
@@ -1248,7 +1244,7 @@ namespace XSDFrontend
               // one in order to put it into the scope. Note that we cannot
               // reuse the name from the attribute group.
 
-              UnsignedLong count;
+              unsigned long count;
               SemanticGraph::Context& ctx (s.context ());
 
               if (!ctx.count ("any-attribute-name-count"))
@@ -1257,9 +1253,9 @@ namespace XSDFrontend
                 ctx.set ("any-attribute-name-count", count);
               }
               else
-                count = ++(ctx.get<UnsignedLong> ("any-attribute-name-count"));
+                count = ++(ctx.get<unsigned long> ("any-attribute-name-count"));
 
-              std::basic_ostringstream<WideChar> os;
+              std::basic_ostringstream<wchar_t> os;
               os << "any-attribute #" << count;
 
               NodeArgs<Scope, Scope::NamesIterator> na (s, pos);
@@ -1291,7 +1287,7 @@ namespace XSDFrontend
 
     private:
       Schema& s_;
-      Boolean& valid_;
+      bool& valid_;
       NamespaceMap& cache_;
       DefaultValues& default_values_;
 
@@ -1305,7 +1301,7 @@ namespace XSDFrontend
   //
   struct FilePathComparator
   {
-    Boolean
+    bool
     operator () (SemanticGraph::Path const& x,
                  SemanticGraph::Path const& y) const
     {
@@ -1321,43 +1317,43 @@ namespace XSDFrontend
   public:
     ~Impl ();
 
-    Impl (Boolean proper_restriction,
-          Boolean multiple_imports,
-          Boolean full_schema_check,
+    Impl (bool proper_restriction,
+          bool multiple_imports,
+          bool full_schema_check,
           LocationTranslator*,
           const WarningSet*);
 
-    Evptr<Schema>
+    auto_ptr<Schema>
     parse (Path const&);
 
-    Evptr<Schema>
+    auto_ptr<Schema>
     parse (Paths const&);
 
-    Evptr<Schema>
+    auto_ptr<Schema>
     xml_schema (Path const&);
 
   private:
-    Void
+    void
     fill_xml_schema (Schema&, Path const&);
 
   private:
     XML::AutoPtr<Xerces::DOMDocument>
-    dom (SemanticGraph::Path const&, Boolean validate);
+    dom (SemanticGraph::Path const&, bool validate);
 
-    Void
+    void
     schema (XML::Element const&);
 
     SemanticGraph::Annotation*
-    annotation (Boolean process);
+    annotation (bool process);
 
-    Void
+    void
     import (XML::Element const&);
 
-    Void
+    void
     include (XML::Element const&);
 
-    Void
-    element_group (XML::Element const&, Boolean in_compositor);
+    void
+    element_group (XML::Element const&, bool in_compositor);
 
     SemanticGraph::Type*
     simple_type (XML::Element const&);
@@ -1371,7 +1367,7 @@ namespace XSDFrontend
     SemanticGraph::Type*
     restriction (XML::Element const& r, XML::Element const& type);
 
-    Void
+    void
     enumeration (XML::Element const&);
 
     SemanticGraph::Type*
@@ -1381,46 +1377,46 @@ namespace XSDFrontend
     all (XML::Element const&);
 
     Choice*
-    choice (XML::Element const&, Boolean in_compositor);
+    choice (XML::Element const&, bool in_compositor);
 
     Sequence*
-    sequence (XML::Element const&, Boolean in_compositor);
+    sequence (XML::Element const&, bool in_compositor);
 
-    Void
+    void
     simple_content (XML::Element const&);
 
-    Void
+    void
     complex_content (XML::Element const&, Complex&);
 
-    Void
+    void
     simple_content_extension (XML::Element const&);
 
-    Void
+    void
     simple_content_restriction (XML::Element const&);
 
-    Void
+    void
     complex_content_extension (XML::Element const&, Complex&);
 
-    Void
+    void
     complex_content_restriction (XML::Element const&, Complex&);
 
-    Void
-    element (XML::Element const&, Boolean global);
+    void
+    element (XML::Element const&, bool global);
 
-    Void
-    attribute (XML::Element const&, Boolean global);
+    void
+    attribute (XML::Element const&, bool global);
 
-    Void
+    void
     attribute_group (XML::Element const&);
 
-    Void
+    void
     any (XML::Element const&);
 
-    Void
+    void
     any_attribute (XML::Element const&);
 
   private:
-    Boolean
+    bool
     is_disabled (Char const* warning)
     {
       return disabled_warnings_all_ ||
@@ -1429,7 +1425,7 @@ namespace XSDFrontend
     }
 
   private:
-    Boolean
+    bool
     more () const
     {
       iterator const& it (iteration_state_.top ());
@@ -1446,7 +1442,7 @@ namespace XSDFrontend
         dynamic_cast<Xerces::DOMElement*> (it.l_->item (it.i_++)));
     }
 
-    Void
+    void
     prev ()
     {
       iterator& it (iteration_state_.top ());
@@ -1455,26 +1451,26 @@ namespace XSDFrontend
         --it.i_;
     }
 
-    Void
+    void
     push (XML::Element const& e)
     {
       iteration_state_.push (e.dom_element ());
     }
 
-    Void
+    void
     pop ()
     {
       iteration_state_.pop ();
     }
 
   private:
-    Void
+    void
     push_scope (SemanticGraph::Scope& s)
     {
       scope_stack_.push (&s);
     }
 
-    Void
+    void
     pop_scope ()
     {
       scope_stack_.pop ();
@@ -1487,13 +1483,13 @@ namespace XSDFrontend
     }
 
   private:
-    Void
+    void
     push_compositor (SemanticGraph::Compositor& c)
     {
       compositor_stack_.push (&c);
     }
 
-    Void
+    void
     pop_compositor ()
     {
       assert (!compositor_stack_.empty ());
@@ -1508,22 +1504,22 @@ namespace XSDFrontend
     }
 
   private:
-    static UnsignedLong const unbounded = ~static_cast<UnsignedLong> (0);
+    static unsigned long const unbounded = ~static_cast<unsigned long> (0);
 
-    UnsignedLong
+    unsigned long
     parse_min (String const& m)
     {
       if (m.empty ())
         return 1;
 
-      UnsignedLong v;
-      std::basic_istringstream<WideChar> is (m);
+      unsigned long v;
+      std::basic_istringstream<wchar_t> is (m);
 
       is >> v;
       return v;
     }
 
-    UnsignedLong
+    unsigned long
     parse_max (String const& m)
     {
       if (m.empty ())
@@ -1532,8 +1528,8 @@ namespace XSDFrontend
       if (m == L"unbounded")
         return unbounded;
 
-      UnsignedLong v;
-      std::basic_istringstream<WideChar> is (m);
+      unsigned long v;
+      std::basic_istringstream<wchar_t> is (m);
 
       is >> v;
       return v;
@@ -1631,13 +1627,13 @@ namespace XSDFrontend
       }
 
       Xerces::DOMNodeList* l_;
-      Size i_;
+      size_t i_;
     };
 
     std::stack<iterator> iteration_state_;
     SemanticGraph::Schema* s_;   // root schema file
     SemanticGraph::Schema* cur_; // current schema file
-    Boolean cur_chameleon_;      // whethere cur_ is chameleon
+    bool cur_chameleon_;      // whethere cur_ is chameleon
 
     SemanticGraph::Schema* xml_schema_; // XML Schema file
     SemanticGraph::Path xml_schema_path_;
@@ -1661,7 +1657,7 @@ namespace XSDFrontend
       }
 
 
-      friend Boolean
+      friend bool
       operator< (SchemaId const& x, SchemaId const& y)
       {
         return x.path_.native_file_string () < y.path_.native_file_string ()
@@ -1709,26 +1705,26 @@ namespace XSDFrontend
     DefaultValues default_values_;
 
   private:
-    Boolean qualify_attribute_;
-    Boolean qualify_element_;
+    bool qualify_attribute_;
+    bool qualify_element_;
 
-    Boolean valid_;
+    bool valid_;
 
-    Boolean proper_restriction_;
-    Boolean multiple_imports_;
-    Boolean full_schema_check_;
+    bool proper_restriction_;
+    bool multiple_imports_;
+    bool full_schema_check_;
     LocationTranslator* loc_translator_;
     const WarningSet* disabled_warnings_;
-    Boolean disabled_warnings_all_;
+    bool disabled_warnings_all_;
 
     NamespaceMap* cache_;
   };
 
 
   Parser::Impl::
-  Impl (Boolean proper_restriction,
-        Boolean multiple_imports,
-        Boolean full_schema_check,
+  Impl (bool proper_restriction,
+        bool multiple_imports,
+        bool full_schema_check,
         LocationTranslator* t,
         const WarningSet* dw)
       : s_ (0),
@@ -1770,7 +1766,7 @@ namespace XSDFrontend
     return node;
   }
 
-  Void Parser::Impl::
+  void Parser::Impl::
   fill_xml_schema (Schema& s, Path const& path)
   {
     Namespace& ns (s.new_node<Namespace> (path, 1, 1));
@@ -1869,12 +1865,12 @@ namespace XSDFrontend
   }
 
 
-  Evptr<Schema> Parser::Impl::
+  auto_ptr<Schema> Parser::Impl::
   xml_schema (Path const& tu)
   {
     valid_ = true;
 
-    Evptr<Schema> rs (new Schema (tu, 1, 1));
+    auto_ptr<Schema> rs (new Schema (tu, 1, 1));
     fill_xml_schema (*rs, tu);
 
     if (!valid_)
@@ -1882,7 +1878,7 @@ namespace XSDFrontend
 
     return rs;
   }
-  Evptr<Schema> Parser::Impl::
+  auto_ptr<Schema> Parser::Impl::
   parse (Path const& tu)
   {
     valid_ = true;
@@ -1906,7 +1902,7 @@ namespace XSDFrontend
     if (trace_)
       wcout << "target namespace: " << ns << endl;
 
-    Evptr<Schema> rs (new Schema (tu, root.line (), root.column ()));
+    auto_ptr<Schema> rs (new Schema (tu, root.line (), root.column ()));
 
     // Implied schema with fundamental types.
     //
@@ -1959,7 +1955,7 @@ namespace XSDFrontend
 
       struct Uses: Traversal::Uses
       {
-        virtual Void
+        virtual void
         traverse (Type& u)
         {
           Schema& s (u.schema ());
@@ -1990,19 +1986,19 @@ namespace XSDFrontend
           belongs_.node_traverser (d);
         }
 
-        virtual Void
+        virtual void
         traverse (SemanticGraph::Attribute& a)
         {
           traverse_member (a);
         }
 
-        virtual Void
+        virtual void
         traverse (SemanticGraph::Element& e)
         {
           traverse_member (e);
         }
 
-        Void
+        void
         traverse_member (SemanticGraph::Member& m)
         {
           if (m.typed_p () &&
@@ -2028,7 +2024,7 @@ namespace XSDFrontend
         {
         }
 
-        virtual Void
+        virtual void
         traverse (SemanticGraph::Type& t)
         {
           if (!t.named_p ())
@@ -2108,7 +2104,7 @@ namespace XSDFrontend
     return rs;
   }
 
-  Evptr<Schema> Parser::Impl::
+  auto_ptr<Schema> Parser::Impl::
   parse (Paths const& paths)
   {
     valid_ = true;
@@ -2121,7 +2117,7 @@ namespace XSDFrontend
     NamespaceMap cache;
     cache_ = &cache;
 
-    Evptr<Schema> rs (new Schema ("", 0, 0));
+    auto_ptr<Schema> rs (new Schema ("", 0, 0));
 
     // Implied schema with fundamental types.
     //
@@ -2206,7 +2202,7 @@ namespace XSDFrontend
 
       struct Uses: Traversal::Uses
       {
-        virtual Void
+        virtual void
         traverse (Type& u)
         {
           Schema& s (u.schema ());
@@ -2237,19 +2233,19 @@ namespace XSDFrontend
           belongs_.node_traverser (d);
         }
 
-        virtual Void
+        virtual void
         traverse (SemanticGraph::Attribute& a)
         {
           traverse_member (a);
         }
 
-        virtual Void
+        virtual void
         traverse (SemanticGraph::Element& e)
         {
           traverse_member (e);
         }
 
-        virtual Void
+        virtual void
         traverse_member (SemanticGraph::Member& m)
         {
           if (m.typed_p () &&
@@ -2275,7 +2271,7 @@ namespace XSDFrontend
         {
         }
 
-        virtual Void
+        virtual void
         traverse (SemanticGraph::Type& t)
         {
           if (!t.named_p ())
@@ -2355,11 +2351,11 @@ namespace XSDFrontend
     return rs;
   }
 
-  Void Parser::Impl::
+  void Parser::Impl::
   schema (XML::Element const& s)
   {
-    Boolean old_qa (qualify_attribute_);
-    Boolean old_qe (qualify_element_);
+    bool old_qa (qualify_attribute_);
+    bool old_qe (qualify_element_);
 
     if (String af = trim (s["attributeFormDefault"]))
       qualify_attribute_ = af == L"qualified";
@@ -2407,7 +2403,7 @@ namespace XSDFrontend
     qualify_element_ = old_qe;
   }
 
-  Void Parser::Impl::
+  void Parser::Impl::
   import (XML::Element const& i)
   {
     NarrowString loc (
@@ -2492,7 +2488,7 @@ namespace XSDFrontend
       s.context ().set ("absolute-path", abs_path);
 
       Schema* old_cur (cur_);
-      Boolean old_cur_chameleon (cur_chameleon_);
+      bool old_cur_chameleon (cur_chameleon_);
       cur_ = &s;
       cur_chameleon_ = false;
 
@@ -2521,7 +2517,7 @@ namespace XSDFrontend
     }
   }
 
-  Void Parser::Impl::
+  void Parser::Impl::
   include (XML::Element const& i)
   {
     NarrowString loc (
@@ -2607,7 +2603,7 @@ namespace XSDFrontend
       schema_map_[schema_id] = &s;
       s.context ().set ("absolute-path", abs_path);
 
-      Boolean chameleon (false);
+      bool chameleon (false);
 
       if (ns.empty () && !(cur_ns = (cur_->names_begin ())->name ()).empty ())
       {
@@ -2627,7 +2623,7 @@ namespace XSDFrontend
         wcout << "target namespace: " << ns << endl;
 
       Schema* old_cur (cur_);
-      Boolean old_cur_chameleon (cur_chameleon_);
+      bool old_cur_chameleon (cur_chameleon_);
       cur_ = &s;
       cur_chameleon_ = chameleon;
 
@@ -2656,8 +2652,8 @@ namespace XSDFrontend
     }
   }
 
-  Void Parser::Impl::
-  element_group (XML::Element const& g, Boolean in_compositor)
+  void Parser::Impl::
+  element_group (XML::Element const& g, bool in_compositor)
   {
     if (String name = trim (g["name"]))
     {
@@ -2721,8 +2717,8 @@ namespace XSDFrontend
         {
           Compositor& c (compositor ());
 
-          UnsignedLong min (parse_min (trim (g["minOccurs"])));
-          UnsignedLong max (parse_max (trim (g["maxOccurs"])));
+          unsigned long min (parse_min (trim (g["minOccurs"])));
+          unsigned long max (parse_max (trim (g["maxOccurs"])));
 
           ElementGroupRef ref (
             uq_name, ns_name,
@@ -2744,8 +2740,8 @@ namespace XSDFrontend
 
           Scope& s (scope ());
 
-          UnsignedLong min (parse_min (trim (g["minOccurs"])));
-          UnsignedLong max (parse_max (trim (g["maxOccurs"])));
+          unsigned long min (parse_min (trim (g["minOccurs"])));
+          unsigned long max (parse_max (trim (g["maxOccurs"])));
 
           ElementGroupRef ref (
             uq_name, ns_name, min, max == unbounded ? 0 : max, s);
@@ -2892,8 +2888,8 @@ namespace XSDFrontend
 
     // Find first non-space character.
     //
-    Size
-    find_ns (const WideChar* s, Size size, Size pos)
+    size_t
+    find_ns (const wchar_t* s, size_t size, size_t pos)
     {
       while (pos < size &&
              (s[pos] == 0x20 || // space
@@ -2907,8 +2903,8 @@ namespace XSDFrontend
 
     // Find first space character.
     //
-    Size
-    find_s (const WideChar* s, Size size, Size pos)
+    size_t
+    find_s (const wchar_t* s, size_t size, size_t pos)
     {
       while (pos < size &&
              s[pos] != 0x20 && // space
@@ -2929,7 +2925,7 @@ namespace XSDFrontend
 
     Union& node (s_->new_node<Union> (file (), t.line (), t.column ()));
 
-    Boolean has_members (false);
+    bool has_members (false);
 
     if (String members = trim (u["memberTypes"]))
     {
@@ -2938,17 +2934,17 @@ namespace XSDFrontend
       // the late resolutions into specific places. It is simpler
       // to just do the whole resolution later.
       //
-      const WideChar* data (members.c_str ());
-      Size size (members.size ());
+      const wchar_t* data (members.c_str ());
+      size_t size (members.size ());
 
       UnionMemberTypes* m (0);
 
       // Traverse the type list while logically collapsing spaces.
       //
-      for (Size i (find_ns (data, size, 0)); i != String::npos;)
+      for (size_t i (find_ns (data, size, 0)); i != String::npos;)
       {
         String s;
-        Size j (find_s (data, size, i));
+        size_t j (find_s (data, size, i));
 
         if (j != String::npos)
         {
@@ -3055,7 +3051,7 @@ namespace XSDFrontend
 
     annotation (false);
 
-    Boolean enum_ (false);
+    bool enum_ (false);
 
     if (!base)
     {
@@ -3195,7 +3191,7 @@ namespace XSDFrontend
     return rv;
   }
 
-  Void Parser::Impl::
+  void Parser::Impl::
   enumeration (XML::Element const& e)
   {
     String value (e["value"]);
@@ -3269,8 +3265,8 @@ namespace XSDFrontend
 
         if (c)
         {
-          UnsignedLong min (parse_min (trim (e["minOccurs"])));
-          UnsignedLong max (parse_max (trim (e["maxOccurs"])));
+          unsigned long min (parse_min (trim (e["minOccurs"])));
+          unsigned long max (parse_max (trim (e["maxOccurs"])));
 
           if (!(min == 0 && max == 0))
             s_->new_edge<ContainsCompositor> (
@@ -3340,14 +3336,14 @@ namespace XSDFrontend
   }
 
   Choice* Parser::Impl::
-  choice (XML::Element const& c, Boolean in_compositor)
+  choice (XML::Element const& c, bool in_compositor)
   {
     Choice& node (s_->new_node<Choice> (file (), c.line (), c.column ()));
 
     if (in_compositor)
     {
-      UnsignedLong min (parse_min (trim (c["minOccurs"])));
-      UnsignedLong max (parse_max (trim (c["maxOccurs"])));
+      unsigned long min (parse_min (trim (c["minOccurs"])));
+      unsigned long max (parse_max (trim (c["maxOccurs"])));
 
       if (!(min == 0 && max == 0))
         s_->new_edge<ContainsParticle> (
@@ -3387,14 +3383,14 @@ namespace XSDFrontend
   }
 
   Sequence* Parser::Impl::
-  sequence (XML::Element const& s, Boolean in_compositor)
+  sequence (XML::Element const& s, bool in_compositor)
   {
     Sequence& node (s_->new_node<Sequence> (file (), s.line (), s.column ()));
 
     if (in_compositor)
     {
-      UnsignedLong min (parse_min (trim (s["minOccurs"])));
-      UnsignedLong max (parse_max (trim (s["maxOccurs"])));
+      unsigned long min (parse_min (trim (s["minOccurs"])));
+      unsigned long max (parse_max (trim (s["maxOccurs"])));
 
       if (!(min == 0 && max == 0))
         s_->new_edge<ContainsParticle> (
@@ -3433,7 +3429,7 @@ namespace XSDFrontend
     return &node;
   }
 
-  Void Parser::Impl::
+  void Parser::Impl::
   simple_content (XML::Element const& c)
   {
     push (c);
@@ -3456,7 +3452,7 @@ namespace XSDFrontend
     pop ();
   }
 
-  Void Parser::Impl::
+  void Parser::Impl::
   complex_content (XML::Element const& c, Complex& type)
   {
     if (String m = trim (c["mixed"]))
@@ -3482,7 +3478,7 @@ namespace XSDFrontend
     pop ();
   }
 
-  Void Parser::Impl::
+  void Parser::Impl::
   simple_content_extension (XML::Element const& e)
   {
     if (trace_)
@@ -3514,7 +3510,7 @@ namespace XSDFrontend
     pop ();
   }
 
-  Void Parser::Impl::
+  void Parser::Impl::
   simple_content_restriction (XML::Element const& r)
   {
     String base (trim (r["base"]));
@@ -3652,7 +3648,7 @@ namespace XSDFrontend
     pop ();
   }
 
-  Void Parser::Impl::
+  void Parser::Impl::
   complex_content_extension (XML::Element const& e, Complex& type)
   {
     if (trace_)
@@ -3686,8 +3682,8 @@ namespace XSDFrontend
 
       if (c)
       {
-        UnsignedLong min (parse_min (trim (e["minOccurs"])));
-        UnsignedLong max (parse_max (trim (e["maxOccurs"])));
+        unsigned long min (parse_min (trim (e["minOccurs"])));
+        unsigned long max (parse_max (trim (e["maxOccurs"])));
 
         if (!(min == 0 && max == 0))
           s_->new_edge<ContainsCompositor> (
@@ -3715,7 +3711,7 @@ namespace XSDFrontend
     pop ();
   }
 
-  Void Parser::Impl::
+  void Parser::Impl::
   complex_content_restriction (XML::Element const& e, Complex& type)
   {
     if (trace_)
@@ -3769,8 +3765,8 @@ namespace XSDFrontend
 
       if (c)
       {
-        UnsignedLong min (parse_min (trim (e["minOccurs"])));
-        UnsignedLong max (parse_max (trim (e["maxOccurs"])));
+        unsigned long min (parse_min (trim (e["minOccurs"])));
+        unsigned long max (parse_max (trim (e["maxOccurs"])));
 
         if (!(min == 0 && max == 0))
           s_->new_edge<ContainsCompositor> (
@@ -3798,10 +3794,10 @@ namespace XSDFrontend
     pop ();
   }
 
-  Void Parser::Impl::
-  element (XML::Element const& e, Boolean global)
+  void Parser::Impl::
+  element (XML::Element const& e, bool global)
   {
-    Boolean qualified (global ? true : qualify_element_);
+    bool qualified (global ? true : qualify_element_);
 
     if (String form = trim (e["form"]))
       qualified = form == L"qualified";
@@ -3820,8 +3816,8 @@ namespace XSDFrontend
 
       if (!global)
       {
-        UnsignedLong min (parse_min (trim (e["minOccurs"])));
-        UnsignedLong max (parse_max (trim (e["maxOccurs"])));
+        unsigned long min (parse_min (trim (e["minOccurs"])));
+        unsigned long max (parse_max (trim (e["maxOccurs"])));
 
         if (!(min == 0 && max == 0))
         {
@@ -3955,8 +3951,8 @@ namespace XSDFrontend
         s_->new_node<Element> (
           file (), e.line (), e.column (), true, true));
 
-      UnsignedLong min (parse_min (trim (e["minOccurs"])));
-      UnsignedLong max (parse_max (trim (e["maxOccurs"])));
+      unsigned long min (parse_min (trim (e["minOccurs"])));
+      unsigned long max (parse_max (trim (e["maxOccurs"])));
 
       // Default and fixed values are mutually exclusive.
       //
@@ -4114,7 +4110,7 @@ namespace XSDFrontend
   }
 
   SemanticGraph::Annotation* Parser::Impl::
-  annotation (Boolean process)
+  annotation (bool process)
   {
     Annotation* r (0);
 
@@ -4141,7 +4137,7 @@ namespace XSDFrontend
               // Use first non-structured (text only) documentation element.
               //
               String text;
-              Boolean struc (false);
+              bool struc (false);
               DOMElement* de (doc.dom_element());
 
               for (DOMNode* n (de->getFirstChild ());
@@ -4187,10 +4183,10 @@ namespace XSDFrontend
   }
 
 
-  Void Parser::Impl::
-  attribute (XML::Element const& a, Boolean global)
+  void Parser::Impl::
+  attribute (XML::Element const& a, bool global)
   {
-    Boolean optional (true);
+    bool optional (true);
 
     String use (trim (a["use"]));
 
@@ -4199,7 +4195,7 @@ namespace XSDFrontend
     else if (use == L"required")
       optional = false;
 
-    Boolean qualified (global ? true : qualify_attribute_);
+    bool qualified (global ? true : qualify_attribute_);
 
     if (String form = trim (a["form"]))
       qualified = form == L"qualified";
@@ -4444,7 +4440,7 @@ namespace XSDFrontend
     }
   }
 
-  Void Parser::Impl::
+  void Parser::Impl::
   attribute_group (XML::Element const& g)
   {
     if (String name = trim (g["name"]))
@@ -4543,7 +4539,7 @@ namespace XSDFrontend
     }
   }
 
-  Void Parser::Impl::
+  void Parser::Impl::
   any (XML::Element const& a)
   {
     if (trace_)
@@ -4557,8 +4553,8 @@ namespace XSDFrontend
     Any& any (
       s_->new_node<Any> (file (), a.line (), a.column (), namespaces));
 
-    UnsignedLong min (parse_min (trim (a["minOccurs"])));
-    UnsignedLong max (parse_max (trim (a["maxOccurs"])));
+    unsigned long min (parse_min (trim (a["minOccurs"])));
+    unsigned long max (parse_max (trim (a["maxOccurs"])));
 
     // Parse annotation.
     //
@@ -4577,7 +4573,7 @@ namespace XSDFrontend
       // Any has no name so we have to come up with a fake one in order to
       // put it into the scope.
       //
-      UnsignedLong count;
+      unsigned long count;
       SemanticGraph::Context& ctx (scope ().context ());
 
       if (!ctx.count ("any-name-count"))
@@ -4586,16 +4582,16 @@ namespace XSDFrontend
         ctx.set ("any-name-count", count);
       }
       else
-        count = ++(ctx.get<UnsignedLong> ("any-name-count"));
+        count = ++(ctx.get<unsigned long> ("any-name-count"));
 
-      std::basic_ostringstream<WideChar> os;
+      std::basic_ostringstream<wchar_t> os;
       os << "any #" << count;
 
       s_->new_edge<Names> (scope (), any, os.str ());
     }
   }
 
-  Void Parser::Impl::
+  void Parser::Impl::
   any_attribute (XML::Element const& a)
   {
     if (trace_)
@@ -4623,7 +4619,7 @@ namespace XSDFrontend
     // in order to put it into the scope.
     //
 
-    UnsignedLong count;
+    unsigned long count;
     SemanticGraph::Context& ctx (scope ().context ());
 
     if (!ctx.count ("any-attribute-name-count"))
@@ -4632,9 +4628,9 @@ namespace XSDFrontend
       ctx.set ("any-attribute-name-count", count);
     }
     else
-      count = ++(ctx.get<UnsignedLong> ("any-attribute-name-count"));
+      count = ++(ctx.get<unsigned long> ("any-attribute-name-count"));
 
-    std::basic_ostringstream<WideChar> os;
+    std::basic_ostringstream<wchar_t> os;
     os << "any-attribute #" << count;
 
     s_->new_edge<Names> (scope (), any, os.str ());
@@ -4773,7 +4769,7 @@ namespace XSDFrontend
       }
     }
 
-    Void
+    void
     map_file (Path const& abs, Path const& rel)
     {
       file_map_[abs] = rel;
@@ -4789,13 +4785,13 @@ namespace XSDFrontend
   class ErrorHandler : public  Xerces::DOMErrorHandler
   {
   public:
-    ErrorHandler (Boolean& valid, XSDFrontend::Context const& ctx)
+    ErrorHandler (bool& valid, XSDFrontend::Context const& ctx)
         : valid_ (valid),
           ctx_ (ctx)
     {
     }
 
-    virtual Boolean
+    virtual bool
     handleError (Xerces::DOMError const& e)
     {
       // Xerces likes to say "Fatal error encountered during schema scan".
@@ -4838,7 +4834,7 @@ namespace XSDFrontend
     }
 
   private:
-    Boolean& valid_;
+    bool& valid_;
     XSDFrontend::Context const& ctx_;
   };
 
@@ -5023,7 +5019,7 @@ namespace XSDFrontend
 
 
   XML::AutoPtr<Xerces::DOMDocument> Parser::Impl::
-  dom (Path const& tu, Boolean validate)
+  dom (Path const& tu, bool validate)
   {
     using namespace Xerces;
 
@@ -5133,7 +5129,7 @@ namespace XSDFrontend
     }
     catch (Xerces::DOMException const& e)
     {
-      Size const size = 2047;
+      size_t const size = 2047;
       XMLCh text[size + 1];
 
       wcerr << tu << ": ice: Xerces::DOMException: ";
@@ -5176,9 +5172,9 @@ namespace XSDFrontend
   }
 
   Parser::
-  Parser (Boolean proper_restriction,
-          Boolean multiple_imports,
-          Boolean full_schema_check)
+  Parser (bool proper_restriction,
+          bool multiple_imports,
+          bool full_schema_check)
       : impl_ (new Impl (proper_restriction,
                          multiple_imports,
                          full_schema_check,
@@ -5188,9 +5184,9 @@ namespace XSDFrontend
   }
 
   Parser::
-  Parser (Boolean proper_restriction,
-          Boolean multiple_imports,
-          Boolean full_schema_check,
+  Parser (bool proper_restriction,
+          bool multiple_imports,
+          bool full_schema_check,
           LocationTranslator& t,
           const WarningSet& d)
       : impl_ (new Impl (proper_restriction,
@@ -5201,19 +5197,19 @@ namespace XSDFrontend
   {
   }
 
-  Evptr<SemanticGraph::Schema> Parser::
+  auto_ptr<SemanticGraph::Schema> Parser::
   parse (SemanticGraph::Path const& path)
   {
     return impl_->parse (path);
   }
 
-  Evptr<SemanticGraph::Schema> Parser::
+  auto_ptr<SemanticGraph::Schema> Parser::
   parse (SemanticGraph::Paths const& paths)
   {
     return impl_->parse (paths);
   }
 
-  Evptr<SemanticGraph::Schema> Parser::
+  auto_ptr<SemanticGraph::Schema> Parser::
   xml_schema (SemanticGraph::Path const& path)
   {
     return impl_->xml_schema (path);

@@ -11,7 +11,7 @@ namespace XSDFrontend
   {
     // ContainsParticle
     //
-    Void ContainsParticle::
+    void ContainsParticle::
     traverse (Type& c)
     {
       dispatch (c.particle ());
@@ -20,7 +20,7 @@ namespace XSDFrontend
 
     // ContainsCompositor
     //
-    Void ContainsCompositor::
+    void ContainsCompositor::
     traverse (Type& c)
     {
       dispatch (c.compositor ());
@@ -29,7 +29,7 @@ namespace XSDFrontend
 
     // Compositor
     //
-    Void Compositor::
+    void Compositor::
     traverse (Type& c)
     {
       pre (c);
@@ -37,25 +37,25 @@ namespace XSDFrontend
       post (c);
     }
 
-    Void Compositor::
+    void Compositor::
     pre (Type&)
     {
     }
 
-    Void Compositor::
+    void Compositor::
     contains (Type& c)
     {
       iterate_and_dispatch (
         c.contains_begin (), c.contains_end (), edge_traverser ());
     }
 
-    Void Compositor::
+    void Compositor::
     contains (Type& c, EdgeDispatcher& d)
     {
       iterate_and_dispatch (c.contains_begin (), c.contains_end (), d);
     }
 
-    Void Compositor::
+    void Compositor::
     post (Type&)
     {
     }
@@ -63,7 +63,7 @@ namespace XSDFrontend
 
     // All
     //
-    Void All::
+    void All::
     traverse (Type& c)
     {
       pre (c);
@@ -71,25 +71,25 @@ namespace XSDFrontend
       post (c);
     }
 
-    Void All::
+    void All::
     pre (Type&)
     {
     }
 
-    Void All::
+    void All::
     contains (Type& c)
     {
       iterate_and_dispatch (
         c.contains_begin (), c.contains_end (), edge_traverser ());
     }
 
-    Void All::
+    void All::
     contains (Type& c, EdgeDispatcher& d)
     {
       iterate_and_dispatch (c.contains_begin (), c.contains_end (), d);
     }
 
-    Void All::
+    void All::
     post (Type&)
     {
     }
@@ -97,7 +97,7 @@ namespace XSDFrontend
 
     // Choice
     //
-    Void Choice::
+    void Choice::
     traverse (Type& c)
     {
       pre (c);
@@ -105,25 +105,25 @@ namespace XSDFrontend
       post (c);
     }
 
-    Void Choice::
+    void Choice::
     pre (Type&)
     {
     }
 
-    Void Choice::
+    void Choice::
     contains (Type& c)
     {
       iterate_and_dispatch (
         c.contains_begin (), c.contains_end (), edge_traverser ());
     }
 
-    Void Choice::
+    void Choice::
     contains (Type& c, EdgeDispatcher& d)
     {
       iterate_and_dispatch (c.contains_begin (), c.contains_end (), d);
     }
 
-    Void Choice::
+    void Choice::
     post (Type&)
     {
     }
@@ -131,7 +131,7 @@ namespace XSDFrontend
 
     // Sequence
     //
-    Void Sequence::
+    void Sequence::
     traverse (Type& c)
     {
       pre (c);
@@ -139,25 +139,25 @@ namespace XSDFrontend
       post (c);
     }
 
-    Void Sequence::
+    void Sequence::
     pre (Type&)
     {
     }
 
-    Void Sequence::
+    void Sequence::
     contains (Type& c)
     {
       iterate_and_dispatch (
         c.contains_begin (), c.contains_end (), edge_traverser ());
     }
 
-    Void Sequence::
+    void Sequence::
     contains (Type& c, EdgeDispatcher& d)
     {
       iterate_and_dispatch (c.contains_begin (), c.contains_end (), d);
     }
 
-    Void Sequence::
+    void Sequence::
     post (Type&)
     {
     }

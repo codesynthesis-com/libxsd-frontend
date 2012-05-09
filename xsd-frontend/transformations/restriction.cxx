@@ -33,7 +33,7 @@ namespace XSDFrontend
       {
       }
 
-      virtual Void
+      virtual void
       traverse (Type& c)
       {
         using namespace SemanticGraph;
@@ -152,7 +152,7 @@ namespace XSDFrontend
       }
 
     private:
-      Void
+      void
       handle (SemanticGraph::Particle& r, SemanticGraph::Particle& b)
       {
         using namespace SemanticGraph;
@@ -214,7 +214,7 @@ namespace XSDFrontend
         }
       }
 
-      Boolean
+      bool
       match (SemanticGraph::Particle& r, SemanticGraph::Particle& b)
       {
         using namespace SemanticGraph;
@@ -281,7 +281,7 @@ namespace XSDFrontend
         return false;
       }
 
-      Void
+      void
       merge_attributes (SemanticGraph::Complex& c,
                         SemanticGraph::Complex& base)
       {
@@ -363,7 +363,7 @@ namespace XSDFrontend
         }
       }
 
-      Void
+      void
       handle_any_attributes (SemanticGraph::Complex& c, BaseList& bl)
       {
         using namespace SemanticGraph;
@@ -459,7 +459,7 @@ namespace XSDFrontend
 
     public:
 
-      virtual Void
+      virtual void
       traverse (SemanticGraph::Element& e)
       {
         SemanticGraph::Type& t (e.type ());
@@ -478,7 +478,7 @@ namespace XSDFrontend
         }
       }
 
-      virtual Void
+      virtual void
       traverse (SemanticGraph::Attribute& a)
       {
         SemanticGraph::Type& t (a.type ());
@@ -506,7 +506,7 @@ namespace XSDFrontend
         {
         }
 
-        virtual Void
+        virtual void
         traverse (SemanticGraph::Complex& c)
         {
           if (d1_)
@@ -531,7 +531,7 @@ namespace XSDFrontend
     //
     struct Uses: Traversal::Uses
     {
-      virtual Void
+      virtual void
       traverse (Type& u)
       {
         SemanticGraph::Schema& s (u.schema ());
@@ -547,7 +547,7 @@ namespace XSDFrontend
 
   namespace Transformations
   {
-    Void Restriction::
+    void Restriction::
     transform (SemanticGraph::Schema& s, SemanticGraph::Path const&)
     {
       Traversal::Schema schema;

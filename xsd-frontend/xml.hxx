@@ -23,9 +23,9 @@ namespace XSDFrontend
 
     inline
     String
-    transcode (XMLCh const* s, Size length)
+    transcode (XMLCh const* s, size_t length)
     {
-      if (sizeof (WideChar) == 4)
+      if (sizeof (wchar_t) == 4)
       {
         // UTF-32
         //
@@ -33,8 +33,8 @@ namespace XSDFrontend
 
         // Find what the resulting buffer size will be.
         //
-        Size rl (0);
-        Boolean valid (true);
+        size_t rl (0);
+        bool valid (true);
 
         for (XMLCh const* p (s); p < end; ++p)
         {
@@ -59,27 +59,27 @@ namespace XSDFrontend
         String r;
         r.reserve (rl + 1);
         r.resize (rl);
-        WideChar* rs (const_cast<WideChar*> (r.c_str ()));
+        wchar_t* rs (const_cast<wchar_t*> (r.c_str ()));
 
-        Size i (0);
+        size_t i (0);
 
         for (XMLCh const* p (s); p < end; ++p)
         {
           XMLCh x (*p);
 
           if (x < 0xD800 || x > 0xDBFF)
-            rs[i++] = WideChar (x);
+            rs[i++] = wchar_t (x);
           else
             rs[i++] = ((x - 0xD800) << 10) + (*++p - 0xDC00) + 0x10000;
         }
 
         return r;
       }
-      else if (sizeof (WideChar) == 2)
+      else if (sizeof (wchar_t) == 2)
       {
         // UTF-16
         //
-        return String (reinterpret_cast<const WideChar*> (s), length);
+        return String (reinterpret_cast<const wchar_t*> (s), length);
       }
       else
         return String ();
@@ -106,16 +106,16 @@ namespace XSDFrontend
     XMLCh*
     transcode (String const& str)
     {
-      Size l (str.size ());
-      WideChar const* s (str.c_str ());
+      size_t l (str.size ());
+      wchar_t const* s (str.c_str ());
 
-      if (sizeof (WideChar) == 4)
+      if (sizeof (wchar_t) == 4)
       {
         // Find what the resulting buffer size will be.
         //
-        Size rl (0);
+        size_t rl (0);
 
-        for (WideChar const* p (s); p < s + l; ++p)
+        for (wchar_t const* p (s); p < s + l; ++p)
         {
           rl += (*p & 0xFFFF0000) ? 2 : 1;
         }
@@ -123,9 +123,9 @@ namespace XSDFrontend
         XMLCh* r (new XMLCh[rl + 1]);
         XMLCh* ir (r);
 
-        for (WideChar const* p (s); p < s + l; ++p)
+        for (wchar_t const* p (s); p < s + l; ++p)
         {
-          WideChar w (*p);
+          wchar_t w (*p);
 
           if (w & 0xFFFF0000)
           {
@@ -142,12 +142,12 @@ namespace XSDFrontend
 
         return r;
       }
-      else if (sizeof (WideChar) == 2)
+      else if (sizeof (wchar_t) == 2)
       {
         XMLCh* r (new XMLCh[l + 1]);
         XMLCh* ir (r);
 
-        for (Size i (0); i < l; ++ir, ++i)
+        for (size_t i (0); i < l; ++ir, ++i)
           *ir = static_cast<XMLCh> (s[i]);
 
         *ir = XMLCh (0);
@@ -166,7 +166,7 @@ namespace XSDFrontend
       {
       }
 
-      XMLChString (WideChar const* s)
+      XMLChString (wchar_t const* s)
           : s_ (transcode (String (s)))
       {
       }
@@ -216,20 +216,20 @@ namespace XSDFrontend
       }
 
     public:
-      UnsignedLong
+      unsigned long
       line () const
       {
         //@@ cache
         //
-        return reinterpret_cast<UnsignedLong> (e_->getUserData (line_key));
+        return reinterpret_cast<unsigned long> (e_->getUserData (line_key));
       }
 
-      UnsignedLong
+      unsigned long
       column () const
       {
         //@@ cache
         //
-        return reinterpret_cast<UnsignedLong> (e_->getUserData (column_key));
+        return reinterpret_cast<unsigned long> (e_->getUserData (column_key));
       }
 
     public:
@@ -242,7 +242,7 @@ namespace XSDFrontend
     public:
       // Attribute identified by a name.
       //
-      Boolean
+      bool
       attribute_p (String const& name) const
       {
         return attribute_p ("", name);
@@ -263,7 +263,7 @@ namespace XSDFrontend
       // Attribute identified by namespace and name.
       //
 
-      Boolean
+      bool
       attribute_p (String const& namespace_, String const& name) const
       {
         Xerces::DOMAttr* a (
@@ -302,7 +302,7 @@ namespace XSDFrontend
     inline String
     prefix (String const& n)
     {
-      Size i (0);
+      size_t i (0);
       while (i < n.length () && n[i] != L':') ++i;
 
       //std::wcerr << "prefix " << n << " "
@@ -314,7 +314,7 @@ namespace XSDFrontend
     inline String
     uq_name (String const& n)
     {
-      Size i (0);
+      size_t i (0);
       while (i < n.length () && n[i] != L':') ++i;
 
       return String (n.c_str () + (i == n.length () ? 0 : i + 1));
@@ -377,7 +377,7 @@ namespace XSDFrontend
 
       if (p == 0)
       {
-        Boolean r (e.dom_element ()->isDefaultNamespace (ns.c_str ()));
+        bool r (e.dom_element ()->isDefaultNamespace (ns.c_str ()));
 
         if (r)
           return L"";
@@ -517,9 +517,9 @@ namespace XSDFrontend
 
       // Conversion to bool.
       //
-      typedef X* (AutoPtr::*BooleanConvertible)() const;
+      typedef X* (AutoPtr::*boolConvertible)() const;
 
-      operator BooleanConvertible () const throw ()
+      operator boolConvertible () const throw ()
       {
         return x_ ? &AutoPtr<X>::operator-> : 0;
       }
@@ -543,7 +543,7 @@ namespace XSDFrontend
         }
       }
 
-      Void
+      void
       push_back (AutoPtr<X>& x)
       {
         Base::push_back (0);

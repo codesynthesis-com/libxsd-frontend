@@ -17,16 +17,14 @@
 using namespace Cult::Types;
 using namespace XSDFrontend;
 
-using std::wcerr;
-using std::wcout;
-using std::endl;
+using namespace std;
 
-UnsignedLong indent = 0;
+static unsigned long indent;
 
 std::wostream&
 ind (std::wostream& os)
 {
-  for (UnsignedLong n (0); n < indent; ++n)
+  for (unsigned long n (0); n < indent; ++n)
     os << L"  ";
 
   return os;
@@ -48,7 +46,7 @@ namespace
 
   struct List: Traversal::List
   {
-    virtual Void
+    virtual void
     traverse (Type& l)
     {
       if (l.annotated_p ())
@@ -78,7 +76,7 @@ namespace
 
   struct Union: Traversal::Union
   {
-    virtual Void
+    virtual void
     traverse (Type& u)
     {
       if (u.annotated_p ())
@@ -114,7 +112,7 @@ namespace
 
   struct Enumerator: Traversal::Enumerator
   {
-    virtual Void
+    virtual void
     traverse (Type& e)
     {
       if (e.annotated_p ())
@@ -127,7 +125,7 @@ namespace
 
   struct Enumeration: Traversal::Enumeration
   {
-    virtual Void
+    virtual void
     traverse (Type& e)
     {
       if (e.annotated_p ())
@@ -149,7 +147,7 @@ namespace
 
   struct ContainsParticle: Traversal::ContainsParticle
   {
-    virtual Void
+    virtual void
     traverse (Type& cp)
     {
       wcout << ind << "[" << cp.min () << ", ";
@@ -165,7 +163,7 @@ namespace
 
   struct ContainsCompositor: Traversal::ContainsCompositor
   {
-    virtual Void
+    virtual void
     traverse (Type& cc)
     {
       wcout << ind << "[" << cc.min () << ", ";
@@ -183,7 +181,7 @@ namespace
                      Traversal::Choice,
                      Traversal::Sequence
   {
-    virtual Void
+    virtual void
     traverse (SemanticGraph::All& a)
     {
       wcout << "all" << endl
@@ -198,7 +196,7 @@ namespace
       wcout << ind << "}" << endl;
     }
 
-    virtual Void
+    virtual void
     traverse (SemanticGraph::Choice& c)
     {
       wcout << "choice" << endl
@@ -213,7 +211,7 @@ namespace
       wcout << ind << "}" << endl;
     }
 
-    virtual Void
+    virtual void
     traverse (SemanticGraph::Sequence& s)
     {
       wcout << "sequence" << endl
@@ -231,7 +229,7 @@ namespace
 
   struct Attribute: Traversal::Attribute
   {
-    virtual Void
+    virtual void
     traverse (Type& a)
     {
       if (a.annotated_p ())
@@ -266,7 +264,7 @@ namespace
 
   struct AnyAttribute: Traversal::AnyAttribute
   {
-    virtual Void
+    virtual void
     traverse (Type& a)
     {
       if (a.annotated_p ())
@@ -279,7 +277,7 @@ namespace
 
   struct Element: Traversal::Element
   {
-    virtual Void
+    virtual void
     traverse (Type& e)
     {
       wcout << "element " << e.name ();
@@ -309,7 +307,7 @@ namespace
 
   struct ElementFlat: Traversal::Element
   {
-    virtual Void
+    virtual void
     traverse (Type& e)
     {
       if (e.annotated_p ())
@@ -329,7 +327,7 @@ namespace
 
   struct Any: Traversal::Any
   {
-    virtual Void
+    virtual void
     traverse (Type& a)
     {
       wcout << "any '" << a.name () << "'" << endl;
@@ -338,7 +336,7 @@ namespace
 
   struct AnyFlat: Traversal::Any
   {
-    virtual Void
+    virtual void
     traverse (Type& a)
     {
       if (a.annotated_p ())
@@ -351,7 +349,7 @@ namespace
 
   struct Complex: Traversal::Complex
   {
-    virtual Void
+    virtual void
     traverse (Type& c)
     {
       // Anonymous type definition can recursively refer to itself.
@@ -389,7 +387,7 @@ namespace
 
   struct GlobalAttribute: Traversal::Attribute
   {
-    virtual Void
+    virtual void
     traverse (Type& a)
     {
       if (a.annotated_p ())
@@ -423,7 +421,7 @@ namespace
 
   struct GlobalElement: Traversal::Element
   {
-    virtual Void
+    virtual void
     traverse (Type& e)
     {
       if (e.annotated_p ())
@@ -457,7 +455,7 @@ namespace
 
   struct Namespace: Traversal::Namespace
   {
-    virtual Void
+    virtual void
     traverse (Type& n)
     {
       wcout << ind << "namespace " << n.name () << endl
@@ -477,21 +475,21 @@ namespace
                Traversal::Sources
                //Traversal::Implies @@ Need a --with-implies option
   {
-    virtual Void
+    virtual void
     traverse (SemanticGraph::Imports& i)
     {
       if (traverse_uses (i, "imports"))
         Traversal::Imports::traverse (i);
     }
 
-    virtual Void
+    virtual void
     traverse (SemanticGraph::Includes& i)
     {
       if (traverse_uses (i, "includes"))
         Traversal::Includes::traverse (i);
     }
 
-    virtual Void
+    virtual void
     traverse (SemanticGraph::Sources& s)
     {
       if (traverse_uses (s, "sources"))
@@ -499,7 +497,7 @@ namespace
     }
 
     /*
-    virtual Void
+    virtual void
     traverse (SemanticGraph::Implies& i)
     {
       if (traverse_uses (i, "implies"))
@@ -507,7 +505,7 @@ namespace
     }
     */
 
-    Boolean
+    bool
     traverse_uses (SemanticGraph::Uses& u, String const& type)
     {
       SemanticGraph::Schema& s (u.schema ());
@@ -531,7 +529,7 @@ namespace
 
   struct Schema: Traversal::Schema
   {
-    virtual Void
+    virtual void
     traverse (Type& s)
     {
       wcout << ind << "{" << endl;
@@ -556,9 +554,8 @@ struct AnonymousNameTranslator: Transformations::AnonymousNameTranslator
   }
 };
 
-
-Int
-main (Int argc, Char* argv[])
+int
+main (int argc, Char* argv[])
 {
   try
   {
@@ -571,8 +568,8 @@ main (Int argc, Char* argv[])
     // Parse options.
     //
     Int i (1);
-    Boolean anon (false);
-    Boolean enum_synth (false);
+    bool anon (false);
+    bool enum_synth (false);
 
     for (; i < argc; ++i)
     {
@@ -589,7 +586,7 @@ main (Int argc, Char* argv[])
     SemanticGraph::Path path (argv[i], boost::filesystem::native);
 
     Parser parser (true, false, true);
-    Evptr<SemanticGraph::Schema> tu (parser.parse (path));
+    auto_ptr<SemanticGraph::Schema> tu (parser.parse (path));
 
     //
     //

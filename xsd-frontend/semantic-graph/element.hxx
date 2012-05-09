@@ -31,13 +31,13 @@ namespace XSDFrontend
       }
 
     public:
-      Void
+      void
       set_left_node (Element& n)
       {
         substitution_ = &n;
       }
 
-      Void
+      void
       set_right_node (Element& n)
       {
         root_ = &n;
@@ -53,7 +53,7 @@ namespace XSDFrontend
                    public virtual Particle
     {
     public:
-      Boolean
+      bool
       substitutes_p () const
       {
         return substitutes_ != 0;
@@ -68,18 +68,18 @@ namespace XSDFrontend
 
     public:
       Element (Path const& file,
-               UnsignedLong line,
-               UnsignedLong column,
-               Boolean global,
-               Boolean qualified);
+               unsigned long line,
+               unsigned long column,
+               bool global,
+               bool qualified);
 
-      Void
+      void
       add_edge_left (Substitutes& e)
       {
         substitutes_ = &e;
       }
 
-      Void
+      void
       add_edge_right (Substitutes&) {}
 
       using Member::add_edge_left;

@@ -9,7 +9,7 @@ namespace XSDFrontend
 {
   namespace Traversal
   {
-    Void AttributeGroup::
+    void AttributeGroup::
     traverse (Type& g)
     {
       pre (g);
@@ -17,12 +17,12 @@ namespace XSDFrontend
       post (g);
     }
 
-    Void AttributeGroup::
+    void AttributeGroup::
     pre (Type&)
     {
     }
 
-    Void AttributeGroup::
+    void AttributeGroup::
     post (Type&)
     {
     }

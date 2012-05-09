@@ -24,7 +24,7 @@ namespace XSDFrontend
     class Simplifier
     {
     public:
-      Void
+      void
       transform (SemanticGraph::Schema&, SemanticGraph::Path const&);
     };
   }

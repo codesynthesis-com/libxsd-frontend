@@ -16,8 +16,8 @@ namespace XSDFrontend
     {
     public:
       AttributeGroup (Path const& file,
-                      UnsignedLong line,
-                      UnsignedLong column);
+                      unsigned long line,
+                      unsigned long column);
     };
   }
 }

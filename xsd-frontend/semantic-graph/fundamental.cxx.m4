@@ -31,8 +31,8 @@ define(`fundamental_type_impl', `
 
       $1::
       $1 (Path const& file,
-          SemanticGraph::UnsignedLong line,
-          SemanticGraph::UnsignedLong column)
+          unsigned long line,
+          unsigned long column)
         : Node (file, line, column)
       {
       }')
@@ -146,8 +146,8 @@ fundamental_type(`id')
 
       IdRef::
       IdRef (Path const& file,
-             SemanticGraph::UnsignedLong line,
-             SemanticGraph::UnsignedLong column)
+             unsigned long line,
+             unsigned long column)
           : Node (file, line, column)
       {
       }
@@ -172,8 +172,8 @@ fundamental_type(`id')
 
       IdRefs::
       IdRefs (Path const& file,
-              SemanticGraph::UnsignedLong line,
-              SemanticGraph::UnsignedLong column)
+              unsigned long line,
+              unsigned long column)
           : Node (file, line, column)
       {
       }

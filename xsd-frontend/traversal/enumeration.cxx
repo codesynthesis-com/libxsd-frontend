@@ -11,7 +11,7 @@ namespace XSDFrontend
   {
     // Enumeration
     //
-    Void Enumeration::
+    void Enumeration::
     traverse (Type& e)
     {
       pre (e);
@@ -21,30 +21,30 @@ namespace XSDFrontend
       post (e);
     }
 
-    Void Enumeration::
+    void Enumeration::
     pre (Type&)
     {
     }
 
-    Void Enumeration::
+    void Enumeration::
     name (Type&)
     {
     }
 
-    Void Enumeration::
+    void Enumeration::
     inherits (Type& e)
     {
       inherits (e, *this);
     }
 
-    Void Enumeration::
+    void Enumeration::
     inherits (Type& e, EdgeDispatcher& d)
     {
       if (e.inherits_p ())
         d.dispatch (e.inherits ());
     }
 
-    Void Enumeration::
+    void Enumeration::
     post (Type&)
     {
     }
@@ -52,7 +52,7 @@ namespace XSDFrontend
 
     // Enumerator
     //
-    Void Enumerator::
+    void Enumerator::
     traverse (Type& e)
     {
       pre (e);
@@ -61,29 +61,29 @@ namespace XSDFrontend
       post (e);
     }
 
-    Void Enumerator::
+    void Enumerator::
     pre (Type&)
     {
     }
 
-    Void Enumerator::
+    void Enumerator::
     belongs (Type& e, EdgeDispatcher& d)
     {
       d.dispatch (e.belongs ());
     }
 
-    Void Enumerator::
+    void Enumerator::
     belongs (Type& e)
     {
       belongs (e, edge_traverser ());
     }
 
-    Void Enumerator::
+    void Enumerator::
     name (Type&)
     {
     }
 
-    Void Enumerator::
+    void Enumerator::
     post (Type&)
     {
     }

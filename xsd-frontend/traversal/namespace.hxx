@@ -15,7 +15,7 @@ namespace XSDFrontend
   {
     struct Namespace: ScopeTemplate<SemanticGraph::Namespace>
     {
-      virtual Void
+      virtual void
       traverse (Type& m)
       {
         pre (m);
@@ -24,17 +24,17 @@ namespace XSDFrontend
         post (m);
       }
 
-      virtual Void
+      virtual void
       pre (Type&)
       {
       }
 
-      virtual Void
+      virtual void
       name (Type&)
       {
       }
 
-      virtual Void
+      virtual void
       post (Type&)
       {
       }

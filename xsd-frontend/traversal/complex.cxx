@@ -9,7 +9,7 @@ namespace XSDFrontend
 {
   namespace Traversal
   {
-    Void Complex::
+    void Complex::
     traverse (Type& c)
     {
       pre (c);
@@ -20,43 +20,43 @@ namespace XSDFrontend
       post (c);
     }
 
-    Void Complex::
+    void Complex::
     pre (Type&)
     {
     }
 
-    Void Complex::
+    void Complex::
     name (Type&)
     {
     }
 
-    Void Complex::
+    void Complex::
     inherits (Type& c)
     {
       inherits (c, *this);
     }
 
-    Void Complex::
+    void Complex::
     inherits (Type& c, EdgeDispatcher& d)
     {
       if (c.inherits_p ())
         d.dispatch (c.inherits ());
     }
 
-    Void Complex::
+    void Complex::
     contains_compositor (Type& c)
     {
       contains_compositor (c, *this);
     }
 
-    Void Complex::
+    void Complex::
     contains_compositor (Type& c, EdgeDispatcher& d)
     {
       if (c.contains_compositor_p ())
         d.dispatch (c.contains_compositor ());
     }
 
-    Void Complex::
+    void Complex::
     post (Type&)
     {
     }

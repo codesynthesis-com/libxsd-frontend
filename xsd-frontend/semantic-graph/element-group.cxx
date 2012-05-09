@@ -12,7 +12,7 @@ namespace XSDFrontend
   namespace SemanticGraph
   {
     ElementGroup::
-    ElementGroup (Path const& file, UnsignedLong line, UnsignedLong column)
+    ElementGroup (Path const& file, unsigned long line, unsigned long column)
         : Node (file, line, column), contains_compositor_ (0)
     {
     }

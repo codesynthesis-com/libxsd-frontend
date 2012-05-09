@@ -69,7 +69,7 @@ namespace XSDFrontend
 
     public:
       template <typename X>
-      Boolean
+      bool
       is_a () const
       {
         return dynamic_cast<X const*> (this) != 0;
@@ -79,7 +79,7 @@ namespace XSDFrontend
       mutable Context context_;
     };
 
-    inline Boolean
+    inline bool
     operator== (Edge const& x, Edge const& y)
     {
       return &x == &y;
@@ -104,20 +104,20 @@ namespace XSDFrontend
         return file_;
       }
 
-      UnsignedLong
+      unsigned long
       line () const
       {
         return line_;
       }
 
-      UnsignedLong
+      unsigned long
       column () const
       {
         return column_;
       }
 
     public:
-      Boolean
+      bool
       annotated_p () const
       {
         return annotates_ != 0;
@@ -134,7 +134,7 @@ namespace XSDFrontend
 
     public:
       template <typename X>
-      Boolean
+      bool
       is_a () const
       {
         return dynamic_cast<X const*> (this) != 0;
@@ -144,12 +144,12 @@ namespace XSDFrontend
       virtual
       ~Node () {}
 
-      Node (Path const& file, UnsignedLong line, UnsignedLong column)
+      Node (Path const& file, unsigned long line, unsigned long column)
           : annotates_ (0), file_ (file), line_ (line), column_ (column)
       {
       }
 
-      Void
+      void
       add_edge_right (Annotates& a)
       {
         annotates_ = &a;
@@ -165,11 +165,11 @@ namespace XSDFrontend
       mutable Context context_;
       Annotates* annotates_;
       Path file_;
-      UnsignedLong line_;
-      UnsignedLong column_;
+      unsigned long line_;
+      unsigned long column_;
     };
 
-    inline Boolean
+    inline bool
     operator== (Node const& x, Node const& y)
     {
       return &x == &y;
@@ -216,26 +216,26 @@ namespace XSDFrontend
     public:
       Names (Name const& name): name_ (name) {}
 
-      Void
+      void
       set_left_node (Scope& n)
       {
         scope_ = &n;
       }
 
-      Void
+      void
       set_right_node (Nameable& n)
       {
         named_ = &n;
       }
 
-      Void
+      void
       clear_left_node (Scope& n)
       {
         assert (scope_ == &n);
         scope_ = 0;
       }
 
-      Void
+      void
       clear_right_node (Nameable& n)
       {
         assert (named_ == &n);
@@ -252,7 +252,7 @@ namespace XSDFrontend
     class Nameable: public virtual Node
     {
     public:
-      Boolean
+      bool
       named_p () const
       {
         return named_ != 0;
@@ -282,13 +282,13 @@ namespace XSDFrontend
     public:
       Nameable (): named_ (0) {}
 
-      Void
+      void
       add_edge_right (Names& e)
       {
         named_ = &e;
       }
 
-      Void
+      void
       remove_edge_right (Names& e)
       {
         assert (named_ == &e);
@@ -365,12 +365,12 @@ namespace XSDFrontend
       }
 
     public:
-      Scope (Path const& file, UnsignedLong line, UnsignedLong column)
+      Scope (Path const& file, unsigned long line, unsigned long column)
           : Node (file, line, column)
       {
       }
 
-      Void
+      void
       add_edge_left (Names& e)
       {
         NamesList::iterator i (names_.insert (names_.end (), &e));
@@ -378,7 +378,7 @@ namespace XSDFrontend
         names_map_[e.name ()].push_back (&e);
       }
 
-      Void
+      void
       remove_edge_left (Names& e)
       {
         ListIteratorMap::iterator i (iterator_map_.find (&e));
@@ -397,7 +397,7 @@ namespace XSDFrontend
         }
       }
 
-      Void
+      void
       add_edge_left (Names& e, NamesIterator const& after)
       {
         NamesList::iterator i;
@@ -456,7 +456,7 @@ namespace XSDFrontend
 
       //
       //
-      Boolean
+      bool
       inherits_p () const
       {
         return inherits_ != 0;
@@ -504,13 +504,13 @@ namespace XSDFrontend
     public:
       Type (): inherits_ (0) {}
 
-      Void
+      void
       add_edge_right (Belongs& e)
       {
         classifies_.push_back (&e);
       }
 
-      Void
+      void
       add_edge_right (Inherits& e)
       {
         begets_.push_back (&e);
@@ -518,16 +518,16 @@ namespace XSDFrontend
 
       using Nameable::add_edge_right;
 
-      Void
+      void
       add_edge_left (Arguments& a)
       {
         arguments_.insert (&a);
       }
 
-      Void
+      void
       remove_edge_left (Arguments&);
 
-      Void
+      void
       add_edge_left (Inherits& e)
       {
         inherits_ = &e;
@@ -552,7 +552,7 @@ namespace XSDFrontend
       Type&
       type () const;
 
-      Boolean
+      bool
       typed_p () const
       {
         return belongs_ != 0;
@@ -561,7 +561,7 @@ namespace XSDFrontend
     public:
       Instance (): belongs_ (0) {}
 
-      Void
+      void
       add_edge_left (Belongs& e)
       {
         belongs_ = &e;
@@ -588,13 +588,13 @@ namespace XSDFrontend
       }
 
     public:
-      Void
+      void
       set_left_node (Instance& n)
       {
         instance_ = &n;
       }
 
-      Void
+      void
       set_right_node (Type& n)
       {
         type_ = &n;
@@ -624,13 +624,13 @@ namespace XSDFrontend
       }
 
     public:
-      Void
+      void
       set_left_node (Type& n)
       {
         derived_ = &n;
       }
 
-      Void
+      void
       set_right_node (Type& n)
       {
         base_ = &n;
@@ -651,7 +651,7 @@ namespace XSDFrontend
       typedef std::map<WideString, WideString> Facets;
       typedef Facets::iterator FacetIterator;
 
-      Boolean
+      bool
       facet_empty ()
       {
         return facets_.empty ();
@@ -675,7 +675,7 @@ namespace XSDFrontend
         return facets_.find (name);
       }
 
-      Void
+      void
       facet_insert (String const& name, String const& value)
       {
         facets_[name] = value;
@@ -717,13 +717,13 @@ namespace XSDFrontend
     public:
       BelongsToNamespace (): member_ (0), namespace__ (0) {}
 
-      Void
+      void
       set_left_node (Member& n)
       {
         member_ = &n;
       }
 
-      Void
+      void
       set_right_node (Namespace& n)
       {
         namespace__ = &n;
@@ -742,13 +742,13 @@ namespace XSDFrontend
       // Member is global either if it is defined outside any type
       // or it is a ref="" of a global member.
       //
-      Boolean
+      bool
       global_p () const
       {
         return global_;
       }
 
-      Boolean
+      bool
       qualified_p () const
       {
         return qualified_;
@@ -768,13 +768,13 @@ namespace XSDFrontend
       // is a superset of the default value semantics. As such setting the
       // fixed value appears as if the default value was also set.
       //
-      Boolean
+      bool
       default_p () const
       {
         return value_type_ != ValueType::none;
       }
 
-      Boolean
+      bool
       fixed_p () const
       {
         return value_type_ == ValueType::fixed;
@@ -793,14 +793,14 @@ namespace XSDFrontend
 
       //
       //
-      Void
+      void
       default_ (WideString const& v)
       {
         value_ = v;
         value_type_ = ValueType::default_;
       }
 
-      Void
+      void
       fixed (WideString const& v)
       {
         value_ = v;
@@ -808,7 +808,7 @@ namespace XSDFrontend
       }
 
     public:
-      Member (Boolean global, Boolean qualified)
+      Member (bool global, bool qualified)
           : global_ (global),
             qualified_ (qualified),
             belongs_to_namespace_ (0),
@@ -816,7 +816,7 @@ namespace XSDFrontend
       {
       }
 
-      Void
+      void
       add_edge_left (BelongsToNamespace& e)
       {
         // In the parser we sometimes re-add the same adge.
@@ -827,8 +827,8 @@ namespace XSDFrontend
       using Instance::add_edge_left;
 
     private:
-      Boolean global_;
-      Boolean qualified_;
+      bool global_;
+      bool qualified_;
       BelongsToNamespace* belongs_to_namespace_;
 
       struct ValueType
@@ -894,19 +894,19 @@ namespace XSDFrontend
     public:
       using Type::add_edge_right;
 
-      Void
+      void
       add_edge_right (Arguments& a)
       {
         argumented_.push_back (&a);
       }
 
-      Void
+      void
       add_edge_right (Arguments& a, ArgumentedIterator const& pos)
       {
         argumented_.insert (pos.base (), &a);
       }
 
-      Void
+      void
       remove_edge_right (Arguments&);
 
     private:
@@ -966,7 +966,7 @@ namespace XSDFrontend
     class AnyType: public virtual Type
     {
     public:
-      AnyType (Path const& file, UnsignedLong line, UnsignedLong column)
+      AnyType (Path const& file, unsigned long line, unsigned long column)
           : Node (file, line, column)
       {
       }
@@ -981,7 +981,7 @@ namespace XSDFrontend
     class AnySimpleType: public virtual Type
     {
     public:
-      AnySimpleType (Path const& file, UnsignedLong line, UnsignedLong column)
+      AnySimpleType (Path const& file, unsigned long line, unsigned long column)
           : Node (file, line, column)
       {
       }

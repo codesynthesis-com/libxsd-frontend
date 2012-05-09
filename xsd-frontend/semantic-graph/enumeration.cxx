@@ -14,7 +14,7 @@ namespace XSDFrontend
     // Enumeration
     //
     Enumeration::
-    Enumeration (Path const& file, UnsignedLong line, UnsignedLong column)
+    Enumeration (Path const& file, unsigned long line, unsigned long column)
         : Node (file, line, column)
     {
     }
@@ -22,7 +22,7 @@ namespace XSDFrontend
     // Enumerator
     //
     Enumerator::
-    Enumerator (Path const& file, UnsignedLong line, UnsignedLong column)
+    Enumerator (Path const& file, unsigned long line, unsigned long column)
         : Node (file, line, column)
     {
     }

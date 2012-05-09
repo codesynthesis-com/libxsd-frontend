@@ -11,19 +11,19 @@ namespace XSDFrontend
   {
     // Particle
     //
-    Void Particle::
+    void Particle::
     traverse (Type& c)
     {
       pre (c);
       post (c);
     }
 
-    Void Particle::
+    void Particle::
     pre (Type&)
     {
     }
 
-    Void Particle::
+    void Particle::
     post (Type&)
     {
     }

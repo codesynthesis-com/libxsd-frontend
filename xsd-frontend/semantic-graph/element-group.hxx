@@ -24,9 +24,9 @@ namespace XSDFrontend
       }
 
     public:
-      ElementGroup (Path const& file, UnsignedLong line, UnsignedLong column);
+      ElementGroup (Path const& file, unsigned long line, unsigned long column);
 
-      Void
+      void
       add_edge_left (ContainsCompositor& e)
       {
         contains_compositor_ = &e;

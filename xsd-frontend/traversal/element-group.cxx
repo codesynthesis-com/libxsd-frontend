@@ -9,7 +9,7 @@ namespace XSDFrontend
 {
   namespace Traversal
   {
-    Void ElementGroup::
+    void ElementGroup::
     traverse (Type& g)
     {
       pre (g);
@@ -18,24 +18,24 @@ namespace XSDFrontend
       post (g);
     }
 
-    Void ElementGroup::
+    void ElementGroup::
     pre (Type&)
     {
     }
 
-    Void ElementGroup::
+    void ElementGroup::
     contains_compositor (Type& g, EdgeDispatcher& d)
     {
       d.dispatch (g.contains_compositor ());
     }
 
-    Void ElementGroup::
+    void ElementGroup::
     contains_compositor (Type& g)
     {
       contains_compositor (g, *this);
     }
 
-    Void ElementGroup::
+    void ElementGroup::
     post (Type&)
     {
     }

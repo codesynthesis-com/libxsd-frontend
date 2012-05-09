@@ -6,7 +6,8 @@
 #ifndef XSD_FRONTEND_SEMANTIC_GRAPH_SCHEMA_HXX
 #define XSD_FRONTEND_SEMANTIC_GRAPH_SCHEMA_HXX
 
-#include <cult/containers/set.hxx>
+#include <set>
+#include <vector>
 
 #include <xsd-frontend/semantic-graph/elements.hxx>
 #include <xsd-frontend/semantic-graph/namespace.hxx>
@@ -99,13 +100,8 @@ namespace XSDFrontend
     //
     class Schema: public graph, public virtual Scope
     {
-      typedef
-      Cult::Containers::Vector<Uses*>
-      UsesList;
-
-      typedef
-      Cult::Containers::Vector<Uses*>
-      UsedList;
+      typedef std::vector<Uses*> UsesList;
+      typedef std::vector<Uses*> UsedList;
 
     public:
       Schema (Path const& file, UnsignedLong line, UnsignedLong column)
@@ -118,9 +114,7 @@ namespace XSDFrontend
       Schema& operator= (Schema const&);
 
     public:
-      typedef
-      Bits::PointerIterator<UsesList::ConstIterator>
-      UsesIterator;
+      typedef pointer_iterator<UsesList::const_iterator> UsesIterator;
 
       UsesIterator
       uses_begin () const
@@ -134,9 +128,8 @@ namespace XSDFrontend
         return uses_.end ();
       }
 
-      typedef
-      Bits::PointerIterator<UsedList::ConstIterator>
-      UsedIterator;
+    public:
+      typedef pointer_iterator<UsedList::const_iterator> UsedIterator;
 
       UsedIterator
       used_begin () const
@@ -225,7 +218,7 @@ namespace XSDFrontend
       }
 
     private:
-      typedef Cult::Containers::Set<Schema const*> SchemaSet;
+      typedef std::set<Schema const*> SchemaSet;
 
       Void
       find_ (Name const& name, NamesList&, SchemaSet&) const;

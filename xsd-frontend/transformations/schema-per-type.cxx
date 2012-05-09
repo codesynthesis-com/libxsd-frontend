@@ -3,19 +3,19 @@
 // copyright : Copyright (c) 2006-2011 Code Synthesis Tools CC
 // license   : GNU GPL v2 + exceptions; see accompanying LICENSE file
 
-#include <xsd-frontend/transformations/schema-per-type.hxx>
+#include <strings.h> // strcasecmp
 
-#include <xsd-frontend/semantic-graph.hxx>
-#include <xsd-frontend/traversal.hxx>
-
-#include <cult/containers/map.hxx>
-#include <cult/containers/set.hxx>
-#include <cult/containers/vector.hxx>
+#include <map>
+#include <set>
+#include <vector>
 
 #include <sstream>
 #include <iostream>
 
-#include <strings.h> // strcasecmp
+#include <xsd-frontend/semantic-graph.hxx>
+#include <xsd-frontend/traversal.hxx>
+
+#include <xsd-frontend/transformations/schema-per-type.hxx>
 
 using std::wcerr;
 using std::endl;
@@ -27,9 +27,10 @@ namespace XSDFrontend
   typedef WideString String;
   typedef Transformations::SchemaPerType::Failed Failed;
 
-  typedef Containers::Vector<SemanticGraph::Schema*> Schemas;
-  typedef Containers::Map<SemanticGraph::Type*,
-                          SemanticGraph::Schema*> TypeSchemaMap;
+  typedef std::vector<SemanticGraph::Schema*> Schemas;
+  typedef
+  std::map<SemanticGraph::Type*, SemanticGraph::Schema*>
+  TypeSchemaMap;
 
   // Compare file paths case-insensitively.
   //
@@ -42,7 +43,7 @@ namespace XSDFrontend
     }
   };
 
-  typedef Containers::Set<NarrowString, FileComparator> FileSet;
+  typedef std::set<NarrowString, FileComparator> FileSet;
 
   namespace
   {
@@ -298,7 +299,7 @@ namespace XSDFrontend
       {
         using namespace SemanticGraph;
 
-        TypeSchemaMap::Iterator i (tsm_.find (&t));
+        TypeSchemaMap::iterator i (tsm_.find (&t));
 
         // If a type is not present in the map then it must be
         // a built-in type.
@@ -334,7 +335,7 @@ namespace XSDFrontend
       SemanticGraph::Schema& root_;
       Char const* by_value_key_;
       TypeSchemaMap& tsm_;
-      Containers::Set<SemanticGraph::Type*> type_set_;
+      std::set<SemanticGraph::Type*> type_set_;
 
       Traversal::Names names_;
     };
@@ -377,7 +378,7 @@ namespace XSDFrontend
       //
       FileSet file_set;
 
-      for (Schemas::Iterator i (schemas.begin ()); i != schemas.end (); ++i)
+      for (Schemas::iterator i (schemas.begin ()); i != schemas.end (); ++i)
       {
         SemanticGraph::Path const& path (
           (*i)->context ().get<SemanticGraph::Path> ("absolute-path"));
@@ -444,7 +445,7 @@ namespace XSDFrontend
       //
       TypeSchemaMap tsm;
 
-      for (Schemas::Iterator i (schemas.begin ()); i != schemas.end (); ++i)
+      for (Schemas::iterator i (schemas.begin ()); i != schemas.end (); ++i)
       {
         process_schema (**i, root, *xsd, tsm, file_set, fat_type_file_, trans_);
       }
@@ -454,7 +455,7 @@ namespace XSDFrontend
       // Establish include/import dependencies. While at it add the
       // new schemas to the list which we will return.
       //
-      for (TypeSchemaMap::Iterator i (tsm.begin ()); i != tsm.end (); ++i)
+      for (TypeSchemaMap::iterator i (tsm.begin ()); i != tsm.end (); ++i)
       {
         SemanticGraph::Schema& s (*i->second);
         Type t (s, root, by_value_key_, tsm);

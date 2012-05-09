@@ -3,12 +3,10 @@
 // copyright : Copyright (c) 2006-2011 Code Synthesis Tools CC
 // license   : GNU GPL v2 + exceptions; see accompanying LICENSE file
 
-#include <xsd-frontend/transformations/simplifier.hxx>
-
 #include <xsd-frontend/semantic-graph.hxx>
 #include <xsd-frontend/traversal.hxx>
 
-#include <cult/containers/vector.hxx>
+#include <xsd-frontend/transformations/simplifier.hxx>
 
 namespace XSDFrontend
 {

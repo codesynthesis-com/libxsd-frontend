@@ -6,6 +6,11 @@
 #ifndef XSD_FRONTEND_SEMANTIC_GRAPH_ELEMENTS_HXX
 #define XSD_FRONTEND_SEMANTIC_GRAPH_ELEMENTS_HXX
 
+#include <set>
+#include <map>
+#include <list>
+#include <vector>
+#include <utility> // std::pair
 #include <iosfwd>
 
 #include <boost/filesystem/path.hpp>
@@ -13,16 +18,10 @@
 #include <boost/filesystem/exception.hpp>
 
 #include <cutl/container/graph.hxx>
+#include <cutl/container/pointer-iterator.hxx>
+#include <cutl/compiler/context.hxx>
 
 #include <cult/types.hxx>
-
-#include <cult/containers/set.hxx>
-#include <cult/containers/map.hxx>
-#include <cult/containers/list.hxx>
-#include <cult/containers/pair.hxx>
-#include <cult/containers/vector.hxx>
-
-#include <cutl/compiler/context.hxx>
 
 namespace XSDFrontend
 {
@@ -30,141 +29,17 @@ namespace XSDFrontend
   {
     using namespace cutl;
 
+    using container::pointer_iterator;
+
     using namespace Cult::Types;
 
-    namespace Bits
-    {
-      //@@ Should end up in Cult::Meta
-      //
-      template <typename X>
-      struct strip_pointer
-      {
-        typedef X Type;
-      };
-
-      template <typename X>
-      struct strip_pointer<X*>
-      {
-        typedef X Type;
-      };
-
-      template <typename I>
-      struct PointerIterator
-      {
-        typedef
-        typename strip_pointer<typename I::Value>::Type
-        Value;
-
-        typedef I BaseIterator;
-        typedef Value& Reference;
-        typedef Value* Pointer;
-
-        PointerIterator ()
-            : i_ () // i_ can be of a pointer type.
-        {
-        }
-
-        PointerIterator (I const& i)
-            : i_ (i)
-        {
-        }
-
-      public:
-        Reference
-        operator* () const
-        {
-          return **i_;
-        }
-
-        Pointer
-        operator-> () const
-        {
-          return *i_;
-        }
-
-        I const&
-        base () const
-        {
-          return i_;
-        }
-
-      public:
-        PointerIterator&
-        operator++ ()
-        {
-          ++i_;
-          return *this;
-        }
-
-        PointerIterator
-        operator++ (Int)
-        {
-          PointerIterator r (*this);
-          ++i_;
-          return r;
-        }
-
-        PointerIterator&
-        operator-- ()
-        {
-          --i_;
-          return *this;
-        }
-
-        PointerIterator
-        operator-- (Int)
-        {
-          PointerIterator r (*this);
-          --i_;
-          return r;
-        }
-
-      private:
-        I i_;
-      };
-
-      template <typename I>
-      inline
-      Boolean
-      operator== (PointerIterator<I> const& a, PointerIterator<I> const& b)
-      {
-        return a.base () == b.base ();
-      }
-
-      template <typename I>
-      inline
-      Boolean
-      operator!= (PointerIterator<I> const& a, PointerIterator<I> const& b)
-      {
-        return a.base () != b.base ();
-      }
-
-      template <typename I>
-      inline
-      typename PointerIterator<I>::BaseIterator::difference_type
-      operator- (PointerIterator<I> const& a, PointerIterator<I> const& b)
-      {
-        return a.base () - b.base ();
-      }
-    }
-
     //
     //
-    typedef
-    boost::filesystem::filesystem_error
-    InvalidPath;
+    typedef boost::filesystem::path Path;
+    typedef std::vector<Path> Paths;
+    typedef boost::filesystem::filesystem_error InvalidPath;
 
-    typedef
-    boost::filesystem::path
-    Path;
-
-    typedef
-    Cult::Containers::Vector<Path>
-    Paths;
-
-    typedef
-    compiler::context
-    Context;
+    typedef compiler::context Context;
 
     //
     //
@@ -426,42 +301,25 @@ namespace XSDFrontend
       Names* named_;
     };
 
-
     //
     //
-    typedef
-    Cult::Containers::Set<Nameable*>
-    Nameables;
-
+    typedef std::set<Nameable*> Nameables;
 
     //
     //
     class Scope: public virtual Nameable
     {
     protected:
-      typedef
-      Cult::Containers::List<Names*>
-      NamesList;
-
-      typedef
-      Cult::Containers::Map<Names*, NamesList::Iterator>
-      ListIteratorMap;
-
-      typedef
-      Cult::Containers::Map<Name, NamesList>
-      NamesMap;
+      typedef std::list<Names*> NamesList;
+      typedef std::map<Names*, NamesList::iterator> ListIteratorMap;
+      typedef std::map<Name, NamesList> NamesMap;
 
     public:
-      typedef
-      Bits::PointerIterator<NamesList::Iterator>
-      NamesIterator;
+      typedef pointer_iterator<NamesList::iterator> NamesIterator;
+      typedef pointer_iterator<NamesList::const_iterator> NamesConstIterator;
 
       typedef
-      Bits::PointerIterator<NamesList::ConstIterator>
-      NamesConstIterator;
-
-      typedef
-      Cult::Containers::Pair <NamesConstIterator, NamesConstIterator>
+      std::pair<NamesConstIterator, NamesConstIterator>
       NamesIteratorPair;
 
       NamesIterator
@@ -491,7 +349,7 @@ namespace XSDFrontend
       virtual NamesIteratorPair
       find (Name const& name) const
       {
-        NamesMap::ConstIterator i (names_map_.find (name));
+        NamesMap::const_iterator i (names_map_.find (name));
 
         if (i == names_map_.end ())
           return NamesIteratorPair (names_.end (), names_.end ());
@@ -502,7 +360,7 @@ namespace XSDFrontend
       NamesIterator
       find (Names& e)
       {
-        ListIteratorMap::Iterator i (iterator_map_.find (&e));
+        ListIteratorMap::iterator i (iterator_map_.find (&e));
         return i != iterator_map_.end () ? i->second : names_.end ();
       }
 
@@ -515,7 +373,7 @@ namespace XSDFrontend
       Void
       add_edge_left (Names& e)
       {
-        NamesList::Iterator i (names_.insert (names_.end (), &e));
+        NamesList::iterator i (names_.insert (names_.end (), &e));
         iterator_map_[&e] = i;
         names_map_[e.name ()].push_back (&e);
       }
@@ -523,15 +381,15 @@ namespace XSDFrontend
       Void
       remove_edge_left (Names& e)
       {
-        ListIteratorMap::Iterator i (iterator_map_.find (&e));
+        ListIteratorMap::iterator i (iterator_map_.find (&e));
         assert (i != iterator_map_.end ());
 
         names_.erase (i->second);
         iterator_map_.erase (i);
 
-        NamesMap::Iterator j (names_map_.find (e.name ()));
+        NamesMap::iterator j (names_map_.find (e.name ()));
 
-        for (NamesList::Iterator i (j->second.begin ());
+        for (NamesList::iterator i (j->second.begin ());
              i != j->second.end (); ++i)
         {
           if (*i == &e)
@@ -542,13 +400,13 @@ namespace XSDFrontend
       Void
       add_edge_left (Names& e, NamesIterator const& after)
       {
-        NamesList::Iterator i;
+        NamesList::iterator i;
 
         if (after.base () == names_.end ())
           i = names_.insert (names_.begin (), &e);
         else
         {
-          NamesList::Iterator j (after.base ());
+          NamesList::iterator j (after.base ());
           i = names_.insert (++j, &e);
         }
 
@@ -577,22 +435,12 @@ namespace XSDFrontend
     class Type: public virtual Nameable
     {
     protected:
-      typedef
-      Cult::Containers::Vector<Belongs*>
-      Classifies;
-
-      typedef
-      Cult::Containers::Vector<Inherits*>
-      Begets;
-
-      typedef
-      Cult::Containers::Set<Arguments*>
-      ArgumentsSet;
+      typedef std::vector<Belongs*> Classifies;
+      typedef std::vector<Inherits*> Begets;
+      typedef std::set<Arguments*> ArgumentsSet;
 
     public:
-      typedef
-      Bits::PointerIterator<Classifies::ConstIterator>
-      ClassifiesIterator;
+      typedef pointer_iterator<Classifies::const_iterator> ClassifiesIterator;
 
       ClassifiesIterator
       classifies_begin () const
@@ -623,9 +471,7 @@ namespace XSDFrontend
 
       //
       //
-      typedef
-      Bits::PointerIterator<Begets::ConstIterator>
-      BegetsIterator;
+      typedef pointer_iterator<Begets::const_iterator> BegetsIterator;
 
       BegetsIterator
       begets_begin () const
@@ -641,9 +487,7 @@ namespace XSDFrontend
 
       //
       //
-      typedef
-      Bits::PointerIterator<ArgumentsSet::ConstIterator>
-      ArgumentsIterator;
+      typedef pointer_iterator<ArgumentsSet::const_iterator> ArgumentsIterator;
 
       ArgumentsIterator
       arguments_begin () const
@@ -804,13 +648,8 @@ namespace XSDFrontend
     class Restricts: public virtual Inherits
     {
     public:
-      typedef
-      Cult::Containers::Map<WideString, WideString>
-      Facets;
-
-      typedef
-      Facets::Iterator
-      FacetIterator;
+      typedef std::map<WideString, WideString> Facets;
+      typedef Facets::iterator FacetIterator;
 
       Boolean
       facet_empty ()
@@ -1012,17 +851,12 @@ namespace XSDFrontend
 
     class Specialization: public virtual Type
     {
-      typedef
-      Cult::Containers::Vector<Arguments*>
-      Argumented;
+      typedef std::vector<Arguments*> Argumented;
 
     public:
+      typedef pointer_iterator<Argumented::iterator> ArgumentedIterator;
       typedef
-      Bits::PointerIterator<Argumented::Iterator>
-      ArgumentedIterator;
-
-      typedef
-      Bits::PointerIterator<Argumented::ConstIterator>
+      pointer_iterator<Argumented::const_iterator>
       ArgumentedConstIterator;
 
       ArgumentedIterator

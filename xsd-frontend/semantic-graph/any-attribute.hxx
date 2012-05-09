@@ -6,7 +6,7 @@
 #ifndef XSD_FRONTEND_SEMANTIC_GRAPH_ANY_ATTRIBUTE_HXX
 #define XSD_FRONTEND_SEMANTIC_GRAPH_ANY_ATTRIBUTE_HXX
 
-#include <cult/containers/vector.hxx>
+#include <vector>
 
 #include <xsd-frontend/semantic-graph/elements.hxx>
 #include <xsd-frontend/semantic-graph/namespace.hxx>
@@ -17,12 +17,10 @@ namespace XSDFrontend
   {
     class AnyAttribute: public virtual Nameable
     {
-      typedef
-      Cult::Containers::Vector<WideString>
-      Namespaces;
+      typedef std::vector<WideString> Namespaces;
 
     public:
-      typedef Namespaces::ConstIterator NamespaceIterator;
+      typedef Namespaces::const_iterator NamespaceIterator;
 
       NamespaceIterator
       namespace_begin () const

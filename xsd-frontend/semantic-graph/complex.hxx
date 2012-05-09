@@ -9,8 +9,6 @@
 #include <xsd-frontend/semantic-graph/elements.hxx>
 #include <xsd-frontend/semantic-graph/compositors.hxx>
 
-#include <cult/containers/vector.hxx>
-
 namespace XSDFrontend
 {
   namespace SemanticGraph

@@ -3,12 +3,12 @@
 // copyright : Copyright (c) 2006-2011 Code Synthesis Tools CC
 // license   : GNU GPL v2 + exceptions; see accompanying LICENSE file
 
-#include <xsd-frontend/transformations/enum-synthesis.hxx>
+#include <set>
 
 #include <xsd-frontend/semantic-graph.hxx>
 #include <xsd-frontend/traversal.hxx>
 
-#include <cult/containers/set.hxx>
+#include <xsd-frontend/transformations/enum-synthesis.hxx>
 
 namespace XSDFrontend
 {
@@ -17,7 +17,7 @@ namespace XSDFrontend
 
   namespace
   {
-    typedef Cult::Containers::Set<String> Enumerators;
+    typedef std::set<String> Enumerators;
 
     struct Enumerator: Traversal::Enumerator
     {

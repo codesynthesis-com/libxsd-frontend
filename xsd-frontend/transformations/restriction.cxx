@@ -3,14 +3,13 @@
 // copyright : Copyright (c) 2006-2011 Code Synthesis Tools CC
 // license   : GNU GPL v2 + exceptions; see accompanying LICENSE file
 
-#include <xsd-frontend/transformations/restriction.hxx>
+#include <vector>
+#include <iostream>
 
 #include <xsd-frontend/semantic-graph.hxx>
 #include <xsd-frontend/traversal.hxx>
 
-#include <cult/containers/vector.hxx>
-
-#include <iostream>
+#include <xsd-frontend/transformations/restriction.hxx>
 
 using std::wcerr;
 using std::endl;
@@ -21,7 +20,7 @@ namespace XSDFrontend
 
   typedef WideString String;
   typedef Transformations::Restriction::Failed Failed;
-  typedef Containers::Vector<SemanticGraph::Complex*> BaseList;
+  typedef std::vector<SemanticGraph::Complex*> BaseList;
 
   namespace
   {
@@ -107,7 +106,7 @@ namespace XSDFrontend
             else
             {
               Compositor::ContainsIterator i (root.contains_begin ());
-              BaseList::ReverseIterator j (base_model.rbegin ());
+              BaseList::reverse_iterator j (base_model.rbegin ());
 
               for (; i != root.contains_end (); ++i, ++j)
               {
@@ -369,7 +368,7 @@ namespace XSDFrontend
       {
         using namespace SemanticGraph;
 
-        BaseList::ReverseIterator bi (bl.rbegin ()), be (bl.rend ());
+        BaseList::reverse_iterator bi (bl.rbegin ()), be (bl.rend ());
         Scope::NamesIterator si;
 
         if (bi != be)

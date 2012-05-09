@@ -6,12 +6,11 @@
 #ifndef XSD_FRONTEND_XML_HXX
 #define XSD_FRONTEND_XML_HXX
 
+#include <vector>
 #include <ostream>
 
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/util/XMLString.hpp>
-
-#include <cult/containers/vector.hxx>
 
 #include <xsd-frontend/types.hxx>
 #include <xsd-frontend/schema-dom-parser.hxx>
@@ -530,13 +529,13 @@ namespace XSDFrontend
     };
 
     template <typename X>
-    struct PtrVector: Cult::Containers::Vector<X*>
+    struct PtrVector: std::vector<X*>
     {
-      typedef Cult::Containers::Vector<X*> Base;
+      typedef std::vector<X*> Base;
 
       ~PtrVector ()
       {
-        for (typename Base::Iterator i (this->begin ()), e (this->end ());
+        for (typename Base::iterator i (this->begin ()), e (this->end ());
              i != e; ++i)
         {
           if (*i)

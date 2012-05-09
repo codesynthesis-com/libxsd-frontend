@@ -6,8 +6,9 @@
 #ifndef XSD_FRONTEND_TRANSFORMATIONS_SCHEMA_PER_TYPE_HXX
 #define XSD_FRONTEND_TRANSFORMATIONS_SCHEMA_PER_TYPE_HXX
 
+#include <vector>
+
 #include <cult/types.hxx>
-#include <cult/containers/vector.hxx>
 
 #include <xsd-frontend/semantic-graph/elements.hxx> // Path
 #include <xsd-frontend/semantic-graph/schema.hxx>
@@ -50,7 +51,7 @@ namespace XSDFrontend
                      Boolean fat_type_file,
                      Char const* by_value_key = 0);
 
-      Cult::Containers::Vector<SemanticGraph::Schema*>
+      std::vector<SemanticGraph::Schema*>
       transform (SemanticGraph::Schema&);
 
     private:

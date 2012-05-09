@@ -6,7 +6,7 @@
 #ifndef XSD_FRONTEND_SEMANTIC_GRAPH_ANY_HXX
 #define XSD_FRONTEND_SEMANTIC_GRAPH_ANY_HXX
 
-#include <cult/containers/vector.hxx>
+#include <vector>
 
 #include <xsd-frontend/semantic-graph/elements.hxx>
 #include <xsd-frontend/semantic-graph/particle.hxx>
@@ -19,12 +19,10 @@ namespace XSDFrontend
     class Any: public virtual Nameable,
                public virtual Particle
     {
-      typedef
-      Cult::Containers::Vector<WideString>
-      Namespaces;
+      typedef std::vector<WideString> Namespaces;
 
     public:
-      typedef Namespaces::ConstIterator NamespaceIterator;
+      typedef Namespaces::const_iterator NamespaceIterator;
 
       NamespaceIterator
       namespace_begin () const

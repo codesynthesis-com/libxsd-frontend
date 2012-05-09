@@ -6,7 +6,7 @@
 #ifndef XSD_FRONTEND_SEMANTIC_GRAPH_COMPOSITORS_HXX
 #define XSD_FRONTEND_SEMANTIC_GRAPH_COMPOSITORS_HXX
 
-#include <cult/containers/list.hxx>
+#include <list>
 
 #include <xsd-frontend/semantic-graph/elements.hxx>
 #include <xsd-frontend/semantic-graph/particle.hxx>
@@ -84,17 +84,12 @@ namespace XSDFrontend
     //
     class Compositor: public virtual Particle
     {
-      typedef
-      Cult::Containers::List<ContainsParticle*>
-      ContainsList;
+      typedef std::list<ContainsParticle*> ContainsList;
 
     public:
+      typedef pointer_iterator<ContainsList::iterator> ContainsIterator;
       typedef
-      Bits::PointerIterator<ContainsList::Iterator>
-      ContainsIterator;
-
-      typedef
-      Bits::PointerIterator<ContainsList::ConstIterator>
+      pointer_iterator<ContainsList::const_iterator>
       ContainsConstIterator;
 
       ContainsIterator
@@ -170,7 +165,7 @@ namespace XSDFrontend
           contains_.push_front (&e);
         else
         {
-          ContainsList::Iterator i (after.base ());
+          ContainsList::iterator i (after.base ());
           contains_.insert (++i, &e);
         }
       }
@@ -178,7 +173,7 @@ namespace XSDFrontend
       Void
       remove_edge_left (ContainsParticle& e)
       {
-        for (ContainsList::Iterator i (contains_.begin ());
+        for (ContainsList::iterator i (contains_.begin ());
              i != contains_.end (); ++i)
         {
           if (*i == &e)

@@ -3,6 +3,12 @@
 // copyright : Copyright (c) 2005-2011 Code Synthesis Tools CC
 // license   : GNU GPL v2 + exceptions; see accompanying LICENSE file
 
+#include <map>
+#include <stack>
+#include <vector>
+
+#include <cutl/compiler/type-id.hxx>
+
 #include <xsd-frontend/types.hxx>
 #include <xsd-frontend/parser.hxx>
 #include <xsd-frontend/xml.hxx>
@@ -10,11 +16,6 @@
 
 #include <xsd-frontend/semantic-graph.hxx>
 #include <xsd-frontend/traversal.hxx>
-
-#include <cult/containers/map.hxx>
-#include <cult/containers/stack.hxx>
-#include <cult/containers/vector.hxx>
-#include <cult/rtti/type-id.hxx>
 
 //@@ Do i need this?
 //
@@ -46,7 +47,7 @@ using std::wcout;
 using std::wcerr;
 using std::endl;
 
-using Cult::RTTI::TypeId;
+using cutl::compiler::type_id;
 
 namespace XSDFrontend
 {
@@ -157,9 +158,9 @@ namespace XSDFrontend
       Nameable* second;
     };
 
-    typedef Cult::Containers::Map<String, CacheNodes> NodeMap;
-    typedef Cult::Containers::Map<String, NodeMap> NamespaceMap;
-    typedef Cult::Containers::Vector<SemanticGraph::Member*> DefaultValues;
+    typedef std::map<String, CacheNodes> NodeMap;
+    typedef std::map<String, NodeMap> NamespaceMap;
+    typedef std::vector<SemanticGraph::Member*> DefaultValues;
 
     template <typename X>
     X&
@@ -170,11 +171,11 @@ namespace XSDFrontend
     {
       // First check the cache.
       //
-      NamespaceMap::Iterator i (cache.find (ns_name));
+      NamespaceMap::iterator i (cache.find (ns_name));
 
       if (i != cache.end ())
       {
-        NodeMap::Iterator j (i->second.find (uq_name));
+        NodeMap::iterator j (i->second.find (uq_name));
 
         if (j != i->second.end ())
         {
@@ -225,12 +226,12 @@ namespace XSDFrontend
 
     //
     //
-    typedef Cult::Containers::Map<String, String> Facets;
+    typedef std::map<String, String> Facets;
 
     Void
     copy_facets (Restricts& r, Facets const& f)
     {
-      for (Facets::ConstIterator i (f.begin ()), e (f.end ()); i != e; ++i)
+      for (Facets::const_iterator i (f.begin ()), e (f.end ()); i != e; ++i)
         r.facet_insert (i->first, i->second);
     }
 
@@ -247,7 +248,7 @@ namespace XSDFrontend
       String uq_name;
     };
 
-    typedef Cult::Containers::Vector<UnionMemberType> UnionMemberTypes;
+    typedef std::vector<UnionMemberType> UnionMemberTypes;
 
     //
     //
@@ -286,8 +287,7 @@ namespace XSDFrontend
       Scope::NamesIterator names_pos;
     };
 
-    typedef Cult::Containers::Vector<ElementGroupRef> ElementGroupRefs;
-
+    typedef std::vector<ElementGroupRef> ElementGroupRefs;
 
     //
     //
@@ -308,7 +308,7 @@ namespace XSDFrontend
       Scope::NamesIterator names_pos;
     };
 
-    typedef Cult::Containers::Vector<AttributeGroupRef> AttributeGroupRefs;
+    typedef std::vector<AttributeGroupRef> AttributeGroupRefs;
 
 
     //
@@ -664,7 +664,7 @@ namespace XSDFrontend
           // Process it backwards so that we can just insert each
           // edge in the front.
           //
-          for (UnionMemberTypes::ConstReverseIterator i (m.rbegin ());
+          for (UnionMemberTypes::const_reverse_iterator i (m.rbegin ());
                i != m.rend (); i++)
           {
             try
@@ -706,11 +706,9 @@ namespace XSDFrontend
         //
         if (c.context ().count ("type-ns-name"))
         {
-          using Cult::RTTI::TypeId;
-
           String ns_name (c.context ().get<String> ("type-ns-name"));
           String uq_name (c.context ().get<String> ("type-uq-name"));
-          TypeId edge_id (c.context ().get<TypeId> ("edge-type-id"));
+          type_id edge_id (c.context ().get<type_id> ("edge-type-id"));
 
           c.context ().remove ("type-ns-name");
           c.context ().remove ("type-uq-name");
@@ -762,7 +760,7 @@ namespace XSDFrontend
           // Handle refs from last to first so that multiple insertions
           // to an empty list (always front) end up in proper order.
           //
-          for (AttributeGroupRefs::ReverseIterator i (refs.rbegin ());
+          for (AttributeGroupRefs::reverse_iterator i (refs.rbegin ());
                i != refs.rend (); ++i)
           {
             clone_attribute_group_content (*i, c);
@@ -898,7 +896,7 @@ namespace XSDFrontend
           // Handle refs from last to first so that multiple insertions
           // to an empty list (always front) end up in proper order.
           //
-          for (AttributeGroupRefs::ReverseIterator i (refs.rbegin ());
+          for (AttributeGroupRefs::reverse_iterator i (refs.rbegin ());
                i != refs.rend (); ++i)
           {
             clone_attribute_group_content (*i, g);
@@ -927,7 +925,7 @@ namespace XSDFrontend
           // Handle refs from last to first so that multiple insertions
           // to an empty list (always front) end up in proper order.
           //
-          for (ElementGroupRefs::ReverseIterator i (refs.rbegin ());
+          for (ElementGroupRefs::reverse_iterator i (refs.rbegin ());
                i != refs.rend (); ++i)
           {
             // Find our scope.
@@ -1434,7 +1432,7 @@ namespace XSDFrontend
     Boolean
     more () const
     {
-      Iterator const& it (iteration_state_.top ());
+      iterator const& it (iteration_state_.top ());
 
       return it.l_->getLength () > it.i_;
     }
@@ -1442,7 +1440,7 @@ namespace XSDFrontend
     XML::Element
     next ()
     {
-      Iterator& it (iteration_state_.top ());
+      iterator& it (iteration_state_.top ());
 
       return XML::Element (
         dynamic_cast<Xerces::DOMElement*> (it.l_->item (it.i_++)));
@@ -1451,7 +1449,7 @@ namespace XSDFrontend
     Void
     prev ()
     {
-      Iterator& it (iteration_state_.top ());
+      iterator& it (iteration_state_.top ());
 
       if (it.i_)
         --it.i_;
@@ -1625,9 +1623,9 @@ namespace XSDFrontend
   private:
     XML::PtrVector<Xerces::DOMDocument>* dom_docs_;
 
-    struct Iterator
+    struct iterator
     {
-      Iterator (Xerces::DOMElement* e)
+      iterator (Xerces::DOMElement* e)
           : l_ (e->getChildNodes ()), i_ (0)
       {
       }
@@ -1636,7 +1634,7 @@ namespace XSDFrontend
       Size i_;
     };
 
-    Cult::Containers::Stack<Iterator> iteration_state_;
+    std::stack<iterator> iteration_state_;
     SemanticGraph::Schema* s_;   // root schema file
     SemanticGraph::Schema* cur_; // current schema file
     Boolean cur_chameleon_;      // whethere cur_ is chameleon
@@ -1646,11 +1644,11 @@ namespace XSDFrontend
 
     //
     //
-    Cult::Containers::Stack<SemanticGraph::Scope*> scope_stack_;
+    std::stack<SemanticGraph::Scope*> scope_stack_;
 
     //
     //
-    Cult::Containers::Stack<SemanticGraph::Compositor*> compositor_stack_;
+    std::stack<SemanticGraph::Compositor*> compositor_stack_;
 
 
     // Map of absolute file path and namespace pair to a Schema node.
@@ -1677,10 +1675,7 @@ namespace XSDFrontend
     };
 
 
-    typedef
-    Cult::Containers::Map<SchemaId, SemanticGraph::Schema*>
-    SchemaMap;
-
+    typedef std::map<SchemaId, SemanticGraph::Schema*> SchemaMap;
     SchemaMap schema_map_;
 
     // Path stack for diagnostic.
@@ -1695,7 +1690,7 @@ namespace XSDFrontend
       SemanticGraph::Path rel, abs;
     };
 
-    Cult::Containers::Stack<PathPair> file_stack_;
+    std::stack<PathPair> file_stack_;
 
     SemanticGraph::Path const&
     file ()
@@ -2065,7 +2060,7 @@ namespace XSDFrontend
     //
     if (valid_)
     {
-      for (DefaultValues::ConstIterator i (default_values_.begin ()),
+      for (DefaultValues::const_iterator i (default_values_.begin ()),
              e (default_values_.end ()); i != e; ++i)
       {
         SemanticGraph::Member& m (**i);
@@ -2139,7 +2134,7 @@ namespace XSDFrontend
     //
     s_ = rs.get ();
 
-    for (Paths::ConstIterator i (paths.begin ()); i != paths.end (); ++i)
+    for (Paths::const_iterator i (paths.begin ()); i != paths.end (); ++i)
     {
       Path const& tu (*i);
       XML::AutoPtr<Xerces::DOMDocument> d (dom (tu, true));
@@ -2312,7 +2307,7 @@ namespace XSDFrontend
     //
     if (valid_)
     {
-      for (DefaultValues::ConstIterator i (default_values_.begin ()),
+      for (DefaultValues::const_iterator i (default_values_.begin ()),
              e (default_values_.end ()); i != e; ++i)
       {
         SemanticGraph::Member& m (**i);
@@ -4054,7 +4049,7 @@ namespace XSDFrontend
 
             node.context ().set ("type-ns-name", ns_name);
             node.context ().set ("type-uq-name", uq_name);
-            node.context ().set ("edge-type-id", TypeId (typeid (Belongs)));
+            node.context ().set ("edge-type-id", type_id (typeid (Belongs)));
 
             if (trace_)
               wcout << "element '" << ref << "' is not typed" << endl
@@ -4387,7 +4382,7 @@ namespace XSDFrontend
 
           node.context ().set ("type-ns-name", ns_name);
           node.context ().set ("type-uq-name", uq_name);
-          node.context ().set ("edge-type-id", TypeId (typeid (Belongs)));
+          node.context ().set ("edge-type-id", type_id (typeid (Belongs)));
 
           if (trace_)
             wcout << "attribute '" << ref << "' is not typed" << endl
@@ -4736,7 +4731,7 @@ namespace XSDFrontend
     {
       node.context ().set ("type-ns-name", ex.ns ());
       node.context ().set ("type-uq-name", ex.name ());
-      node.context ().set ("edge-type-id", TypeId (typeid (Edge)));
+      node.context ().set ("edge-type-id", type_id (typeid (Edge)));
 
       if (trace_)
         wcout << "unable to resolve name '" << ex.name ()
@@ -4766,7 +4761,7 @@ namespace XSDFrontend
     Path const&
     file (Path const& abs) const
     {
-      FileMap::ConstIterator i (file_map_.find (abs));
+      FileMap::const_iterator i (file_map_.find (abs));
 
       if (i != file_map_.end ())
       {
@@ -4785,7 +4780,7 @@ namespace XSDFrontend
     }
 
   private:
-    typedef Cult::Containers::Map<Path, Path, FilePathComparator> FileMap;
+    typedef std::map<Path, Path, FilePathComparator> FileMap;
     FileMap file_map_;
   };
 

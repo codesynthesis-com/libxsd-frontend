@@ -29,7 +29,7 @@ namespace XSDFrontend
     Void Type::
     remove_edge_left (Arguments& a)
     {
-      ArgumentsSet::Iterator i (arguments_.find (&a));
+      ArgumentsSet::iterator i (arguments_.find (&a));
       assert (i != arguments_.end ());
       arguments_.erase (i);
     }
@@ -41,7 +41,7 @@ namespace XSDFrontend
     {
       // The number of entries should be small so linear search will do.
       //
-      Argumented::Iterator i (
+      Argumented::iterator i (
         std::find (argumented_.begin (), argumented_.end (), &a));
 
       assert (i != argumented_.end ());

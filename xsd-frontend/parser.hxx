@@ -6,8 +6,9 @@
 #ifndef XSD_FRONTEND_PARSER_HXX
 #define XSD_FRONTEND_PARSER_HXX
 
+#include <set>
+
 #include <cult/types.hxx>
-#include <cult/containers/set.hxx>
 
 #include <xsd-frontend/semantic-graph/schema.hxx>
 
@@ -30,7 +31,7 @@ namespace XSDFrontend
   // Set of disabled warning IDs. Special ID "all" disables all
   // warnings.
   //
-  typedef Cult::Containers::Set<NarrowString> WarningSet;
+  typedef std::set<NarrowString> WarningSet;
 
   class Parser: public NonCopyable
   {

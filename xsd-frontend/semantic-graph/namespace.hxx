@@ -14,15 +14,11 @@ namespace XSDFrontend
   {
     class Namespace : public virtual Scope
     {
-    protected:
-      friend class Bits::Graph<Node, Edge>;
-
+    public:
       Namespace (Path const& file, UnsignedLong line, UnsignedLong column);
 
       Void
-      add_edge_right (BelongsToNamespace&)
-      {
-      }
+      add_edge_right (BelongsToNamespace&) {}
 
       using Scope::add_edge_right;
     };

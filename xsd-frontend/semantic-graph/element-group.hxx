@@ -23,18 +23,16 @@ namespace XSDFrontend
         return *contains_compositor_;
       }
 
-    protected:
-      friend class Bits::Graph<Node, Edge>;
-
+    public:
       ElementGroup (Path const& file, UnsignedLong line, UnsignedLong column);
-
-      using Scope::add_edge_left;
 
       Void
       add_edge_left (ContainsCompositor& e)
       {
         contains_compositor_ = &e;
       }
+
+      using Scope::add_edge_left;
 
     private:
       ContainsCompositor* contains_compositor_;

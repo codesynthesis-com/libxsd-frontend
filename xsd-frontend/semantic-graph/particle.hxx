@@ -48,9 +48,7 @@ namespace XSDFrontend
         return max_;
       }
 
-    protected:
-      friend class Bits::Graph<Node, Edge>;
-
+    public:
       ContainsParticle (UnsignedLong min, UnsignedLong max);
 
       Void
@@ -118,9 +116,7 @@ namespace XSDFrontend
         return contained_particle_->max ();
       }
 
-    protected:
-      friend class Bits::Graph<Node, Edge>;
-
+    public:
       Particle ();
 
       Void

@@ -61,9 +61,7 @@ namespace XSDFrontend
       Namespace&
       definition_namespace ();
 
-    protected:
-      friend class Bits::Graph<Node, Edge>;
-
+    public:
       AnyAttribute (Path const& file,
                     UnsignedLong line,
                     UnsignedLong column,

@@ -14,9 +14,7 @@ namespace XSDFrontend
   {
     class Union: public virtual Specialization
     {
-    protected:
-      friend class Bits::Graph<Node, Edge>;
-
+    public:
       Union (Path const& file, UnsignedLong line, UnsignedLong column);
     };
   }

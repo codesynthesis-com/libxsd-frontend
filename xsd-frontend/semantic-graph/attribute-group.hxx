@@ -14,9 +14,7 @@ namespace XSDFrontend
   {
     class AttributeGroup: public virtual Scope
     {
-    protected:
-      friend class Bits::Graph<Node, Edge>;
-
+    public:
       AttributeGroup (Path const& file,
                       UnsignedLong line,
                       UnsignedLong column);

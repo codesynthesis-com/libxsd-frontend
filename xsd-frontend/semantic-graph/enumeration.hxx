@@ -15,18 +15,14 @@ namespace XSDFrontend
   {
     class Enumeration: public virtual Complex
     {
-    protected:
-      friend class Bits::Graph<Node, Edge>;
-
+    public:
       Enumeration (Path const& file, UnsignedLong line, UnsignedLong column);
     };
 
 
     class Enumerator: public virtual Instance
     {
-    protected:
-      friend class Bits::Graph<Node, Edge>;
-
+    public:
       Enumerator (Path const& file, UnsignedLong line, UnsignedLong column);
     };
   }

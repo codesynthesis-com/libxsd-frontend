@@ -45,9 +45,7 @@ namespace XSDFrontend
         return max_;
       }
 
-    protected:
-      friend class Bits::Graph<Node, Edge>;
-
+    public:
       ContainsCompositor (UnsignedLong min, UnsignedLong max);
 
       Void
@@ -81,7 +79,6 @@ namespace XSDFrontend
       Node* container_;
       UnsignedLong min_, max_;
     };
-
 
     //
     //
@@ -157,18 +154,25 @@ namespace XSDFrontend
           return Particle::max ();
       }
 
-    protected:
-      friend class Bits::Graph<Node, Edge>;
-
-      Compositor ()
-          : contained_compositor_ (0)
-      {
-      }
+    public:
+      Compositor (): contained_compositor_ (0) {}
 
       Void
       add_edge_left (ContainsParticle& e)
       {
         contains_.push_back (&e);
+      }
+
+      Void
+      add_edge_left (ContainsParticle& e, ContainsIterator const& after)
+      {
+        if (after.base () == contains_.end ())
+          contains_.push_front (&e);
+        else
+        {
+          ContainsList::Iterator i (after.base ());
+          contains_.insert (++i, &e);
+        }
       }
 
       Void
@@ -185,28 +189,6 @@ namespace XSDFrontend
         }
       }
 
-      //@@ Ideally should be protected but then NodeArg has no way to
-      //   access it. Maybe when (if) I move NodeArg into Grpah I can
-      //   resolve this.
-      //
-    public:
-      Void
-      add_edge_left (ContainsParticle& e, ContainsIterator const& after)
-      {
-        if (after.base () == contains_.end ())
-          contains_.push_front (&e);
-        else
-        {
-          ContainsList::Iterator i (after.base ());
-          contains_.insert (++i, &e);
-        }
-      }
-
-    protected:
-      using Node::add_edge_right;
-      using Particle::add_edge_right;
-      using Particle::remove_edge_right;
-
       Void
       add_edge_right (ContainsCompositor& e)
       {
@@ -220,41 +202,36 @@ namespace XSDFrontend
         contained_compositor_ = 0;
       }
 
+      using Node::add_edge_right;
+      using Particle::add_edge_right;
+      using Particle::remove_edge_right;
+
     private:
       ContainsList contains_;
       ContainsCompositor* contained_compositor_;
     };
 
-
     //
     //
     class All: public virtual Compositor
     {
-    protected:
-      friend class Bits::Graph<Node, Edge>;
-
+    public:
       All (Path const& file, UnsignedLong line, UnsignedLong column);
     };
-
 
     //
     //
     class Choice: public virtual Compositor
     {
-    protected:
-      friend class Bits::Graph<Node, Edge>;
-
+    public:
       Choice (Path const& file, UnsignedLong line, UnsignedLong column);
     };
-
 
     //
     //
     class Sequence: public virtual Compositor
     {
-    protected:
-      friend class Bits::Graph<Node, Edge>;
-
+    public:
       Sequence (Path const& file, UnsignedLong line, UnsignedLong column);
     };
   }

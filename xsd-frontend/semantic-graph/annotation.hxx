@@ -25,13 +25,8 @@ namespace XSDFrontend
         return *annotation_;
       }
 
-    protected:
-      friend class Bits::Graph<Node, Edge>;
-
-      Annotates ()
-          : annotation_ (0)
-      {
-      }
+    public:
+      Annotates (): annotation_ (0) {}
 
       Void
       set_left_node (Annotation& a)
@@ -40,14 +35,10 @@ namespace XSDFrontend
       }
 
       Void
-      set_right_node (Node&)
-      {
-      }
+      set_right_node (Node&) {}
 
       Void
-      set_right_node (Edge&)
-      {
-      }
+      set_right_node (Edge&) {}
 
     private:
       Annotation* annotation_;
@@ -64,9 +55,7 @@ namespace XSDFrontend
         return documentation_;
       }
 
-    protected:
-      friend class Bits::Graph<Node, Edge>;
-
+    public:
       Annotation (Path const& file,
                   UnsignedLong line,
                   UnsignedLong column,
@@ -76,9 +65,7 @@ namespace XSDFrontend
       }
 
       Void
-      add_edge_left (Annotates&)
-      {
-      }
+      add_edge_left (Annotates&) {}
 
     private:
       WideString documentation_;

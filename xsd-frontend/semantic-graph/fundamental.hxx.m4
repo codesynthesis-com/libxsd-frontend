@@ -15,9 +15,7 @@ define(`fundamental_type_impl', `
       //
       class $1: public virtual Type
       {
-      protected:
-        friend class Bits::Graph<Node, Edge>;
-
+      public:
         $1 (Path const& file,
             SemanticGraph::UnsignedLong line,
             SemanticGraph::UnsignedLong column);
@@ -50,8 +48,6 @@ namespace XSDFrontend
       class Type: public virtual SemanticGraph::Type
       {
       protected:
-        friend class Bits::Graph<Node, Edge>;
-
         Type ();
       };
 dnl
@@ -106,9 +102,7 @@ fundamental_type(`id')
       class IdRef: public virtual Type,
                    public virtual Specialization
       {
-      protected:
-        friend class Bits::Graph<Node, Edge>;
-
+      public:
         IdRef (Path const& file,
                SemanticGraph::UnsignedLong line,
                SemanticGraph::UnsignedLong column);
@@ -120,9 +114,7 @@ fundamental_type(`id')
       class IdRefs: public virtual Type,
                     public virtual Specialization
       {
-      protected:
-        friend class Bits::Graph<Node, Edge>;
-
+      public:
         IdRefs (Path const& file,
                 SemanticGraph::UnsignedLong line,
                 SemanticGraph::UnsignedLong column);

@@ -21,9 +21,7 @@ namespace XSDFrontend
         return optional_;
       }
 
-    protected:
-      friend class Bits::Graph<Node, Edge>;
-
+    public:
       Attribute (Path const& file,
                  UnsignedLong line,
                  UnsignedLong column,

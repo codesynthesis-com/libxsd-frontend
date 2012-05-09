@@ -45,15 +45,8 @@ namespace XSDFrontend
         mixed_ = m;
       }
 
-    protected:
-      friend class Bits::Graph<Node, Edge>;
-
-      Complex (); // Virtual inheritance (Enumeration).
+    public:
       Complex (Path const& file, UnsignedLong line, UnsignedLong column);
-
-      using Type::add_edge_right;
-      using Type::add_edge_left;
-      using Scope::add_edge_left;
 
       Void
       add_edge_left (ContainsCompositor& e)
@@ -67,6 +60,13 @@ namespace XSDFrontend
         assert (contains_compositor_ == &e);
         contains_compositor_ = 0;
       }
+
+      using Type::add_edge_right;
+      using Type::add_edge_left;
+      using Scope::add_edge_left;
+
+    protected:
+      Complex (); // For virtual inheritance (Enumeration).
 
     private:
       Boolean mixed_;

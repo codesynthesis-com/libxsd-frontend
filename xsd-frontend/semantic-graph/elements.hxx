@@ -12,13 +12,14 @@
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/exception.hpp>
 
+#include <cutl/container/graph.hxx>
+
 #include <cult/types.hxx>
 
 #include <cult/containers/set.hxx>
 #include <cult/containers/map.hxx>
 #include <cult/containers/list.hxx>
 #include <cult/containers/pair.hxx>
-#include <cult/containers/graph.hxx>
 #include <cult/containers/vector.hxx>
 
 #include <cutl/compiler/context.hxx>
@@ -33,8 +34,6 @@ namespace XSDFrontend
 
     namespace Bits
     {
-      using Cult::Containers::Graph;
-
       //@@ Should end up in Cult::Meta
       //
       template <typename X>
@@ -201,13 +200,6 @@ namespace XSDFrontend
         return dynamic_cast<X const*> (this) != 0;
       }
 
-    protected:
-      friend class Bits::Graph<Node, Edge>;
-
-      Edge ()
-      {
-      }
-
     private:
       mutable Context context_;
     };
@@ -274,29 +266,24 @@ namespace XSDFrontend
       }
 
     public:
-
       virtual
-      ~Node ()
-      {
-      }
-
-    protected:
-      friend class Bits::Graph<Node, Edge>;
+      ~Node () {}
 
       Node (Path const& file, UnsignedLong line, UnsignedLong column)
           : annotates_ (0), file_ (file), line_ (line), column_ (column)
       {
       }
 
-      Node () // For virtual inheritance.
-      {
-        abort (); // Told you so!
-      }
-
       Void
       add_edge_right (Annotates& a)
       {
         annotates_ = &a;
+      }
+
+    protected:
+      Node () // For virtual inheritance.
+      {
+        abort (); // Told you so!
       }
 
     private:
@@ -313,6 +300,9 @@ namespace XSDFrontend
       return &x == &y;
     }
 
+    //
+    //
+    typedef container::graph<Node, Edge> graph;
 
     //
     //
@@ -348,13 +338,8 @@ namespace XSDFrontend
         return *named_;
       }
 
-    protected:
-      friend class Bits::Graph<Node, Edge>;
-
-      Names (Name const& name)
-          : name_ (name)
-      {
-      }
+    public:
+      Names (Name const& name): name_ (name) {}
 
       Void
       set_left_node (Scope& n)
@@ -419,13 +404,8 @@ namespace XSDFrontend
         return *named_;
       }
 
-    protected:
-      friend class Bits::Graph<Node, Edge>;
-
-      Nameable ()
-          : named_ (0)
-      {
-      }
+    public:
+      Nameable (): named_ (0) {}
 
       Void
       add_edge_right (Names& e)
@@ -526,15 +506,9 @@ namespace XSDFrontend
         return i != iterator_map_.end () ? i->second : names_.end ();
       }
 
-    protected:
-      friend class Bits::Graph<Node, Edge>;
-
+    public:
       Scope (Path const& file, UnsignedLong line, UnsignedLong column)
           : Node (file, line, column)
-      {
-      }
-
-      Scope ()
       {
       }
 
@@ -565,11 +539,6 @@ namespace XSDFrontend
         }
       }
 
-      //@@ Ideally should be protected but then NodeArg has no way to
-      //   access it. Maybe when (if) I move NodeArg into Grpah I can
-      //   resolve this.
-      //
-    public:
       Void
       add_edge_left (Names& e, NamesIterator const& after)
       {
@@ -587,8 +556,10 @@ namespace XSDFrontend
         names_map_[e.name ()].push_back (&e);
       }
 
-    protected:
       using Nameable::add_edge_right;
+
+    protected:
+      Scope () {}
 
     private:
       NamesList names_;
@@ -686,13 +657,8 @@ namespace XSDFrontend
         return arguments_.end ();
       }
 
-    protected:
-      friend class Bits::Graph<Node, Edge>;
-
-      Type ()
-          : inherits_ (0)
-      {
-      }
+    public:
+      Type (): inherits_ (0) {}
 
       Void
       add_edge_right (Belongs& e)
@@ -730,7 +696,6 @@ namespace XSDFrontend
       ArgumentsSet arguments_;
     };
 
-
     class Instance: public virtual Nameable
     {
     public:
@@ -749,13 +714,8 @@ namespace XSDFrontend
         return belongs_ != 0;
       }
 
-    protected:
-      friend class Bits::Graph<Node, Edge>;
-
-      Instance ()
-          : belongs_ (0)
-      {
-      }
+    public:
+      Instance (): belongs_ (0) {}
 
       Void
       add_edge_left (Belongs& e)
@@ -783,13 +743,7 @@ namespace XSDFrontend
         return *type_;
       }
 
-    protected:
-      friend class Bits::Graph<Node, Edge>;
-
-      Belongs ()
-      {
-      }
-
+    public:
       Void
       set_left_node (Instance& n)
       {
@@ -825,13 +779,7 @@ namespace XSDFrontend
         return *derived_;
       }
 
-    protected:
-      friend class Bits::Graph<Node, Edge>;
-
-      Inherits ()
-      {
-      }
-
+    public:
       Void
       set_left_node (Type& n)
       {
@@ -849,15 +797,8 @@ namespace XSDFrontend
       Type* derived_;
     };
 
-
     class Extends: public virtual Inherits
     {
-    protected:
-      friend class Bits::Graph<Node, Edge>;
-
-      Extends ()
-      {
-      }
     };
 
     class Restricts: public virtual Inherits
@@ -908,13 +849,6 @@ namespace XSDFrontend
       }
 
     protected:
-      friend class Bits::Graph<Node, Edge>;
-
-      Restricts ()
-      {
-      }
-
-    protected:
       Facets facets_;
     };
 
@@ -941,13 +875,8 @@ namespace XSDFrontend
         return *namespace__;
       }
 
-    protected:
-      friend class Bits::Graph<Node, Edge>;
-
-      BelongsToNamespace ()
-          : member_ (0), namespace__ (0)
-      {
-      }
+    public:
+      BelongsToNamespace (): member_ (0), namespace__ (0) {}
 
       Void
       set_left_node (Member& n)
@@ -1039,9 +968,7 @@ namespace XSDFrontend
         value_type_ = ValueType::fixed;
       }
 
-    protected:
-      friend class Bits::Graph<Node, Edge>;
-
+    public:
       Member (Boolean global, Boolean qualified)
           : global_ (global),
             qualified_ (qualified),
@@ -1130,9 +1057,7 @@ namespace XSDFrontend
         return *argumented_[0];
       }
 
-    protected:
-      friend class Bits::Graph<Node, Edge>;
-
+    public:
       using Type::add_edge_right;
 
       Void
@@ -1142,19 +1067,17 @@ namespace XSDFrontend
       }
 
       Void
-      remove_edge_right (Arguments&);
-
-    public:
-      Void
       add_edge_right (Arguments& a, ArgumentedIterator const& pos)
       {
         argumented_.insert (pos.base (), &a);
       }
 
+      Void
+      remove_edge_right (Arguments&);
+
     private:
       Argumented argumented_;
     };
-
 
     class Arguments: public virtual Edge
     {
@@ -1171,9 +1094,7 @@ namespace XSDFrontend
         return *specialization_;
       }
 
-    protected:
-      friend class Bits::Graph<Node, Edge>;
-
+    public:
       void
       set_left_node (Type& n)
       {
@@ -1210,17 +1131,14 @@ namespace XSDFrontend
     //
     class AnyType: public virtual Type
     {
-    protected:
-      friend class Bits::Graph<Node, Edge>;
-
+    public:
       AnyType (Path const& file, UnsignedLong line, UnsignedLong column)
           : Node (file, line, column)
       {
       }
 
-      AnyType () // For virtual inheritance.
-      {
-      }
+    protected:
+      AnyType () {} // For virtual inheritance.
     };
 
 
@@ -1228,17 +1146,14 @@ namespace XSDFrontend
     //
     class AnySimpleType: public virtual Type
     {
-    protected:
-      friend class Bits::Graph<Node, Edge>;
-
+    public:
       AnySimpleType (Path const& file, UnsignedLong line, UnsignedLong column)
           : Node (file, line, column)
       {
       }
 
-      AnySimpleType () // For virtual inheritance.
-      {
-      }
+    protected:
+      AnySimpleType () {} // For virtual inheritance.
     };
   }
 }

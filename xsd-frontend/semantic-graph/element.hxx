@@ -30,13 +30,7 @@ namespace XSDFrontend
         return *root_;
       }
 
-    protected:
-      friend class Bits::Graph<Node, Edge>;
-
-      Substitutes ()
-      {
-      }
-
+    public:
       Void
       set_left_node (Element& n)
       {
@@ -72,9 +66,7 @@ namespace XSDFrontend
         return *substitutes_;
       }
 
-    protected:
-      friend class Bits::Graph<Node, Edge>;
-
+    public:
       Element (Path const& file,
                UnsignedLong line,
                UnsignedLong column,
@@ -88,9 +80,7 @@ namespace XSDFrontend
       }
 
       Void
-      add_edge_right (Substitutes&)
-      {
-      }
+      add_edge_right (Substitutes&) {}
 
       using Member::add_edge_left;
       using Member::add_edge_right;

@@ -14,9 +14,7 @@ namespace XSDFrontend
   {
     class List: public virtual Specialization
     {
-    protected:
-      friend class Bits::Graph<Node, Edge>;
-
+    public:
       List (Path const& file, UnsignedLong line, UnsignedLong column);
     };
   }

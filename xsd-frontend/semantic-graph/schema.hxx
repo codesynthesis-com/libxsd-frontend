@@ -15,10 +15,7 @@ namespace XSDFrontend
 {
   namespace SemanticGraph
   {
-    //
-    //
     class Schema;
-
 
     class Uses: public virtual Edge
     {
@@ -41,13 +38,8 @@ namespace XSDFrontend
         return path_;
       }
 
-    protected:
-      friend class Bits::Graph<Node, Edge>;
-
-      Uses (Path const& path)
-          : path_ (path)
-      {
-      }
+    public:
+      Uses (Path const& path): path_ (path) {}
 
       Void
       set_left_node (Schema& s)
@@ -72,13 +64,8 @@ namespace XSDFrontend
     //
     class Implies: public virtual Uses
     {
-    protected:
-      friend class Bits::Graph<Node, Edge>;
-
-      Implies (Path const& path)
-          : Uses (path)
-      {
-      }
+    public:
+      Implies (Path const& path): Uses (path) {}
     };
 
 
@@ -86,13 +73,8 @@ namespace XSDFrontend
     //
     class Sources: public virtual Uses
     {
-    protected:
-      friend class Bits::Graph<Node, Edge>;
-
-      Sources (Path const& path)
-          : Uses (path)
-      {
-      }
+    public:
+      Sources (Path const& path): Uses (path) {}
     };
 
 
@@ -100,13 +82,8 @@ namespace XSDFrontend
     //
     class Includes: public virtual Uses
     {
-    protected:
-      friend class Bits::Graph<Node, Edge>;
-
-      Includes (Path const& path)
-          : Uses (path)
-      {
-      }
+    public:
+      Includes (Path const& path): Uses (path) {}
     };
 
 
@@ -114,21 +91,13 @@ namespace XSDFrontend
     //
     class Imports: public virtual Uses
     {
-    protected:
-      friend class Bits::Graph<Node, Edge>;
-
-      Imports (Path const& path)
-          : Uses (path)
-      {
-      }
+    public:
+      Imports (Path const& path): Uses (path) {}
     };
 
-
     //
     //
-    class Schema: public virtual Scope,
-                  private Bits::Graph<Node, Edge>,
-                  public NonCopyable
+    class Schema: public graph, public virtual Scope
     {
       typedef
       Cult::Containers::Vector<Uses*>
@@ -140,9 +109,13 @@ namespace XSDFrontend
 
     public:
       Schema (Path const& file, UnsignedLong line, UnsignedLong column)
-          : SemanticGraph::Node (file, line, column)
+          : Node (file, line, column), graph_ (*this)
       {
       }
+
+    private:
+      Schema (Schema const&);
+      Schema& operator= (Schema const&);
 
     public:
       typedef
@@ -187,19 +160,19 @@ namespace XSDFrontend
       find (Name const& name) const;
 
     public:
-      using Bits::Graph<SemanticGraph::Node, Edge>::new_edge;
-      using Bits::Graph<SemanticGraph::Node, Edge>::reset_left_node;
-      using Bits::Graph<SemanticGraph::Node, Edge>::reset_right_node;
-      using Bits::Graph<SemanticGraph::Node, Edge>::add_edge_left;
-      using Bits::Graph<SemanticGraph::Node, Edge>::add_edge_right;
-      using Bits::Graph<SemanticGraph::Node, Edge>::delete_node;
-      using Bits::Graph<SemanticGraph::Node, Edge>::delete_edge;
+      using graph::new_edge;
+      using graph::reset_left_node;
+      using graph::reset_right_node;
+      using graph::add_edge_left;
+      using graph::add_edge_right;
+      using graph::delete_node;
+      using graph::delete_edge;
 
       template <typename T>
       T&
       new_node (Path const& file, UnsignedLong line, UnsignedLong column)
       {
-        return graph ().new_node<T> (file, line, column);
+        return graph_.new_node<T> (file, line, column);
       }
 
       template <typename T, typename A0>
@@ -207,7 +180,7 @@ namespace XSDFrontend
       new_node (Path const& file, UnsignedLong line, UnsignedLong column,
                 A0 const& a0)
       {
-        return graph ().new_node<T> (file, line, column, a0);
+        return graph_.new_node<T> (file, line, column, a0);
       }
 
       template <typename T, typename A0, typename A1>
@@ -215,7 +188,7 @@ namespace XSDFrontend
       new_node (Path const& file, UnsignedLong line, UnsignedLong column,
                 A0 const& a0, A1 const& a1)
       {
-        return graph ().new_node<T> (file, line, column, a0, a1);
+        return graph_.new_node<T> (file, line, column, a0, a1);
       }
 
       template <typename T, typename A0, typename A1, typename A2>
@@ -223,7 +196,7 @@ namespace XSDFrontend
       new_node (Path const& file, UnsignedLong line, UnsignedLong column,
                 A0 const& a0, A1 const& a1, A2 const& a2)
       {
-        return graph ().new_node<T> (file, line, column, a0, a1, a2);
+        return graph_.new_node<T> (file, line, column, a0, a1, a2);
       }
 
       template <typename T, typename A0, typename A1, typename A2,
@@ -232,14 +205,10 @@ namespace XSDFrontend
       new_node (Path const& file, UnsignedLong line, UnsignedLong column,
                 A0 const& a0, A1 const& a1, A2 const& a2, A3 const& a3)
       {
-        return graph ().new_node<T> (file, line, column, a0, a1, a2, a3);
+        return graph_.new_node<T> (file, line, column, a0, a1, a2, a3);
       }
 
-    protected:
-      //@@ gcc bug #21146
-      //
-      friend class Bits::Graph<SemanticGraph::Node, Edge>;
-
+    public:
       using Scope::add_edge_left;
       using Node::add_edge_right;
 
@@ -256,21 +225,16 @@ namespace XSDFrontend
       }
 
     private:
-      Bits::Graph<SemanticGraph::Node, Edge>&
-      graph ()
-      {
-        return *this;
-      }
-
-    private:
-      UsesList uses_;
-      UsedList used_;
-
-    private:
       typedef Cult::Containers::Set<Schema const*> SchemaSet;
 
       Void
       find_ (Name const& name, NamesList&, SchemaSet&) const;
+
+    private:
+      graph& graph_;
+
+      UsesList uses_;
+      UsedList used_;
 
       mutable NamesList names_;
       mutable SchemaSet schemas_;

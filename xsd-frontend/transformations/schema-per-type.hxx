@@ -8,7 +8,7 @@
 
 #include <vector>
 
-#include <cult/types.hxx>
+#include <xsd-frontend/types.hxx>
 
 #include <xsd-frontend/semantic-graph/elements.hxx> // Path
 #include <xsd-frontend/semantic-graph/schema.hxx>
@@ -17,8 +17,6 @@ namespace XSDFrontend
 {
   namespace Transformations
   {
-    using namespace Cult::Types;
-
     class SchemaPerTypeTranslator
     {
     public:
@@ -28,8 +26,8 @@ namespace XSDFrontend
       // The following two functions should return empty string if
       // there is no match.
       //
-      virtual WideString
-      translate_type (WideString const& ns, WideString const& name) = 0;
+      virtual String
+      translate_type (String const& ns, String const& name) = 0;
 
       virtual NarrowString
       translate_schema (NarrowString const& abs_path) = 0;
@@ -49,14 +47,14 @@ namespace XSDFrontend
       //
       SchemaPerType (SchemaPerTypeTranslator&,
                      bool fat_type_file,
-                     Char const* by_value_key = 0);
+                     char const* by_value_key = 0);
 
       std::vector<SemanticGraph::Schema*>
       transform (SemanticGraph::Schema&);
 
     private:
       bool fat_type_file_;
-      Char const* by_value_key_;
+      char const* by_value_key_;
       SchemaPerTypeTranslator& trans_;
     };
   }

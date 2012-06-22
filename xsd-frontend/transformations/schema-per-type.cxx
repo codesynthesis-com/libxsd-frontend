@@ -22,15 +22,9 @@ using std::endl;
 
 namespace XSDFrontend
 {
-  using namespace Cult;
-
-  typedef WideString String;
   typedef Transformations::SchemaPerType::Failed Failed;
-
   typedef std::vector<SemanticGraph::Schema*> Schemas;
-  typedef
-  std::map<SemanticGraph::Type*, SemanticGraph::Schema*>
-  TypeSchemaMap;
+  typedef std::map<SemanticGraph::Type*, SemanticGraph::Schema*> TypeSchemaMap;
 
   // Compare file paths case-insensitively.
   //
@@ -143,7 +137,7 @@ namespace XSDFrontend
             //
             if (!tn)
             {
-              for (NarrowString::Iterator i (base.begin ()), e (base.end ());
+              for (NarrowString::iterator i (base.begin ()), e (base.end ());
                    i != e; ++i)
               {
                 if (*i == '/' || *i == '\\')
@@ -182,7 +176,7 @@ namespace XSDFrontend
               throw Failed ();
             }
           }
-          catch (String::NonRepresentable const&)
+          catch (NonRepresentable const&)
           {
             wcerr << "error: '" << wbase << "' cannot be represented as a "
                   << "narrow string" << endl;
@@ -251,7 +245,7 @@ namespace XSDFrontend
     {
       Type (SemanticGraph::Schema& schema,
             SemanticGraph::Schema& root,
-            Char const* by_value_key,
+            char const* by_value_key,
             TypeSchemaMap& tsm)
           : schema_ (schema),
             root_ (root),
@@ -333,7 +327,7 @@ namespace XSDFrontend
     private:
       SemanticGraph::Schema& schema_;
       SemanticGraph::Schema& root_;
-      Char const* by_value_key_;
+      char const* by_value_key_;
       TypeSchemaMap& tsm_;
       std::set<SemanticGraph::Type*> type_set_;
 
@@ -346,7 +340,7 @@ namespace XSDFrontend
     SchemaPerType::
     SchemaPerType (SchemaPerTypeTranslator& trans,
                    bool fat,
-                   Char const* key)
+                   char const* key)
         : fat_type_file_ (fat), by_value_key_ (key), trans_ (trans)
     {
     }

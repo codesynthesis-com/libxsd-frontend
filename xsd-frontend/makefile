@@ -44,7 +44,7 @@ cxx_tun += transformations/anonymous.cxx       \
            transformations/schema-per-type.cxx \
            transformations/simplifier.cxx
 
-cxx_tun += parser.cxx schema-dom-parser.cxx
+cxx_tun += types.cxx parser.cxx schema-dom-parser.cxx
 
 
 cxx_obj := $(addprefix $(out_base)/,$(cxx_tun:.cxx=.o))
@@ -71,19 +71,14 @@ $(call import,\
   $(scf_root)/import/libcutl/stub.make,\
   l: cutl.l,cpp-options: cutl.l.cpp-options)
 
-$(call import,\
-  $(scf_root)/import/libcult/stub.make,\
-  l: cult.l,cpp-options: cult.l.cpp-options)
-
-# what to build
+# What to build.
 #
-$(xsd_frontend.l): $(cxx_obj) $(cult.l) $(cutl.l) $(xerces_c.l) $(fs.l)
+$(xsd_frontend.l): $(cxx_obj) $(cutl.l) $(xerces_c.l) $(fs.l)
 
 $(xsd_frontend.l.cpp-options): prefix := xsd-frontend/ $(out_root)/
 $(xsd_frontend.l.cpp-options): value := -I$(src_root) -I$(out_root)
 $(xsd_frontend.l.cpp-options):  \
   $(fs.l.cpp-options)           \
-  $(cult.l.cpp-options)         \
   $(cutl.l.cpp-options)
 
 #@@ This can be further optimized since only parser depends on xerces.

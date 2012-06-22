@@ -10,8 +10,6 @@
 
 namespace XSDFrontend
 {
-  using namespace Cult;
-
   namespace
   {
     struct Compositor: Traversal::All,

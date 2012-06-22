@@ -49,7 +49,7 @@ namespace XSDFrontend
     class Annotation: public virtual Node
     {
     public:
-      WideString const&
+      String const&
       documentation () const
       {
         return documentation_;
@@ -59,7 +59,7 @@ namespace XSDFrontend
       Annotation (Path const& file,
                   unsigned long line,
                   unsigned long column,
-                  WideString const& documentation)
+                  String const& documentation)
           : Node (file, line, column), documentation_ (documentation)
       {
       }
@@ -68,7 +68,7 @@ namespace XSDFrontend
       add_edge_left (Annotates&) {}
 
     private:
-      WideString documentation_;
+      String documentation_;
     };
   }
 }

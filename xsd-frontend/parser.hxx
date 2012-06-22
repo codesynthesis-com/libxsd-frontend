@@ -9,14 +9,11 @@
 #include <set>
 #include <memory> // std::auto_ptr
 
-#include <cult/types.hxx>
-
+#include <xsd-frontend/types.hxx>
 #include <xsd-frontend/semantic-graph/schema.hxx>
 
 namespace XSDFrontend
 {
-  using namespace Cult::Types;
-
   struct InvalidSchema {};
 
   class LocationTranslator
@@ -34,7 +31,7 @@ namespace XSDFrontend
   //
   typedef std::set<NarrowString> WarningSet;
 
-  class Parser: public NonCopyable
+  class Parser
   {
   public:
     ~Parser ();
@@ -48,6 +45,10 @@ namespace XSDFrontend
             bool full_schema_check,
             LocationTranslator&,
             const WarningSet& disabled);
+
+  private:
+    Parser (Parser const&);
+    Parser& operator= (Parser const&);
 
   public:
     // Parse a schema file. Throws InvalidSchema in case of a failure.

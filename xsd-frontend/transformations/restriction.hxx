@@ -6,7 +6,7 @@
 #ifndef XSD_FRONTEND_TRANSFORMATIONS_RESTRICTION_HXX
 #define XSD_FRONTEND_TRANSFORMATIONS_RESTRICTION_HXX
 
-#include <cult/types.hxx>
+#include <xsd-frontend/types.hxx>
 
 #include <xsd-frontend/semantic-graph/elements.hxx> // Path
 #include <xsd-frontend/semantic-graph/schema.hxx>
@@ -15,8 +15,6 @@ namespace XSDFrontend
 {
   namespace Transformations
   {
-    using namespace Cult::Types;
-
     // This transformation performs two major tasks. It transfers omitted
     // attribute declarations from the base to derived-by-restriction type
     // and establishes correspondence between particles and compositors by

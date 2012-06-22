@@ -19,7 +19,7 @@ namespace XSDFrontend
     class Any: public virtual Nameable,
                public virtual Particle
     {
-      typedef std::vector<WideString> Namespaces;
+      typedef std::vector<String> Namespaces;
 
     public:
       typedef Namespaces::const_iterator NamespaceIterator;
@@ -65,7 +65,7 @@ namespace XSDFrontend
       Any (Path const& file,
            unsigned long line,
            unsigned long column,
-           WideString const& namespaces);
+           String const& namespaces);
 
       Any (Path const& file,
            unsigned long line,

@@ -17,7 +17,7 @@ namespace XSDFrontend
   {
     class AnyAttribute: public virtual Nameable
     {
-      typedef std::vector<WideString> Namespaces;
+      typedef std::vector<String> Namespaces;
 
     public:
       typedef Namespaces::const_iterator NamespaceIterator;
@@ -63,7 +63,7 @@ namespace XSDFrontend
       AnyAttribute (Path const& file,
                     unsigned long line,
                     unsigned long column,
-                    WideString const& namespaces);
+                    String const& namespaces);
 
       AnyAttribute (Path const& file,
                     unsigned long line,

@@ -96,7 +96,7 @@ namespace XSDFrontend
     NarrowString
     transcode_to_narrow (XMLCh const* xs)
     {
-      Char* s (Xerces::XMLString::transcode (xs));
+      char* s (Xerces::XMLString::transcode (xs));
       NarrowString r (s);
       Xerces::XMLString::release (&s);
       return r;

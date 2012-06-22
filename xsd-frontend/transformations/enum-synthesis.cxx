@@ -12,9 +12,6 @@
 
 namespace XSDFrontend
 {
-  using namespace Cult;
-  typedef WideString String;
-
   namespace
   {
     typedef std::set<String> Enumerators;

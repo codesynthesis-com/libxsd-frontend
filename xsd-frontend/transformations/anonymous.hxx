@@ -6,7 +6,7 @@
 #ifndef XSD_FRONTEND_TRANSFORMATIONS_ANONYMOUS_HXX
 #define XSD_FRONTEND_TRANSFORMATIONS_ANONYMOUS_HXX
 
-#include <cult/types.hxx>
+#include <xsd-frontend/types.hxx>
 
 #include <xsd-frontend/semantic-graph/elements.hxx> // Path
 #include <xsd-frontend/semantic-graph/schema.hxx>
@@ -15,8 +15,6 @@ namespace XSDFrontend
 {
   namespace Transformations
   {
-    using namespace Cult::Types;
-
     class AnonymousNameTranslator
     {
     public:
@@ -26,11 +24,11 @@ namespace XSDFrontend
       // The file argument is empty for the currect translation
       // unit.
       //
-      virtual WideString
-      translate (WideString const& file,
-                 WideString const& ns,
-                 WideString const& name,
-                 WideString const& xpath) = 0;
+      virtual String
+      translate (String const& file,
+                 String const& ns,
+                 String const& name,
+                 String const& xpath) = 0;
     };
 
     // This transformation morphs anonymous types into named ones

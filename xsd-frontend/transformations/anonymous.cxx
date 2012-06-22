@@ -17,10 +17,6 @@ using std::endl;
 
 namespace XSDFrontend
 {
-  using namespace Cult;
-
-  typedef WideString String;
-
   namespace
   {
     using Transformations::AnonymousNameTranslator;

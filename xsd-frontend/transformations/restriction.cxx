@@ -11,14 +11,10 @@
 
 #include <xsd-frontend/transformations/restriction.hxx>
 
-using std::wcerr;
-using std::endl;
+using namespace std;
 
 namespace XSDFrontend
 {
-  using namespace Cult;
-
-  typedef WideString String;
   typedef Transformations::Restriction::Failed Failed;
   typedef std::vector<SemanticGraph::Complex*> BaseList;
 

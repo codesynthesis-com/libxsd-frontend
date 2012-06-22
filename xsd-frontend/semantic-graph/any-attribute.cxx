@@ -16,7 +16,7 @@ namespace XSDFrontend
     AnyAttribute (Path const& file,
                   unsigned long line,
                   unsigned long column,
-                  WideString const& namespaces)
+                  String const& namespaces)
         : Node (file, line, column),
           prototype_ (0)
     {
@@ -26,9 +26,9 @@ namespace XSDFrontend
 
       for (size_t i (0), j (namespaces.find (L' '));;)
       {
-        if (j != WideString::npos)
+        if (j != String::npos)
         {
-          namespaces_.push_back (WideString (namespaces, i, j - i));
+          namespaces_.push_back (String (namespaces, i, j - i));
 
           i = j + 1;
           j = namespaces.find (L' ', i);
@@ -37,7 +37,7 @@ namespace XSDFrontend
         {
           // Last element.
           //
-          namespaces_.push_back (WideString (namespaces, i));
+          namespaces_.push_back (String (namespaces, i));
           break;
         }
       }

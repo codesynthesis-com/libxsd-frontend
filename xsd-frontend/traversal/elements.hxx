@@ -6,10 +6,9 @@
 #ifndef XSD_FRONTEND_TRAVERSAL_ELEMENTS_HXX
 #define XSD_FRONTEND_TRAVERSAL_ELEMENTS_HXX
 
-#include <cult/types.hxx>
-
 #include <cutl/compiler/traversal.hxx>
 
+#include <xsd-frontend/types.hxx>
 #include <xsd-frontend/semantic-graph/elements.hxx>
 
 namespace XSDFrontend
@@ -17,7 +16,6 @@ namespace XSDFrontend
   namespace Traversal
   {
     using namespace cutl;
-    using namespace Cult::Types;
 
     typedef compiler::dispatcher<SemanticGraph::Node> NodeDispatcher;
     typedef compiler::dispatcher<SemanticGraph::Edge> EdgeDispatcher;

@@ -21,7 +21,7 @@
 #include <cutl/container/pointer-iterator.hxx>
 #include <cutl/compiler/context.hxx>
 
-#include <cult/types.hxx>
+#include <xsd-frontend/types.hxx>
 
 namespace XSDFrontend
 {
@@ -30,8 +30,6 @@ namespace XSDFrontend
     using namespace cutl;
 
     using container::pointer_iterator;
-
-    using namespace Cult::Types;
 
     //
     //
@@ -181,7 +179,7 @@ namespace XSDFrontend
 
     //
     //
-    typedef WideString Name;
+    typedef String Name;
 
 
     //
@@ -648,7 +646,7 @@ namespace XSDFrontend
     class Restricts: public virtual Inherits
     {
     public:
-      typedef std::map<WideString, WideString> Facets;
+      typedef std::map<String, String> Facets;
       typedef Facets::iterator FacetIterator;
 
       bool
@@ -670,7 +668,7 @@ namespace XSDFrontend
       }
 
       FacetIterator
-      facet_find (WideString const& name)
+      facet_find (String const& name)
       {
         return facets_.find (name);
       }
@@ -782,7 +780,7 @@ namespace XSDFrontend
 
       struct NoValue {};
 
-      WideString
+      String
       value () const
       {
         if (value_type_ != ValueType::none)
@@ -794,14 +792,14 @@ namespace XSDFrontend
       //
       //
       void
-      default_ (WideString const& v)
+      default_ (String const& v)
       {
         value_ = v;
         value_type_ = ValueType::default_;
       }
 
       void
-      fixed (WideString const& v)
+      fixed (String const& v)
       {
         value_ = v;
         value_type_ = ValueType::fixed;
@@ -841,7 +839,7 @@ namespace XSDFrontend
         };
       };
 
-      WideString value_;
+      String value_;
       ValueType::Value value_type_;
     };
 

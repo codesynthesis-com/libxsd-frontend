@@ -3,8 +3,7 @@
 // copyright : Copyright (c) 2006-2011 Code Synthesis Tools CC
 // license   : GNU GPL v2 + exceptions; see accompanying LICENSE file
 
-#include <cult/types.hxx>
-
+#include <xsd-frontend/types.hxx>
 #include <xsd-frontend/parser.hxx>
 #include <xsd-frontend/transformations/anonymous.hxx>
 #include <xsd-frontend/transformations/enum-synthesis.hxx>
@@ -14,10 +13,8 @@
 
 #include <iostream>
 
-using namespace Cult::Types;
-using namespace XSDFrontend;
-
 using namespace std;
+using namespace XSDFrontend;
 
 static unsigned long indent;
 
@@ -32,8 +29,6 @@ ind (std::wostream& os)
 
 namespace
 {
-  typedef Cult::Types::WideString String;
-
   // Nameable which is named in the namespace scope.
   //
   String
@@ -543,11 +538,11 @@ namespace
 
 struct AnonymousNameTranslator: Transformations::AnonymousNameTranslator
 {
-  virtual WideString
-  translate (WideString const& /*file*/,
-             WideString const& ns,
-             WideString const& name,
-             WideString const& xpath)
+  virtual String
+  translate (String const& /*file*/,
+             String const& ns,
+             String const& name,
+             String const& xpath)
   {
     wcout << "anonymous: " << ns << " " << name << " " << xpath << endl;
     return name;
@@ -555,7 +550,7 @@ struct AnonymousNameTranslator: Transformations::AnonymousNameTranslator
 };
 
 int
-main (int argc, Char* argv[])
+main (int argc, char* argv[])
 {
   try
   {
@@ -567,7 +562,7 @@ main (int argc, Char* argv[])
 
     // Parse options.
     //
-    Int i (1);
+    int i (1);
     bool anon (false);
     bool enum_synth (false);
 

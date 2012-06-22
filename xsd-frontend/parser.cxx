@@ -11,7 +11,6 @@
 
 #include <cutl/compiler/type-id.hxx>
 
-#include <xsd-frontend/types.hxx>
 #include <xsd-frontend/parser.hxx>
 #include <xsd-frontend/xml.hxx>
 #include <xsd-frontend/schema-dom-parser.hxx>
@@ -107,10 +106,10 @@ namespace XSDFrontend
     // Trim leading and trailing whitespaces.
     //
     template <typename C>
-    Cult::StringTemplate<C>
-    trim (Cult::StringTemplate<C> const& s)
+    StringTemplate<C>
+    trim (StringTemplate<C> const& s)
     {
-      typedef Cult::StringTemplate<C> String;
+      typedef StringTemplate<C> String;
 
       size_t size (s.size ());
 
@@ -1312,8 +1311,11 @@ namespace XSDFrontend
   // Parser::Impl
   //
 
-  class Parser::Impl: public NonCopyable
+  class Parser::Impl
   {
+    Impl (Impl const&);
+    Impl& operator= (Impl const&);
+
   public:
     ~Impl ();
 
@@ -1417,7 +1419,7 @@ namespace XSDFrontend
 
   private:
     bool
-    is_disabled (Char const* warning)
+    is_disabled (char const* warning)
     {
       return disabled_warnings_all_ ||
         (disabled_warnings_ &&
@@ -4750,8 +4752,10 @@ namespace XSDFrontend
   // that can later be used in diagnostics. Unfortunately, it doesn't
   // work. So we will have to keep our own track.
   //
-  struct Context: public NonCopyable
+  struct Context
   {
+    Context () {}
+
     // File map for diagnostic.
     //
     Path const&
@@ -4774,6 +4778,10 @@ namespace XSDFrontend
     {
       file_map_[abs] = rel;
     }
+
+  private:
+    Context (Context const&);
+    Context& operator= (Context const&);
 
   private:
     typedef std::map<Path, Path, FilePathComparator> FileMap;

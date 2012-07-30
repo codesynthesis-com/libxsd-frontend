@@ -469,8 +469,15 @@ namespace XSDFrontend
             m.context ().remove ("instance-ns-name");
             m.context ().remove ("instance-uq-name");
 
-
-            Member& ref (resolve<Member> (ns_name, uq_name, s_, cache_));
+            // Resolve the name to the same type. It is legal to have
+            // an element and an attribute with the same name.
+            //
+            Member& ref (
+              m.is_a<Element> ()
+              ? static_cast<Member&> (
+                  resolve<Element> (ns_name, uq_name, s_, cache_))
+              : static_cast<Member&> (
+                  resolve<Attribute> (ns_name, uq_name, s_, cache_)));
 
             // Make sure the referenced member is fully resolved.
             // @@ Substitutes edge won't be resolved.

@@ -44,6 +44,8 @@ cxx_tun += transformations/anonymous.cxx       \
            transformations/schema-per-type.cxx \
            transformations/simplifier.cxx
 
+cxx_tun += generators/dependencies.cxx
+
 cxx_tun += types.cxx parser.cxx schema-dom-parser.cxx
 
 

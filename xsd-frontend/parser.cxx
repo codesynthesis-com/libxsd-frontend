@@ -1303,18 +1303,6 @@ namespace XSDFrontend
     };
   }
 
-  //
-  //
-  struct FilePathComparator
-  {
-    bool
-    operator () (SemanticGraph::Path const& x,
-                 SemanticGraph::Path const& y) const
-    {
-        return x.native_file_string () < y.native_file_string ();
-    }
-  };
-
   // Parser::Impl
   //
 
@@ -1669,9 +1657,7 @@ namespace XSDFrontend
       friend bool
       operator< (SchemaId const& x, SchemaId const& y)
       {
-        return x.path_.native_file_string () < y.path_.native_file_string ()
-          || (x.path_.native_file_string () == y.path_.native_file_string ()
-              && x.ns_ < y.ns_);
+        return x.path_ < y.path_ || (x.path_ == y.path_ && x.ns_ < y.ns_);
       }
 
     private:
@@ -1923,10 +1909,12 @@ namespace XSDFrontend
     // Parse.
     //
     {
-      // Enter the file into schema_map_.
+      // Enter the file into schema_map_. Do normalize() before
+      // complete() to avoid hitting system path limits with '..'
+      // directories.
       //
-      Path abs_path (system_complete (tu));
-      abs_path.normalize ();
+      Path abs_path (tu);
+      abs_path.normalize ().complete ();
       schema_map_[SchemaId (abs_path, ns)] = rs.get ();
       rs->context ().set ("absolute-path", abs_path);
 
@@ -2126,7 +2114,7 @@ namespace XSDFrontend
     NamespaceMap cache;
     cache_ = &cache;
 
-    auto_ptr<Schema> rs (new Schema ("", 0, 0));
+    auto_ptr<Schema> rs (new Schema (Path (), 0, 0));
 
     // Implied schema with fundamental types.
     //
@@ -2153,10 +2141,12 @@ namespace XSDFrontend
       if (trace_)
         wcout << "target namespace: " << ns << endl;
 
-      // Check if we already have this schema.
+      // Check if we already have this schema. Do normalize() before
+      // complete() to avoid hitting system path limits with '..'
+      // directories.
       //
-      Path abs_path (system_complete (tu));
-      abs_path.normalize ();
+      Path abs_path (tu);
+      abs_path.normalize ().complete ();
       SchemaId schema_id (abs_path, ns);
 
       if (schema_map_.find (schema_id) != schema_map_.end ())
@@ -2434,31 +2424,21 @@ namespace XSDFrontend
     Path path, rel_path, abs_path;
     try
     {
-      try
-      {
-        path = Path (loc);
-      }
-      catch (InvalidPath const&)
-      {
-        // Retry as a native path.
-        //
-        path = Path (loc, boost::filesystem::native);
-      }
+      path = Path (loc);
 
-      if (path.is_complete ())
+      if (path.absolute ())
       {
         abs_path = rel_path = path;
+        abs_path.normalize ();
       }
       else
       {
-        // Use abs_file to construct the absolute path to avoid
-        // hitting system path limits with '..' directories.
+        // Do normalize() before complete() to avoid hitting system path
+        // limits with '..' directories.
         //
-        rel_path = file ().branch_path () / path;
-        abs_path = system_complete (abs_file ().branch_path () / path);
+        abs_path = rel_path = file ().directory () / path;
+        abs_path.normalize ().complete ();
       }
-
-      abs_path.normalize ();
     }
     catch (InvalidPath const&)
     {
@@ -2541,31 +2521,21 @@ namespace XSDFrontend
     Path path, rel_path, abs_path;
     try
     {
-      try
-      {
-        path = Path (loc);
-      }
-      catch (InvalidPath const&)
-      {
-        // Retry as a native path.
-        //
-        path = Path (loc, boost::filesystem::native);
-      }
+      path = Path (loc);
 
-      if (path.is_complete ())
+      if (path.absolute ())
       {
         abs_path = rel_path = path;
+        abs_path.normalize ();
       }
       else
       {
-        // Use abs_file to construct the absolute path to avoid
-        // hitting system path limits with '..' directories.
+        // Do normalize() before complete() to avoid hitting system path
+        // limits with '..' directories.
         //
-        rel_path = file ().branch_path () / path;
-        abs_path = system_complete (abs_file ().branch_path () / path);
+        abs_path = rel_path = file ().directory () / path;
+        abs_path.normalize ().complete ();
       }
-
-      abs_path.normalize ();
     }
     catch (InvalidPath const&)
     {
@@ -4791,7 +4761,7 @@ namespace XSDFrontend
     Context& operator= (Context const&);
 
   private:
-    typedef std::map<Path, Path, FilePathComparator> FileMap;
+    typedef std::map<Path, Path> FileMap;
     FileMap file_map_;
   };
 
@@ -4819,8 +4789,7 @@ namespace XSDFrontend
 
 
       XSDFrontend::SemanticGraph::Path abs_path (
-        XML::transcode_to_narrow (e.getLocation ()->getURI ()),
-        boost::filesystem::native);
+        XML::transcode_to_narrow (e.getLocation ()->getURI ()));
 
       XSDFrontend::SemanticGraph::Path rel_path (ctx_.file (abs_path));
 
@@ -4873,8 +4842,7 @@ namespace XSDFrontend
           base_ (base),
           ctx_ (ctx)
     {
-      setSystemId (XML::XMLChString (
-                     String (abs_.native_file_string ())).c_str ());
+      setSystemId (XML::XMLChString (String (abs_.string ())).c_str ());
     }
 
     virtual Xerces::BinInputStream*
@@ -4947,8 +4915,7 @@ namespace XSDFrontend
 
       // base_uri should be a valid path by now.
       //
-      Path base (XML::transcode_to_narrow (base_uri),
-                 boost::filesystem::native);
+      Path base (XML::transcode_to_narrow (base_uri));
 
       if (prv_id == 0)
       {
@@ -4972,31 +4939,19 @@ namespace XSDFrontend
 
       try
       {
-        Path path;
-
-        try
-        {
-          path = Path (path_str);
-        }
-        catch (InvalidPath const&)
-        {
-          // Retry as a native path.
-          //
-          path = Path (path_str, boost::filesystem::native);
-        }
-
-        Path base_dir (base.branch_path ());
+        Path path (path_str);
+        Path base_dir (base.directory ());
 
         Path abs_path, rel_path;
 
-        if (path.is_complete ())
+        if (path.absolute ())
         {
           abs_path = rel_path = path;
         }
         else
         {
           abs_path = base_dir / path;
-          rel_path = ctx_.file (base).branch_path () / path;
+          rel_path = ctx_.file (base).directory () / path;
         }
 
         abs_path.normalize ();
@@ -5042,8 +4997,11 @@ namespace XSDFrontend
     {
       XSDFrontend::Context ctx;
 
-      Path abs_path (system_complete (tu));
-      abs_path.normalize ();
+      // Do normalize() before complete() to avoid hitting system path
+      // limits with '..' directories.
+      //
+      Path abs_path (tu);
+      abs_path.normalize ().complete ();
       ctx.map_file (abs_path, tu);
 
       InputSource input_source (abs_path, tu, abs_path, ctx);

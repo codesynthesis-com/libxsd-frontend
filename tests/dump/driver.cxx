@@ -578,7 +578,7 @@ main (int argc, char* argv[])
 
     // Parse schema.
     //
-    SemanticGraph::Path path (argv[i], boost::filesystem::native);
+    SemanticGraph::Path path (argv[i]);
 
     Parser parser (true, false, true);
     auto_ptr<SemanticGraph::Schema> tu (parser.parse (path));

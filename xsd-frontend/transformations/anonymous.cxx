@@ -531,6 +531,7 @@ namespace XSDFrontend
             // Run the name through the translation service.
             //
             SemanticGraph::Path file (path (l));
+            file.normalize ();
             String file_str;
 
             // Try to use the portable representation of the path. If that
@@ -538,11 +539,11 @@ namespace XSDFrontend
             //
             try
             {
-              file_str = file.string ();
+              file_str = file.posix_string ();
             }
             catch (SemanticGraph::InvalidPath const&)
             {
-              file_str = file.native_file_string ();
+              file_str = file.string ();
             }
 
             String name (
@@ -615,17 +616,18 @@ namespace XSDFrontend
               if (!file_str)
               {
                 SemanticGraph::Path file (path (u));
+                file.normalize ();
 
                 // Try to use the portable representation of the path. If
                 // that fails, fall back to the native representation.
                 //
                 try
                 {
-                  file_str = file.string ();
+                  file_str = file.posix_string ();
                 }
                 catch (SemanticGraph::InvalidPath const&)
                 {
-                  file_str = file.native_file_string ();
+                  file_str = file.string ();
                 }
               }
 
@@ -697,6 +699,7 @@ namespace XSDFrontend
             // Run the name through the translation service.
             //
             SemanticGraph::Path file (path (c));
+            file.normalize ();
             String file_str;
 
             // Try to use the portable representation of the path. If that
@@ -704,11 +707,11 @@ namespace XSDFrontend
             //
             try
             {
-              file_str = file.string ();
+              file_str = file.posix_string ();
             }
             catch (SemanticGraph::InvalidPath const&)
             {
-              file_str = file.native_file_string ();
+              file_str = file.string ();
             }
 
             String name (
@@ -895,6 +898,7 @@ namespace XSDFrontend
         // Run the name through the translation service.
         //
         SemanticGraph::Path file (path (m));
+        file.normalize ();
         String file_str;
 
         // Try to use the portable representation of the path. If that
@@ -902,11 +906,11 @@ namespace XSDFrontend
         //
         try
         {
-          file_str = file.string ();
+          file_str = file.posix_string ();
         }
         catch (SemanticGraph::InvalidPath const&)
         {
-          file_str = file.native_file_string ();
+          file_str = file.string ();
         }
 
         String name (

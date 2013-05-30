@@ -374,6 +374,8 @@ namespace XSDFrontend
 
       for (Schemas::iterator i (schemas.begin ()); i != schemas.end (); ++i)
       {
+        // This path was already normalized by the parser.
+        //
         SemanticGraph::Path const& path (
           (*i)->context ().get<SemanticGraph::Path> ("absolute-path"));
 
@@ -386,15 +388,15 @@ namespace XSDFrontend
         //
         try
         {
-          abs_path = path.string ();
+          abs_path = path.posix_string ();
         }
         catch (SemanticGraph::InvalidPath const&)
         {
-          abs_path = path.native_file_string ();
+          abs_path = path.string ();
         }
 
         NarrowString tf (trans_.translate_schema (abs_path));
-        NarrowString file (tf ? tf : path.leaf ());
+        NarrowString file (tf ? tf : path.leaf ().string ());
 
         size_t p (file.rfind ('.'));
         NarrowString ext (

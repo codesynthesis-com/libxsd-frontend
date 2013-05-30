@@ -10,16 +10,15 @@
 #include <map>
 #include <list>
 #include <vector>
-#include <utility> // std::pair
 #include <iosfwd>
-
-#include <boost/filesystem/path.hpp>
-#include <boost/filesystem/operations.hpp>
-#include <boost/filesystem/exception.hpp>
+#include <utility> // std::pair
+#include <cstdlib> // abort
+#include <cassert>
 
 #include <cutl/container/graph.hxx>
 #include <cutl/container/pointer-iterator.hxx>
 #include <cutl/compiler/context.hxx>
+#include <cutl/fs/path.hxx>
 
 #include <xsd-frontend/types.hxx>
 
@@ -33,9 +32,9 @@ namespace XSDFrontend
 
     //
     //
-    typedef boost::filesystem::path Path;
+    typedef fs::path Path;
+    typedef fs::invalid_path InvalidPath;
     typedef std::vector<Path> Paths;
-    typedef boost::filesystem::filesystem_error InvalidPath;
 
     typedef compiler::context Context;
 

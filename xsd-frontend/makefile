@@ -59,12 +59,6 @@ xsd_frontend.l.cpp-options := $(out_base)/xsd-frontend.l.cpp-options
 
 clean   := $(out_base)/.clean
 
-# Import.
-#
-$(call import,\
-  $(scf_root)/import/libboost/filesystem/stub.make,\
-  l: fs.l,cpp-options: fs.l.cpp-options)
-
 $(call import,\
   $(scf_root)/import/libxerces-c/stub.make,\
   l: xerces_c.l,cpp-options: xerces_c.l.cpp-options)
@@ -75,13 +69,11 @@ $(call import,\
 
 # What to build.
 #
-$(xsd_frontend.l): $(cxx_obj) $(cutl.l) $(xerces_c.l) $(fs.l)
+$(xsd_frontend.l): $(cxx_obj) $(cutl.l) $(xerces_c.l)
 
 $(xsd_frontend.l.cpp-options): prefix := xsd-frontend/ $(out_root)/
 $(xsd_frontend.l.cpp-options): value := -I$(src_root) -I$(out_root)
-$(xsd_frontend.l.cpp-options):  \
-  $(fs.l.cpp-options)           \
-  $(cutl.l.cpp-options)
+$(xsd_frontend.l.cpp-options): $(cutl.l.cpp-options)
 
 #@@ This can be further optimized since only parser depends on xerces.
 #

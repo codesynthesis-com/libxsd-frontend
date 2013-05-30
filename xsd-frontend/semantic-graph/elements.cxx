@@ -296,5 +296,5 @@ namespace XSDFrontend
 std::wostream&
 operator<< (std::wostream& os, XSDFrontend::SemanticGraph::Path const& path)
 {
-  return os << path.native_file_string ().c_str ();
+  return os << path.string ().c_str ();
 }

@@ -415,6 +415,15 @@ namespace XSDFrontend
               resolve<SemanticGraph::Element> (ns_name, uq_name, s_, cache_));
 
             s_.new_edge<Substitutes> (e, root);
+
+            // See if we need to derive the type of this element from the
+            // one it substitutes.
+            //
+            if (!e.typed_p ())
+            {
+              resolve_member (root); // Make sure the type is resolved.
+              s_.new_edge<Belongs> (e, root.type ());
+            }
           }
           catch (NotNamespace const& ex)
           {
@@ -3825,12 +3834,15 @@ namespace XSDFrontend
         default_values_.push_back (&node);
       }
 
+      bool subst (false);
       if (global)
       {
         if (String sg = trim (e["substitutionGroup"]))
         {
           if (trace_)
             wcout << "substitutes " << sg << endl;
+
+          subst = true;
 
           try
           {
@@ -3900,10 +3912,12 @@ namespace XSDFrontend
           if (t)
             s_->new_edge<Belongs> (node, *t);
         }
-        else
+        // By default the type is anyType unless this element is a
+        // member of a substitution group, in which case it has the
+        // same type as the element it substiutes.
+        //
+        else if (!subst)
         {
-          // anyType
-          //
           if (!is_disabled ("F001"))
           {
             wcerr << file () << ":" << e.line () << ":" << e.column () << ": "

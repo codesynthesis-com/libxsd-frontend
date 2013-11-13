@@ -13,6 +13,8 @@
 #include <xercesc/validators/schema/XSDLocator.hpp>
 #include <xercesc/validators/schema/XSDErrorReporter.hpp>
 
+#include <xsd-frontend/version.hxx> // Check Xerces-C++ version.
+
 namespace XSDFrontend
 {
   namespace XML
@@ -35,11 +37,7 @@ namespace XSDFrontend
                     const unsigned int url_id,
                     const XMLCh* const prefix,
                     const Xerces::RefVectorOf<Xerces::XMLAttr>& attributes,
-#if _XERCES_VERSION >= 30000
                     const XMLSize_t attribute_count,
-#else
-                    const unsigned int attribute_count,
-#endif
                     const bool empty,
                     const bool root);
 
@@ -51,11 +49,7 @@ namespace XSDFrontend
 
       virtual void
       docCharacters (const XMLCh* const,
-#if _XERCES_VERSION >= 30000
                      const XMLSize_t length,
-#else
-                     const unsigned int length,
-#endif
                      const bool cdata);
 
       virtual void
@@ -69,11 +63,7 @@ namespace XSDFrontend
 
       virtual void
       ignorableWhitespace (const XMLCh* const,
-#if _XERCES_VERSION >= 30000
                            const XMLSize_t length,
-#else
-                           const unsigned int length,
-#endif
                            const bool cdata);
     private:
       SchemaDOMParser (SchemaDOMParser const&);

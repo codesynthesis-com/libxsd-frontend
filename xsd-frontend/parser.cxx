@@ -11,8 +11,9 @@
 
 #include <cutl/compiler/type-id.hxx>
 
-#include <xsd-frontend/parser.hxx>
+#include <xsd-frontend/version.hxx> // Check Xerces-C++ version.
 #include <xsd-frontend/xml.hxx>
+#include <xsd-frontend/parser.hxx>
 #include <xsd-frontend/schema-dom-parser.hxx>
 
 #include <xsd-frontend/semantic-graph.hxx>
@@ -4891,11 +4892,7 @@ namespace XSDFrontend
 
 
   class EntityResolver: public Xerces::XMemory,
-#if _XERCES_VERSION >= 30000
                         public Xerces::DOMLSResourceResolver
-#else
-                        public Xerces::DOMEntityResolver
-#endif
   {
   public:
     EntityResolver (XSDFrontend::Context& ctx, LocationTranslator* t)
@@ -4903,19 +4900,12 @@ namespace XSDFrontend
     {
     }
 
-#if _XERCES_VERSION >= 30000
     virtual Xerces::DOMLSInput*
     resolveResource(XMLCh const* const,
                     XMLCh const* const,
                     XMLCh const* const /*pub_id*/,
                     XMLCh const* const prv_id,
                     XMLCh const* const base_uri)
-#else
-    virtual Xerces::DOMInputSource*
-    resolveEntity (XMLCh const* const /*pub_id*/,
-                   XMLCh const* const prv_id,
-                   XMLCh const* const base_uri)
-#endif
     {
       /*
       XMLCh empty[1];
@@ -5036,7 +5026,6 @@ namespace XSDFrontend
 
         // Create a DOMBuilder.
         //
-#if _XERCES_VERSION >= 30000
         XML::AutoPtr<DOMLSParser> parser (
           impl->createLSParser (DOMImplementationLS::MODE_SYNCHRONOUS, 0));
 
@@ -5068,29 +5057,6 @@ namespace XSDFrontend
 
         Wrapper4InputSource wrap (&input_source, false);
         parser->loadGrammar (&wrap, Grammar::SchemaGrammarType);
-#else
-        XML::AutoPtr<DOMBuilder> parser (
-          impl->createDOMBuilder (DOMImplementationLS::MODE_SYNCHRONOUS, 0));
-
-        parser->setFeature (XMLUni::fgDOMComments, false);
-        parser->setFeature (XMLUni::fgDOMDatatypeNormalization, true);
-        parser->setFeature (XMLUni::fgDOMEntities, false);
-        parser->setFeature (XMLUni::fgDOMNamespaces, true);
-        parser->setFeature (XMLUni::fgDOMValidation, true);
-        parser->setFeature (XMLUni::fgDOMWhitespaceInElementContent, false);
-        parser->setFeature (XMLUni::fgXercesSchema, true);
-        parser->setFeature (XMLUni::fgXercesSchemaFullChecking, full_schema_check_);
-        parser->setFeature (XMLUni::fgXercesValidationErrorAsFatal, true);
-
-        ErrorHandler eh (valid_, ctx);
-        parser->setErrorHandler (&eh);
-
-        EntityResolver er (ctx, loc_translator_);
-        parser->setEntityResolver (&er);
-
-        Wrapper4InputSource wrap (&input_source, false);
-        parser->loadGrammar (wrap, Grammar::SchemaGrammarType);
-#endif
       }
 
       if (!valid_)

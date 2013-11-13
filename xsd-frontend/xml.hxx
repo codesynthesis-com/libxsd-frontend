@@ -12,6 +12,7 @@
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/util/XMLString.hpp>
 
+#include <xsd-frontend/version.hxx>            // Check Xerces-C++ version.
 #include <xsd-frontend/types.hxx>
 #include <xsd-frontend/schema-dom-parser.hxx>
 
@@ -366,14 +367,7 @@ namespace XSDFrontend
     ns_prefix (Element const& e, String const& wns)
     {
       XMLChString ns (wns);
-
-#if _XERCES_VERSION >= 30000
-      XMLCh const* p (
-        e.dom_element ()->lookupPrefix (ns.c_str ()));
-#else
-      XMLCh const* p (
-        e.dom_element ()->lookupNamespacePrefix (ns.c_str (), false));
-#endif
+      XMLCh const* p (e.dom_element ()->lookupPrefix (ns.c_str ()));
 
       if (p == 0)
       {

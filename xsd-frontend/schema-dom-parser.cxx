@@ -44,11 +44,7 @@ namespace XSDFrontend
                   const unsigned int url_id,
                   const XMLCh* const prefix,
                   const RefVectorOf<XMLAttr>& attributes,
-#if _XERCES_VERSION >= 30000
                   const XMLSize_t attr_count,
-#else
-                  const unsigned int attr_count,
-#endif
                   const bool empty,
                   const bool root)
     {
@@ -77,18 +73,8 @@ namespace XSDFrontend
       ReaderMgr::LastExtEntityInfo info;
       ((ReaderMgr*) fScanner->getLocator())->getLastExtEntityInfo(info);
 
-#if _XERCES_VERSION >= 30000
       unsigned long l (static_cast<unsigned long> (info.lineNumber));
       unsigned long c (static_cast<unsigned long> (info.colNumber));
-#else
-      unsigned long l (info.lineNumber == -1
-                       ? 0UL
-                       : static_cast<unsigned long> (info.lineNumber));
-
-      unsigned long c (info.colNumber == -1
-                       ? 0UL
-                       : static_cast<unsigned long> (info.colNumber));
-#endif
 
       fCurrentNode->setUserData (line_key, reinterpret_cast<void*> (l), 0);
       fCurrentNode->setUserData (column_key, reinterpret_cast<void*> (c), 0);
@@ -124,11 +110,7 @@ namespace XSDFrontend
 
     void SchemaDOMParser::
     docCharacters (const XMLCh* const s,
-#if _XERCES_VERSION >= 30000
                    const XMLSize_t length,
-#else
-                   const unsigned int length,
-#endif
                    const bool cdata)
     {
       // Ignore chars outside of content.
@@ -177,11 +159,7 @@ namespace XSDFrontend
 
     void SchemaDOMParser::
     ignorableWhitespace (const XMLCh* const s,
-#if _XERCES_VERSION >= 30000
                          const XMLSize_t length,
-#else
-                         const unsigned int length,
-#endif
                          const bool cdata)
     {
       // Ignore chars before the root element.

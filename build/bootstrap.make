@@ -16,6 +16,10 @@ ifeq ($(patsubst %build/bootstrap.make,,$(lastword $(MAKEFILE_LIST))),)
 include $(build)/bootstrap.make
 endif
 
+# Configuration (optional; only used in the +dep packages).
+#
+$(call -include,$(dcf_root)/configuration-dynamic.make)
+
 # Aliases
 #
 .PHONY: $(out_base)/       \
@@ -41,6 +45,6 @@ define include-dep
 $(call -include,$1)
 endef
 
-ifneq ($(filter $(MAKECMDGOALS),clean cleandoc disfigure),)
+ifneq ($(filter $(MAKECMDGOALS),clean disfigure),)
 include-dep =
 endif

@@ -93,8 +93,11 @@ $(out_base)/: $(xsd_frontend.l)
 $(clean): $(xsd_frontend.l).o.clean     \
   $(xsd_frontend.l.cpp-options).clean   \
   $(addsuffix .cxx.clean,$(cxx_obj))    \
-  $(addsuffix .cxx.clean,$(cxx_od))     \
-  $(addsuffix .m4.clean,$(m4_cxx))
+  $(addsuffix .cxx.clean,$(cxx_od))
+
+ifneq ($(libxsd_frontend_clean_gen),n)
+$(clean): $(addsuffix .m4.clean,$(m4_cxx))
+endif
 
 # Generated .gitignore.
 #

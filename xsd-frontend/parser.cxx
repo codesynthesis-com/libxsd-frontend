@@ -558,19 +558,10 @@ namespace XSDFrontend
             if (!m.annotated_p () && ref.annotated_p ())
               s_.new_edge<Annotates> (ref.annotation (), m);
 
-            // Type info.
+            // Type info. Can be missing for a substitution group member.
             //
             if (ref.typed_p ())
               s_.new_edge<Belongs> (m, ref.type ());
-            else
-            {
-              if (valid_)
-              {
-                wcerr << "ice: referenced instance '" << ns_name << "#"
-                      << uq_name << "' is not typed" << endl;
-                abort ();
-              }
-            }
           }
         }
         catch (NotNamespace const& ex)

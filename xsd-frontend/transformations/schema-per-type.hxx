@@ -1,5 +1,5 @@
 // file      : xsd-frontend/transformations/schema-per-type.hxx
-// copyright : Copyright (c) 2006-2011 Code Synthesis Tools CC
+// copyright : Copyright (c) 2006-2014 Code Synthesis Tools CC
 // license   : GNU GPL v2 + exceptions; see accompanying LICENSE file
 
 #ifndef XSD_FRONTEND_TRANSFORMATIONS_SCHEMA_PER_TYPE_HXX

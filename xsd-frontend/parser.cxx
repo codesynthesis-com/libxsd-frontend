@@ -2358,9 +2358,13 @@ namespace XSDFrontend
 
     if (String af = trim (s["attributeFormDefault"]))
       qualify_attribute_ = af == L"qualified";
+    else
+      qualify_attribute_ = false;
 
     if (String ef = trim (s["elementFormDefault"]))
       qualify_element_ = ef == L"qualified";
+    else
+      qualify_element_ = false;
 
     push (s);
 
@@ -4186,6 +4190,8 @@ namespace XSDFrontend
 
     if (String name = trim (a["name"]))
     {
+      wcout << name << " " << qualified << endl;
+
       if (trace_)
         wcout << "attribute '" << name << "'" << endl;
 

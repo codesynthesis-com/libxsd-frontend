@@ -18,12 +18,24 @@ namespace XSDFrontend
       bool
       mixed_p () const
       {
-        return mixed_;
+        if (mixed_)
+          return true;
+
+        // If we have empty content, then we have the same content
+        // type as our base.
+        //
+        if (!contains_compositor_p () && inherits_p ())
+        {
+          if (Complex* b = dynamic_cast<Complex*> (&inherits ().base ()))
+            return b->mixed_p ();
+        }
+
+        return false;
       }
 
     public:
       bool
-      contains_compositor_p ()
+      contains_compositor_p () const
       {
         return contains_compositor_ != 0;
       }

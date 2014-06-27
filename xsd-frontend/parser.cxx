@@ -4190,8 +4190,6 @@ namespace XSDFrontend
 
     if (String name = trim (a["name"]))
     {
-      wcout << name << " " << qualified << endl;
-
       if (trace_)
         wcout << "attribute '" << name << "'" << endl;
 

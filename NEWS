@@ -1,3 +1,12 @@
+Version 2.0.0
+
+  * New major version with removed dependencies (now only depends on
+    libcutl) and no longer supports Xerces-C++ 2-series.
+
+  * Support for fat type files.
+
+  * Generator that returns list of included/imported schemas.
+
 Version 1.18.0
 
   * Add support for multiple pattern facets.
@@ -8,7 +17,7 @@ Version 1.18.0
 
 Version 1.17.0
 
-  * Add support for resolving default/fixed values of QName type. Now 
+  * Add support for resolving default/fixed values of QName type. Now
     the qualified value is represented in the <namespace>#<qname> form.
 
   * Anonymous transformation now passes the actual file path instead of
@@ -19,7 +28,7 @@ Version 1.17.0
 
   * Do not copy ref'ed default values for non-optional attributes.
 
-  * Change predicate names in the semantic graph to consistently end 
+  * Change predicate names in the semantic graph to consistently end
     with _p.
 
   * New transformation: enum synthesis.
@@ -29,12 +38,12 @@ Version 1.17.0
   * Add support for translating schema file paths.
 
 Version 1.16.0
-  
+
   * New transformation: simplifier. It simplifies the schema graph
     by, for example, removing empty compositors where it would not
     change the semantics of the schema.
 
-  * Added min() and max() accessors to the Particle and Compositor 
+  * Added min() and max() accessors to the Particle and Compositor
     semantic graph nodes.
 
   * Added optional strong include key to the schema-per-type
@@ -45,7 +54,7 @@ Version 1.15.0
   * Support for the simple type/simple content restriction facets.
 
   * Support for suppressing frontend warnings.
-  
+
   * Support for suppressing full schema checking.
 
   * Support for the interface changes introduced in Xerces-C++ 3.0.0.b2.
@@ -59,7 +68,7 @@ Version 1.14.0
   * Support for UTF-32 and UTF-16 in wchar_t.
 
   * Fixed a bug in import stubs.
-  
+
   * Got rid of warnings reported by g++-4.3.
 
 Version 1.13.0

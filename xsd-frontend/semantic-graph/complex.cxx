@@ -12,14 +12,17 @@ namespace XSDFrontend
   {
     Complex::
     Complex ()
-        : mixed_ (false), contains_compositor_ (0)
+        : abstract_ (false), mixed_ (false), contains_compositor_ (0)
     {
     }
 
     Complex::
-    Complex (Path const& file, unsigned long line, unsigned long column)
+    Complex (Path const& file,
+             unsigned long line,
+             unsigned long column,
+             bool abstract)
         : Node (file, line, column),
-          mixed_ (false), contains_compositor_ (0)
+          abstract_ (abstract), mixed_ (false), contains_compositor_ (0)
     {
     }
 

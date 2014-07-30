@@ -16,6 +16,9 @@ namespace XSDFrontend
     {
     public:
       bool
+      abstract_p () const {return abstract_;}
+
+      bool
       mixed_p () const
       {
         if (mixed_)
@@ -55,7 +58,10 @@ namespace XSDFrontend
       }
 
     public:
-      Complex (Path const& file, unsigned long line, unsigned long column);
+      Complex (Path const& file,
+               unsigned long line,
+               unsigned long column,
+               bool abstract);
 
       void
       add_edge_left (ContainsCompositor& e)
@@ -78,6 +84,7 @@ namespace XSDFrontend
       Complex (); // For virtual inheritance (Enumeration).
 
     private:
+      bool abstract_;
       bool mixed_;
       ContainsCompositor* contains_compositor_;
     };

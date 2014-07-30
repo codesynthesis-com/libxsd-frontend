@@ -3148,7 +3148,10 @@ namespace XSDFrontend
       pop_scope ();
     else
     {
-      Complex& node (s_->new_node<Complex> (file (), t.line (), t.column ()));
+      // Really a simple type so not abstract/mixed checks.
+      //
+      Complex& node (s_->new_node<Complex> (
+                       file (), t.line (), t.column (), false));
 
       if (base_type)
         restricts = &s_->new_edge<Restricts> (node, *base_type);
@@ -3202,7 +3205,11 @@ namespace XSDFrontend
   {
     Type* r (0);
 
-    Complex& node (s_->new_node<Complex> (file (), t.line (), t.column ()));
+    String abs_s (trim (t["abstract"]));
+    bool abs (abs_s == L"true" || abs_s == L"1");
+
+    Complex& node (s_->new_node<Complex> (
+                     file (), t.line (), t.column (), abs));
 
     if (String m = trim (t["mixed"]))
       node.mixed_p (m == L"true" || m == L"1");

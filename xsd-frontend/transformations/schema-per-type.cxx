@@ -232,6 +232,11 @@ namespace XSDFrontend
           //
           root.new_edge<Includes> (s, ts, path);
           tsm[&t] = &ts;
+
+          // Also mark this schema as "type schema" in case someone
+          // needs to distinguish between the two kinds.
+          //
+          ts.context ().set ("type-schema", true);
         }
         else
           ++i;

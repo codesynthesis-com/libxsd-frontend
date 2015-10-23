@@ -3,6 +3,7 @@
 // license   : GNU GPL v2 + exceptions; see accompanying LICENSE file
 
 #include <algorithm>
+#include <iostream>
 
 #include <cutl/compiler/type-info.hxx>
 

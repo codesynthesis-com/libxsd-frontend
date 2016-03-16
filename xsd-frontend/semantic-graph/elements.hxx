@@ -10,6 +10,7 @@
 #include <list>
 #include <vector>
 #include <iosfwd>
+#include <cstddef> // std::size_t
 #include <utility> // std::pair
 #include <cstdlib> // abort
 #include <cassert>
@@ -340,6 +341,12 @@ namespace XSDFrontend
       names_end () const
       {
         return names_.end ();
+      }
+
+      std::size_t
+      names_size () const
+      {
+        return names_.size ();
       }
 
       virtual NamesIteratorPair

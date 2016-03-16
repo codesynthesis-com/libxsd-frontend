@@ -421,7 +421,7 @@ namespace XSDFrontend
             //
             if (!e.typed_p ())
             {
-              resolve_member (root); // Make sure the type is resolved.
+              resolve_element (root); // Make sure the type is resolved.
               s_.new_edge<Belongs> (e, root.type ());
             }
           }

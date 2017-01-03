@@ -1,5 +1,5 @@
 // file      : xsd-frontend/traversal/element.hxx
-// copyright : Copyright (c) 2005-2014 Code Synthesis Tools CC
+// copyright : Copyright (c) 2005-2017 Code Synthesis Tools CC
 // license   : GNU GPL v2 + exceptions; see accompanying LICENSE file
 
 #ifndef XSD_FRONTEND_TRAVERSAL_ELEMENT_HXX

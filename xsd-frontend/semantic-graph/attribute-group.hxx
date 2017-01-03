@@ -1,5 +1,5 @@
 // file      : xsd-frontend/semantic-graph/attribute-group.hxx
-// copyright : Copyright (c) 2006-2014 Code Synthesis Tools CC
+// copyright : Copyright (c) 2006-2017 Code Synthesis Tools CC
 // license   : GNU GPL v2 + exceptions; see accompanying LICENSE file
 
 #ifndef XSD_FRONTEND_SEMANTIC_GRAPH_ATTRIBUTE_GROUP_HXX

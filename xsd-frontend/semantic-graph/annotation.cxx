@@ -1,5 +1,4 @@
 // file      : xsd-frontend/semantic-graph/annotation.cxx
-// copyright : Copyright (c) 2006-2017 Code Synthesis Tools CC
 // license   : GNU GPL v2 + exceptions; see accompanying LICENSE file
 
 #include <cutl/compiler/type-info.hxx>

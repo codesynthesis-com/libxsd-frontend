@@ -1,5 +1,4 @@
 // file      : xsd-frontend/semantic-graph/element-group.hxx
-// copyright : Copyright (c) 2006-2017 Code Synthesis Tools CC
 // license   : GNU GPL v2 + exceptions; see accompanying LICENSE file
 
 #ifndef XSD_FRONTEND_SEMANTIC_GRAPH_ELEMENT_GROUP_HXX

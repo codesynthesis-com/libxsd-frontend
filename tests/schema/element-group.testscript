@@ -1,0 +1,324 @@
+# file      : tests/schema/element-group.testscript
+# license   : GNU GPL v2 + exceptions; see accompanying LICENSE file
+
+: multiple-ref-levels
+:
+{
+  cat <<EOI >=test.xsd;
+    <?xml version="1.0"?>
+    <schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:t="test" targetNamespace="test">
+
+      <!-- Multiple levels of forward reference. -->
+
+      <complexType name="type">
+        <sequence>
+          <group ref="t:g1" minOccurs="0" maxOccurs="unbounded"/>
+        </sequence>
+      </complexType>
+
+      <group name="g1">
+        <choice>
+          <group ref="t:g2" minOccurs="0"/>
+          <group ref="t:g3" maxOccurs="unbounded"/>
+        </choice>
+      </group>
+
+      <group name="g2">
+        <choice>
+          <element ref="t:foo2"/>
+          <element ref="t:bar2" minOccurs="0"/>
+        </choice>
+      </group>
+
+      <group name="g3">
+        <choice>
+          <element ref="t:foo3" maxOccurs="unbounded"/>
+          <element ref="t:bar3" minOccurs="0" maxOccurs="unbounded"/>
+        </choice>
+      </group>
+
+      <element name="foo2" type="string"/>
+      <element name="bar2" type="string"/>
+
+      <element name="foo3" type="string"/>
+      <element name="bar3" type="string"/>
+
+    </schema>
+    EOI
+
+  $* test.xsd >>EOO
+    primary
+    {
+      namespace test
+      {
+        complex type
+        {
+          element foo2
+          element bar2
+          element foo3
+          element bar3
+          [1, 1] sequence
+          {
+            [0, unbounded] choice
+            {
+              [0, 1] choice
+              {
+                [1, 1] element foo2 http://www.w3.org/2001/XMLSchema#string
+                [0, 1] element bar2 http://www.w3.org/2001/XMLSchema#string
+              }
+              [1, unbounded] choice
+              {
+                [1, unbounded] element foo3 http://www.w3.org/2001/XMLSchema#string
+                [0, unbounded] element bar3 http://www.w3.org/2001/XMLSchema#string
+              }
+            }
+          }
+        }
+        element foo2 http://www.w3.org/2001/XMLSchema#string
+        element bar2 http://www.w3.org/2001/XMLSchema#string
+        element foo3 http://www.w3.org/2001/XMLSchema#string
+        element bar3 http://www.w3.org/2001/XMLSchema#string
+      }
+    }
+    EOO
+}
+
+: recursive-refs
+:
+{
+  cat <<EOI >=test.xsd;
+    <?xml version="1.0"?>
+    <schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:t="test" targetNamespace="test">
+
+      <!-- Recursive reference: g1->element->type->g1 -->
+
+      <complexType name="type">
+        <sequence>
+          <group ref="t:g1"/>
+        </sequence>
+      </complexType>
+
+      <group name="g1">
+        <choice>
+          <element name="foo">
+            <complexType>
+              <sequence>
+                <group ref="t:g1"/>
+              </sequence>
+            </complexType>
+          </element>
+          <element ref="t:bar"/>
+        </choice>
+      </group>
+
+      <element name="bar">
+        <complexType>
+          <sequence>
+    	<group ref="t:g1"/>
+          </sequence>
+        </complexType>
+      </element>
+
+    </schema>
+    EOI
+
+  $* test.xsd >>EOO
+    primary
+    {
+      namespace test
+      {
+        complex type
+        {
+          element foo
+          element bar
+          [1, 1] sequence
+          {
+            [1, 1] choice
+            {
+              [1, 1] element foo
+              {
+                complex <anonymous>
+                {
+                  element foo
+                  element bar
+                  [1, 1] sequence
+                  {
+                    [1, 1] choice
+                    {
+                      [1, 1] element foo
+                      {
+                        complex <recursive-anonymous>
+                      }
+                      [1, 1] element bar
+                      {
+                        complex <anonymous>
+                        {
+                          element foo
+                          element bar
+                          [1, 1] sequence
+                          {
+                            [1, 1] choice
+                            {
+                              [1, 1] element foo
+                              {
+                                complex <recursive-anonymous>
+                              }
+                              [1, 1] element bar
+                              {
+                                complex <recursive-anonymous>
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+              [1, 1] element bar
+              {
+                complex <anonymous>
+                {
+                  element foo
+                  element bar
+                  [1, 1] sequence
+                  {
+                    [1, 1] choice
+                    {
+                      [1, 1] element foo
+                      {
+                        complex <anonymous>
+                        {
+                          element foo
+                          element bar
+                          [1, 1] sequence
+                          {
+                            [1, 1] choice
+                            {
+                              [1, 1] element foo
+                              {
+                                complex <recursive-anonymous>
+                              }
+                              [1, 1] element bar
+                              {
+                                complex <recursive-anonymous>
+                              }
+                            }
+                          }
+                        }
+                      }
+                      [1, 1] element bar
+                      {
+                        complex <recursive-anonymous>
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        element bar
+        {
+          complex <anonymous>
+          {
+            element foo
+            element bar
+            [1, 1] sequence
+            {
+              [1, 1] choice
+              {
+                [1, 1] element foo
+                {
+                  complex <anonymous>
+                  {
+                    element foo
+                    element bar
+                    [1, 1] sequence
+                    {
+                      [1, 1] choice
+                      {
+                        [1, 1] element foo
+                        {
+                          complex <recursive-anonymous>
+                        }
+                        [1, 1] element bar
+                        {
+                          complex <recursive-anonymous>
+                        }
+                      }
+                    }
+                  }
+                }
+                [1, 1] element bar
+                {
+                  complex <recursive-anonymous>
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    EOO
+}
+
+: any
+:
+{
+  cat <<EOI >=test.xsd;
+    <?xml version="1.0"?>
+    <schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:t="test" targetNamespace="test">
+
+      <!-- Any in groups. -->
+
+      <complexType name="type">
+        <sequence>
+          <group ref="t:g1" minOccurs="0" maxOccurs="unbounded"/>
+          <group ref="t:g2" minOccurs="0" maxOccurs="unbounded"/>
+        </sequence>
+      </complexType>
+
+      <group name="g1">
+        <sequence>
+          <any namespace="http://www.foo.com"/>
+        </sequence>
+      </group>
+
+      <group name="g2">
+        <sequence>
+          <element name="foo" type="int"/>
+          <any namespace="http://www.bar.com"/>
+        </sequence>
+      </group>
+
+    </schema>
+    EOI
+
+  $* test.xsd >>EOO
+    primary
+    {
+      namespace test
+      {
+        complex type
+        {
+          any 'any #1'
+          element foo
+          any 'any #0'
+          [1, 1] sequence
+          {
+            [0, unbounded] sequence
+            {
+              [1, 1] any 'any #1'
+            }
+            [0, unbounded] sequence
+            {
+              [1, 1] element foo http://www.w3.org/2001/XMLSchema#int
+              [1, 1] any 'any #0'
+            }
+          }
+        }
+      }
+    }
+    EOO
+}

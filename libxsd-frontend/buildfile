@@ -1,0 +1,54 @@
+# file      : libxsd-frontend/buildfile
+# license   : GNU GPL v2 + exceptions; see accompanying LICENSE file
+
+import intf_libs  = libcutl%lib{cutl}
+import intf_libs += libxerces-c%lib{xerces-c}
+
+lib{xsd-frontend}: {hxx ixx txx cxx}{** -version} {hxx}{version} $intf_libs
+
+# Include the generated version header into the distribution (so that we don't
+# pick up an installed one) and don't remove it when cleaning in src (so that
+# clean results in a state identical to distributed).
+#
+hxx{version}: in{version} $src_root/manifest
+hxx{version}:
+{
+  dist  = true
+  clean = ($src_root != $out_root)
+}
+
+# Build options.
+#
+cxx.poptions =+ "-I$out_root" "-I$src_root"
+
+obja{*}: cxx.poptions += -DLIBXSD_FRONTEND_STATIC_BUILD
+objs{*}: cxx.poptions += -DLIBXSD_FRONTEND_SHARED_BUILD
+
+# Export options.
+#
+lib{xsd-frontend}:
+{
+  cxx.export.poptions = "-I$out_root" "-I$src_root"
+  cxx.export.libs     = $intf_libs
+}
+
+liba{xsd-frontend}: cxx.export.poptions += -DLIBXSD_FRONTEND_STATIC
+libs{xsd-frontend}: cxx.export.poptions += -DLIBXSD_FRONTEND_SHARED
+
+# For pre-releases use the complete version to make sure they cannot be used
+# in place of another pre-release or the final version. See the version module
+# for details on the version.* variable values.
+#
+if $version.pre_release
+  lib{xsd-frontend}: bin.lib.version = @"-$version.project_id"
+else
+  lib{xsd-frontend}: bin.lib.version = @"-$version.major.$version.minor"
+
+# Install into the libxsd-frontend/ subdirectory of, say, /usr/include/
+# recreating subdirectories.
+#
+{hxx ixx txx}{*}:
+{
+  install         = include/libxsd-frontend/
+  install.subdirs = true
+}

@@ -1,0 +1,298 @@
+# file      : tests/schema/annotation.testscript
+# license   : GNU GPL v2 + exceptions; see accompanying LICENSE file
+
+: basic
+:
+{
+  cat <<EOI >=test.xsd;
+    <?xml version="1.0"?>
+    <schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:t="test" targetNamespace="test">
+
+      <annotation>
+        <documentation>schema documentation</documentation>
+      </annotation>
+
+      <simpleType name="list">
+        <annotation>
+          <documentation>list type documentation</documentation>
+        </annotation>
+        <list itemType="string"/>
+      </simpleType>
+
+      <simpleType name="union">
+        <annotation>
+          <documentation>union type documentation</documentation>
+        </annotation>
+        <union memberTypes="int string"/>
+      </simpleType>
+
+      <simpleType name="enum">
+        <annotation>
+          <documentation>enumeration type documentation</documentation>
+        </annotation>
+        <restriction base="string">
+          <enumeration value="male">
+            <annotation>
+              <documentation>enumerator documentation (male)</documentation>
+            </annotation>
+          </enumeration>
+          <enumeration value="female">
+            <annotation>
+              <documentation>enumerator documentation (female)</documentation>
+            </annotation>
+          </enumeration>
+        </restriction>
+      </simpleType>
+
+      <complexType name="type">
+        <annotation>
+          <documentation>complex type documentation</documentation>
+        </annotation>
+        <sequence>
+          <element name="efoo" type="string">
+            <annotation>
+              <documentation>local element efoo documentation</documentation>
+            </annotation>
+          </element>
+          <element name="ebar">
+            <annotation>
+              <documentation>local element ebar documentation</documentation>
+            </annotation>
+            <complexType>
+              <sequence>
+                <element name="efoo" type="string">
+                  <annotation>
+                    <documentation>nested local element efoo documentation</documentation>
+                  </annotation>
+                </element>
+              </sequence>
+              <attribute name="afoo" type="string">
+                <annotation>
+                  <documentation>nested local attribute afoo documentation</documentation>
+                </annotation>
+              </attribute>
+            </complexType>
+          </element>
+          <element ref="t:ebaz">
+            <annotation>
+              <documentation>local element ebaz documentation</documentation>
+            </annotation>
+          </element>
+          <any namespace="##other">
+            <annotation>
+              <documentation>any documentation</documentation>
+            </annotation>
+          </any>
+        </sequence>
+        <attribute name="afoo" type="string">
+          <annotation>
+            <documentation>local attribute afoo documentation</documentation>
+          </annotation>
+        </attribute>
+        <attribute name="abar">
+          <annotation>
+            <documentation>local attribute abar documentation</documentation>
+          </annotation>
+          <simpleType>
+            <annotation>
+              <documentation>list type documentation</documentation>
+            </annotation>
+            <list itemType="string"/>
+          </simpleType>
+        </attribute>
+        <attribute ref="t:abaz">
+          <annotation>
+            <documentation>local attribute abaz documentation</documentation>
+          </annotation>
+        </attribute>
+        <anyAttribute namespace="##other">
+          <annotation>
+            <documentation>anyAttribute documentation</documentation>
+          </annotation>
+        </anyAttribute>
+      </complexType>
+
+      <element name="ebaz" type="string">
+        <annotation>
+          <documentation>global element documentation</documentation>
+        </annotation>
+      </element>
+
+      <attribute name="abaz" type="string">
+        <annotation>
+          <documentation>global attribute documentation</documentation>
+        </annotation>
+      </attribute>
+
+    </schema>
+    EOI
+
+  $* test.xsd >>EOO
+    <schema documentation>
+    primary
+    {
+      namespace test
+      {
+        <list type documentation>
+        list list http://www.w3.org/2001/XMLSchema#string
+        <union type documentation>
+        union union http://www.w3.org/2001/XMLSchema#int http://www.w3.org/2001/XMLSchema#string
+        <enumeration type documentation>
+        enumeration enum: http://www.w3.org/2001/XMLSchema#string
+        {
+          <enumerator documentation (male)>
+          enumerator male
+          <enumerator documentation (female)>
+          enumerator female
+        }
+        <complex type documentation>
+        complex type
+        {
+          <local element efoo documentation>
+          element efoo
+          <local element ebar documentation>
+          element ebar
+          <local element ebaz documentation>
+          element ebaz
+          <any documentation>
+          any 'any #0'
+          <local attribute afoo documentation>
+          optional attribute afoo http://www.w3.org/2001/XMLSchema#string
+          <local attribute abar documentation>
+          optional attribute abar
+          {
+            <list type documentation>
+            list <anonymous> http://www.w3.org/2001/XMLSchema#string
+          }
+          <local attribute abaz documentation>
+          optional attribute abaz http://www.w3.org/2001/XMLSchema#string
+          <anyAttribute documentation>
+          any-attribute 'any-attribute #0'
+          [1, 1] sequence
+          {
+            [1, 1] element efoo http://www.w3.org/2001/XMLSchema#string
+            [1, 1] element ebar
+            {
+              complex <anonymous>
+              {
+                <nested local element efoo documentation>
+                element efoo
+                <nested local attribute afoo documentation>
+                optional attribute afoo http://www.w3.org/2001/XMLSchema#string
+                [1, 1] sequence
+                {
+                  [1, 1] element efoo http://www.w3.org/2001/XMLSchema#string
+                }
+              }
+            }
+            [1, 1] element ebaz http://www.w3.org/2001/XMLSchema#string
+            [1, 1] any 'any #0'
+          }
+        }
+        <global element documentation>
+        element ebaz http://www.w3.org/2001/XMLSchema#string
+        <global attribute documentation>
+        attribute abaz http://www.w3.org/2001/XMLSchema#string
+      }
+    }
+    EOO
+}
+
+: refs
+:
+{
+  cat <<EOI >=refs.xsd;
+    <?xml version="1.0"?>
+    <schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:t="test" targetNamespace="test">
+
+      <!-- Test various ref constructs. -->
+
+      <complexType name="type">
+        <sequence>
+          <element ref="t:ebar"/>
+          <group ref="t:eg"/>
+        </sequence>
+        <attribute ref="t:abar"/>
+        <attributeGroup ref="t:ag"/>
+      </complexType>
+
+      <group name="eg">
+        <choice>
+          <element name="efoo" type="string">
+            <annotation>
+              <documentation>group element efoo documentation</documentation>
+            </annotation>
+          </element>
+          <element ref="t:ebar"/>
+        </choice>
+      </group>
+
+      <element name="ebar" type="string">
+        <annotation>
+          <documentation>global element ebar documentation</documentation>
+        </annotation>
+      </element>
+
+      <attributeGroup name="ag">
+        <attribute name="afoo" type="string">
+          <annotation>
+            <documentation>group attribute afoo documentation</documentation>
+          </annotation>
+        </attribute>
+        <attribute ref="t:abaz"/>
+      </attributeGroup>
+
+      <attribute name="abar" type="string">
+        <annotation>
+          <documentation>global attribute abar documentation</documentation>
+        </annotation>
+      </attribute>
+
+      <attribute name="abaz" type="string">
+        <annotation>
+          <documentation>global attribute abaz documentation</documentation>
+        </annotation>
+      </attribute>
+
+    </schema>
+    EOI
+
+  $* refs.xsd >>EOO
+    primary
+    {
+      namespace test
+      {
+        complex type
+        {
+          <global element ebar documentation>
+          element ebar
+          <group element efoo documentation>
+          element efoo
+          <global element ebar documentation>
+          element ebar
+          <global attribute abar documentation>
+          optional attribute abar http://www.w3.org/2001/XMLSchema#string
+          <group attribute afoo documentation>
+          optional attribute afoo http://www.w3.org/2001/XMLSchema#string
+          <global attribute abaz documentation>
+          optional attribute abaz http://www.w3.org/2001/XMLSchema#string
+          [1, 1] sequence
+          {
+            [1, 1] element ebar http://www.w3.org/2001/XMLSchema#string
+            [1, 1] choice
+            {
+              [1, 1] element efoo http://www.w3.org/2001/XMLSchema#string
+              [1, 1] element ebar http://www.w3.org/2001/XMLSchema#string
+            }
+          }
+        }
+        <global element ebar documentation>
+        element ebar http://www.w3.org/2001/XMLSchema#string
+        <global attribute abar documentation>
+        attribute abar http://www.w3.org/2001/XMLSchema#string
+        <global attribute abaz documentation>
+        attribute abaz http://www.w3.org/2001/XMLSchema#string
+      }
+    }
+    EOO
+}

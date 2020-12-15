@@ -1,0 +1,6 @@
+# file      : tests/schema/buildfile
+# license   : GNU GPL v2 + exceptions; see accompanying LICENSE file
+
+import libs = libxsd-frontend%lib{xsd-frontend}
+
+exe{driver}: {hxx cxx}{*} $libs testscript{*}

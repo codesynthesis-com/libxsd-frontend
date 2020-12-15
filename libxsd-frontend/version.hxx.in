@@ -1,0 +1,51 @@
+// file      : libxsd-frontend/version.hxx.in
+// license   : GNU GPL v2 + exceptions; see accompanying LICENSE file
+
+#ifndef LIBXSD_FRONTEND_VERSION // Note: using the version macro itself.
+
+// The numeric version format is AAAAABBBBBCCCCCDDDE where:
+//
+// AAAAA - major version number
+// BBBBB - minor version number
+// CCCCC - bugfix version number
+// DDD   - alpha / beta (DDD + 500) version number
+// E     - final (0) / snapshot (1)
+//
+// When DDDE is not 0, 1 is subtracted from AAAAABBBBBCCCCC. For example:
+//
+// Version      AAAAABBBBBCCCCCDDDE
+//
+// 0.1.0        0000000001000000000
+// 0.1.2        0000000001000020000
+// 1.2.3        0000100002000030000
+// 2.2.0-a.1    0000200001999990010
+// 3.0.0-b.2    0000299999999995020
+// 2.2.0-a.1.z  0000200001999990011
+//
+#define LIBXSD_FRONTEND_VERSION       $libxsd_frontend.version.project_number$ULL
+#define LIBXSD_FRONTEND_VERSION_STR   "$libxsd_frontend.version.project$"
+#define LIBXSD_FRONTEND_VERSION_ID    "$libxsd_frontend.version.project_id$"
+#define LIBXSD_FRONTEND_VERSION_FULL  "$libxsd_frontend.version$"
+
+#define LIBXSD_FRONTEND_VERSION_MAJOR $libxsd_frontend.version.major$
+#define LIBXSD_FRONTEND_VERSION_MINOR $libxsd_frontend.version.minor$
+#define LIBXSD_FRONTEND_VERSION_PATCH $libxsd_frontend.version.patch$
+
+#define LIBXSD_FRONTEND_PRE_RELEASE   $libxsd_frontend.version.pre_release$
+
+#define LIBXSD_FRONTEND_SNAPSHOT      $libxsd_frontend.version.snapshot_sn$ULL
+#define LIBXSD_FRONTEND_SNAPSHOT_ID   "$libxsd_frontend.version.snapshot_id$"
+
+#include <xercesc/util/XercesVersion.hpp>
+
+// Check that we have a compatible Xerces version (3.0.0 or later).
+//
+#if _XERCES_VERSION < 30000
+#  error Xerces-C++ 2-series is not supported
+#endif
+
+#include <libcutl/version.hxx>
+
+$libcutl.check(LIBCUTL_VERSION, LIBCUTL_SNAPSHOT)$
+
+#endif // LIBXSD_FRONTEND_VERSION

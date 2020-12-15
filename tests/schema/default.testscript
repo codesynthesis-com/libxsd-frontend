@@ -1,0 +1,99 @@
+# file      : tests/schema/default.testscript
+# license   : GNU GPL v2 + exceptions; see accompanying LICENSE file
+
+: qual
+:
+{
+  cat <<EOI >=test.xsd;
+    <?xml version="1.0"?>
+    <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:t="test" xmlns:x="foo" targetNamespace="test">
+
+      <xs:complexType name="type">
+        <xs:sequence>
+          <xs:element name="e1" type="xs:int" default="123"/>
+          <xs:element name="e2" type="xs:int" fixed="456"/>
+
+          <xs:element name="e3" type="xs:QName" default="unqual"/>
+          <xs:element name="e4" type="xs:QName" fixed="t:foo"/>
+          <xs:element name="e5" type="xs:QName" default="x:bar"/>
+        </xs:sequence>
+        <xs:attribute name="a1" type="xs:int" default="123"/>
+        <xs:attribute name="a2" type="xs:int" fixed="456"/>
+
+        <xs:attribute name="a3" type="t:qname" default="x:bar"/>
+      </xs:complexType>
+
+      <xs:simpleType name="qname">
+        <xs:restriction base="xs:QName"/>
+      </xs:simpleType>
+
+    </xs:schema>
+    EOI
+
+  $* test.xsd >>EOO
+    primary
+    {
+      namespace test
+      {
+        complex type
+        {
+          element e1=123
+          element e2==456
+          element e3=unqual
+          element e4==test#t:foo
+          element e5=foo#x:bar
+          optional attribute a1=123 http://www.w3.org/2001/XMLSchema#int
+          optional attribute a2==456 http://www.w3.org/2001/XMLSchema#int
+          optional attribute a3=foo#x:bar test#qname
+          [1, 1] sequence
+          {
+            [1, 1] element e1=123 http://www.w3.org/2001/XMLSchema#int
+            [1, 1] element e2==456 http://www.w3.org/2001/XMLSchema#int
+            [1, 1] element e3=unqual http://www.w3.org/2001/XMLSchema#QName
+            [1, 1] element e4==test#t:foo http://www.w3.org/2001/XMLSchema#QName
+            [1, 1] element e5=foo#x:bar http://www.w3.org/2001/XMLSchema#QName
+          }
+        }
+        complex qname: http://www.w3.org/2001/XMLSchema#QName
+        {
+        }
+      }
+    }
+    EOO
+}
+
+: unqual
+:
+{
+  cat <<EOI >=test.xsd;
+    <?xml version="1.0"?>
+    <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:t="test" xmlns="foo" targetNamespace="test">
+
+      <xs:complexType name="type">
+        <xs:sequence>
+          <xs:element name="e" type="xs:QName" default="unqual"/>
+        </xs:sequence>
+        <xs:attribute name="a" type="xs:QName" default="unqual"/>
+      </xs:complexType>
+
+    </xs:schema>
+    EOI
+
+  $* test.xsd >>EOO
+    primary
+    {
+      namespace test
+      {
+        complex type
+        {
+          element e=foo#unqual
+          optional attribute a=foo#unqual http://www.w3.org/2001/XMLSchema#QName
+          [1, 1] sequence
+          {
+            [1, 1] element e=foo#unqual http://www.w3.org/2001/XMLSchema#QName
+          }
+        }
+      }
+    }
+    EOO
+}

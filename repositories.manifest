@@ -1,0 +1,10 @@
+: 1
+summary: XML Schema definition language compiler frontend library repository
+
+:
+role: prerequisite
+location: https://git.build2.org/packaging/xerces-c/xerces-c.git##HEAD
+
+:
+role: prerequisite
+location: https://git.codesynthesis.com/libcutl/libcutl.git##HEAD

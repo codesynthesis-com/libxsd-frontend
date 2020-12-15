@@ -1,0 +1,102 @@
+# file      : tests/schema/attribute-group.testscript
+# license   : GNU GPL v2 + exceptions; see accompanying LICENSE file
+
+: multiple-ref-levels
+:
+{
+  cat <<EOI >=test.xsd;
+    <?xml version="1.0"?>
+    <schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:t="test" targetNamespace="test">
+
+      <!-- Multiple levels of forward reference. -->
+
+      <complexType name="type">
+        <attributeGroup ref="t:g1"/>
+      </complexType>
+
+      <attributeGroup name="g1">
+        <attributeGroup ref="t:g2"/>
+        <attributeGroup ref="t:g3"/>
+      </attributeGroup>
+
+      <attributeGroup name="g2">
+        <attribute ref="t:foo2"/>
+        <attribute ref="t:bar2" use="required"/>
+      </attributeGroup>
+
+      <attributeGroup name="g3">
+        <attribute ref="t:foo3"/>
+        <attribute ref="t:bar3" use="required"/>
+      </attributeGroup>
+
+      <attribute name="foo2" type="string"/>
+      <attribute name="bar2" type="string"/>
+
+      <attribute name="foo3" type="string"/>
+      <attribute name="bar3" type="string"/>
+
+    </schema>
+    EOI
+
+  $* test.xsd >>EOO
+    primary
+    {
+      namespace test
+      {
+        complex type
+        {
+          optional attribute foo2 http://www.w3.org/2001/XMLSchema#string
+          required attribute bar2 http://www.w3.org/2001/XMLSchema#string
+          optional attribute foo3 http://www.w3.org/2001/XMLSchema#string
+          required attribute bar3 http://www.w3.org/2001/XMLSchema#string
+        }
+        attribute foo2 http://www.w3.org/2001/XMLSchema#string
+        attribute bar2 http://www.w3.org/2001/XMLSchema#string
+        attribute foo3 http://www.w3.org/2001/XMLSchema#string
+        attribute bar3 http://www.w3.org/2001/XMLSchema#string
+      }
+    }
+    EOO
+}
+
+: any-attr
+:
+{
+  cat <<EOI >=test.xsd;
+    <?xml version="1.0"?>
+    <schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:t="test" targetNamespace="test">
+
+      <!-- AnyAttribute in attribute groups. -->
+
+      <complexType name="type">
+        <attributeGroup ref="t:g1"/>
+        <attributeGroup ref="t:g2"/>
+      </complexType>
+
+      <attributeGroup name="g1">
+        <anyAttribute namespace="http://www.foo.com"/>
+      </attributeGroup>
+
+      <attributeGroup name="g2">
+        <attribute name="foo" type="string"/>
+        <anyAttribute namespace="http://www.bar.com"/>
+      </attributeGroup>
+
+    </schema>
+    EOI
+
+  $* test.xsd >>EOO
+    primary
+    {
+      namespace test
+      {
+        complex type
+        {
+          any-attribute 'any-attribute #1'
+          optional attribute foo http://www.w3.org/2001/XMLSchema#string
+          any-attribute 'any-attribute #0'
+        }
+      }
+    }
+    EOO
+}

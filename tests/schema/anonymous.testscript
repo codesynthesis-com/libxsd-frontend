@@ -1,0 +1,181 @@
+# file      : tests/schema/anonymous.testscript
+# license   : GNU GPL v2 + exceptions; see accompanying LICENSE file
+
+test.options += --anonymous
+
+: basic
+:
+{
+  cat <<EOI >=test.xsd;
+    <?xml version="1.0"?>
+    <schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:t="test" targetNamespace="test">
+
+      <simpleType name="named">
+        <list itemType="string"/>
+      </simpleType>
+
+      <simpleType name="anon_item">
+        <restriction base="string">
+          <enumeration value="male"/>
+          <enumeration value="female"/>
+        </restriction>
+      </simpleType>
+
+      <simpleType name="anon">
+        <list>
+          <simpleType>
+            <restriction base="string">
+              <enumeration value="male"/>
+    	  <enumeration value="female"/>
+            </restriction>
+          </simpleType>
+        </list>
+      </simpleType>
+
+      <simpleType name="anon_nested">
+        <list>
+          <simpleType>
+            <restriction>
+              <simpleType>
+                <restriction base="string">
+                  <maxLength value="20"/>
+                </restriction>
+              </simpleType>
+              <enumeration value="male"/>
+    	  <enumeration value="female"/>
+            </restriction>
+          </simpleType>
+        </list>
+      </simpleType>
+
+    </schema>
+    EOI
+
+  $* test.xsd >>EOO
+    anonymous: test anon_item anon
+    anonymous: test anon_nested_item anon_nested
+    anonymous: test anon_nested_item_base anon_nested_item
+    primary
+    {
+      namespace test
+      {
+        list named http://www.w3.org/2001/XMLSchema#string
+        enumeration anon_item: http://www.w3.org/2001/XMLSchema#string
+        {
+          enumerator male
+          enumerator female
+        }
+        list anon test#anon_item1
+        list anon_nested test#anon_nested_item
+        enumeration anon_item1: http://www.w3.org/2001/XMLSchema#string
+        {
+          enumerator male
+          enumerator female
+        }
+        enumeration anon_nested_item: test#anon_nested_item_base
+        {
+          enumerator male
+          enumerator female
+        }
+        complex anon_nested_item_base: http://www.w3.org/2001/XMLSchema#string
+        {
+        }
+      }
+    }
+    EOO
+}
+
+: complex
+:
+{
+  cat <<EOI >=test.xsd;
+    <?xml version="1.0"?>
+    <schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:t="test" targetNamespace="test">
+
+      <simpleType name="named">
+        <restriction base="string">
+          <enumeration value="male"/>
+          <enumeration value="female"/>
+        </restriction>
+      </simpleType>
+
+      <simpleType name="anon_base">
+        <restriction base="string">
+          <enumeration value="male"/>
+          <enumeration value="female"/>
+        </restriction>
+      </simpleType>
+
+      <simpleType name="anon">
+        <restriction>
+          <simpleType>
+            <restriction base="string">
+              <maxLength value="20"/>
+            </restriction>
+          </simpleType>
+          <enumeration value="male"/>
+          <enumeration value="female"/>
+        </restriction>
+      </simpleType>
+
+      <simpleType name="anon_nested">
+        <restriction>
+          <simpleType>
+            <restriction>
+              <simpleType>
+                <restriction base="string">
+                  <maxLength value="40"/>
+                </restriction>
+              </simpleType>
+              <maxLength value="20"/>
+            </restriction>
+          </simpleType>
+          <enumeration value="male"/>
+          <enumeration value="female"/>
+        </restriction>
+      </simpleType>
+
+    </schema>
+    EOI
+
+  $* test.xsd >>EOO
+    anonymous: test anon_base anon
+    anonymous: test anon_nested_base anon_nested
+    anonymous: test anon_nested_base_base anon_nested_base
+    primary
+    {
+      namespace test
+      {
+        enumeration named: http://www.w3.org/2001/XMLSchema#string
+        {
+          enumerator male
+          enumerator female
+        }
+        enumeration anon_base: http://www.w3.org/2001/XMLSchema#string
+        {
+          enumerator male
+          enumerator female
+        }
+        enumeration anon: test#anon_base1
+        {
+          enumerator male
+          enumerator female
+        }
+        enumeration anon_nested: test#anon_nested_base
+        {
+          enumerator male
+          enumerator female
+        }
+        complex anon_base1: http://www.w3.org/2001/XMLSchema#string
+        {
+        }
+        complex anon_nested_base: test#anon_nested_base_base
+        {
+        }
+        complex anon_nested_base_base: http://www.w3.org/2001/XMLSchema#string
+        {
+        }
+      }
+    }
+    EOO
+}

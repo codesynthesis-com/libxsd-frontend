@@ -7,11 +7,13 @@
 #include <libxsd-frontend/traversal/elements.hxx>
 #include <libxsd-frontend/semantic-graph/particle.hxx>
 
+#include <libxsd-frontend/export.hxx>
+
 namespace XSDFrontend
 {
   namespace Traversal
   {
-    struct Particle : Node<SemanticGraph::Particle>
+    struct LIBXSD_FRONTEND_SYMEXPORT Particle: Node<SemanticGraph::Particle>
     {
       virtual void
       traverse (Type&);

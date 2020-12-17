@@ -21,6 +21,8 @@
 
 #include <libxsd-frontend/types.hxx>
 
+#include <libxsd-frontend/export.hxx>
+
 namespace XSDFrontend
 {
   namespace SemanticGraph
@@ -84,7 +86,7 @@ namespace XSDFrontend
 
     //
     //
-    class Node
+    class LIBXSD_FRONTEND_SYMEXPORT Node
     {
     public:
       Context&
@@ -434,7 +436,7 @@ namespace XSDFrontend
     class Inherits;
     class Arguments;
 
-    class Type: public virtual Nameable
+    class LIBXSD_FRONTEND_SYMEXPORT Type: public virtual Nameable
     {
     protected:
       typedef std::vector<Belongs*> Classifies;
@@ -542,7 +544,7 @@ namespace XSDFrontend
       ArgumentsSet arguments_;
     };
 
-    class Instance: public virtual Nameable
+    class LIBXSD_FRONTEND_SYMEXPORT Instance: public virtual Nameable
     {
     public:
       Belongs&
@@ -851,7 +853,7 @@ namespace XSDFrontend
     // Parametric types.
     //
 
-    class Specialization: public virtual Type
+    class LIBXSD_FRONTEND_SYMEXPORT Specialization: public virtual Type
     {
       typedef std::vector<Arguments*> Argumented;
 
@@ -997,7 +999,7 @@ namespace XSDFrontend
 // ADL won't find it because Path is a typedef. Note that this
 // function prints in native format.
 //
-std::wostream&
+LIBXSD_FRONTEND_SYMEXPORT std::wostream&
 operator<< (std::wostream& os, XSDFrontend::SemanticGraph::Path const& path);
 
 #endif  // LIBXSD_FRONTEND_SEMANTIC_GRAPH_ELEMENTS_HXX

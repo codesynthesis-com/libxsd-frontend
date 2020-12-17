@@ -13,6 +13,8 @@
 
 #include <libxsd-frontend/version.hxx> // Check Xerces-C++ version.
 
+#include <libxsd-frontend/export.hxx>
+
 namespace XSDFrontend
 {
   namespace XML
@@ -22,7 +24,8 @@ namespace XSDFrontend
     extern const XMLCh line_key[2];
     extern const XMLCh column_key[2];
 
-    class SchemaDOMParser: public Xerces::XercesDOMParser
+    class LIBXSD_FRONTEND_SYMEXPORT SchemaDOMParser:
+      public Xerces::XercesDOMParser
     {
     public :
       SchemaDOMParser (

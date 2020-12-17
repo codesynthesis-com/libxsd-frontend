@@ -9,6 +9,8 @@
 #include <libxsd-frontend/semantic-graph/elements.hxx> // Path
 #include <libxsd-frontend/semantic-graph/schema.hxx>
 
+#include <libxsd-frontend/export.hxx>
+
 namespace XSDFrontend
 {
   namespace Transformations
@@ -21,7 +23,7 @@ namespace XSDFrontend
     // or compositor in the base. Note that restriction of anyType is
     // a special case and is not handled by this transformation.
     //
-    class Restriction
+    class LIBXSD_FRONTEND_SYMEXPORT Restriction
     {
     public:
       struct Failed {};

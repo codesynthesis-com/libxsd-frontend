@@ -9,6 +9,8 @@
 #include <libxsd-frontend/types.hxx>
 #include <libxsd-frontend/semantic-graph/elements.hxx>
 
+#include <libxsd-frontend/export.hxx>
+
 namespace XSDFrontend
 {
   namespace Traversal
@@ -253,7 +255,7 @@ namespace XSDFrontend
 
     //
     //
-    struct Instance : Node<SemanticGraph::Instance>
+    struct LIBXSD_FRONTEND_SYMEXPORT Instance: Node<SemanticGraph::Instance>
     {
       virtual void
       traverse (Type&);
@@ -274,7 +276,7 @@ namespace XSDFrontend
 
     //
     //
-    struct Member : Node<SemanticGraph::Member>
+    struct LIBXSD_FRONTEND_SYMEXPORT Member: Node<SemanticGraph::Member>
     {
       virtual void
       traverse (Type&);

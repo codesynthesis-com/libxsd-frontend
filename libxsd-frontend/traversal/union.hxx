@@ -7,11 +7,13 @@
 #include <libxsd-frontend/traversal/elements.hxx>
 #include <libxsd-frontend/semantic-graph/union.hxx>
 
+#include <libxsd-frontend/export.hxx>
+
 namespace XSDFrontend
 {
   namespace Traversal
   {
-    struct Union: Node<SemanticGraph::Union>
+    struct LIBXSD_FRONTEND_SYMEXPORT Union: Node<SemanticGraph::Union>
     {
       virtual void
       traverse (Type&);

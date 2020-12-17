@@ -7,11 +7,14 @@
 #include <libxsd-frontend/traversal/elements.hxx>
 #include <libxsd-frontend/semantic-graph/enumeration.hxx>
 
+#include <libxsd-frontend/export.hxx>
+
 namespace XSDFrontend
 {
   namespace Traversal
   {
-    struct Enumeration : ScopeTemplate<SemanticGraph::Enumeration>
+    struct LIBXSD_FRONTEND_SYMEXPORT Enumeration:
+      ScopeTemplate<SemanticGraph::Enumeration>
     {
       virtual void
       traverse (Type&);
@@ -32,7 +35,8 @@ namespace XSDFrontend
       post (Type&);
     };
 
-    struct Enumerator : Node<SemanticGraph::Enumerator>
+    struct LIBXSD_FRONTEND_SYMEXPORT Enumerator:
+      Node<SemanticGraph::Enumerator>
     {
       virtual void
       traverse (Type&);

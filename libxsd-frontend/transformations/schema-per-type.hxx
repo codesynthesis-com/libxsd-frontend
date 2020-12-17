@@ -11,11 +11,13 @@
 #include <libxsd-frontend/semantic-graph/elements.hxx> // Path
 #include <libxsd-frontend/semantic-graph/schema.hxx>
 
+#include <libxsd-frontend/export.hxx>
+
 namespace XSDFrontend
 {
   namespace Transformations
   {
-    class SchemaPerTypeTranslator
+    class LIBXSD_FRONTEND_SYMEXPORT SchemaPerTypeTranslator
     {
     public:
       virtual
@@ -34,7 +36,7 @@ namespace XSDFrontend
     // This transformation restructures the semantic graph to have
     // each type definition in a seperate schema file.
     //
-    class SchemaPerType
+    class LIBXSD_FRONTEND_SYMEXPORT SchemaPerType
     {
     public:
       struct Failed {};

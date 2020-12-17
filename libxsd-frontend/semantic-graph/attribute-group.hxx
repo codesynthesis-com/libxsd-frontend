@@ -6,11 +6,13 @@
 
 #include <libxsd-frontend/semantic-graph/elements.hxx>
 
+#include <libxsd-frontend/export.hxx>
+
 namespace XSDFrontend
 {
   namespace SemanticGraph
   {
-    class AttributeGroup: public virtual Scope
+    class LIBXSD_FRONTEND_SYMEXPORT AttributeGroup: public virtual Scope
     {
     public:
       AttributeGroup (Path const& file,

@@ -611,7 +611,7 @@ namespace XSDFrontend
             s_.new_edge<Arguments> (
               resolve<SemanticGraph::Type> (ns_name, uq_name, s_, cache_), s);
           }
-          catch (NotName const& ex)
+          catch (NotName const&)
           {
             wcerr << s.file () << ":" << s.line () << ":" << s.column () << ": "
                   << "error: unable to resolve type '" << uq_name << "' "
@@ -639,7 +639,7 @@ namespace XSDFrontend
             s_.new_edge<Arguments> (
               resolve<SemanticGraph::Type> (ns_name, uq_name, s_, cache_), l);
           }
-          catch (NotName const& ex)
+          catch (NotName const&)
           {
             wcerr << l.file () << ":" << l.line () << ":" << l.column () << ": "
                   << "error: unable to resolve item type '" << uq_name << "' "
@@ -677,7 +677,7 @@ namespace XSDFrontend
                 resolve<SemanticGraph::Type> (
                   i->ns_name, i->uq_name, s_, cache_), na);
             }
-            catch (NotName const& ex)
+            catch (NotName const&)
             {
               wcerr << u.file () << ":" << u.line () << ":" << u.column () << ": "
                     << "error: unable to resolve item type '" << i->uq_name << "' "
@@ -740,7 +740,7 @@ namespace XSDFrontend
             else
               assert (false);
           }
-          catch (NotName const& ex)
+          catch (NotName const&)
           {
             wcerr << c.file () << ":" << c.line () << ":" << c.column () << ": "
                   << "error: unable to resolve base type '" << uq_name << "' "
@@ -820,7 +820,7 @@ namespace XSDFrontend
               e.context ().remove ("facets");
             }
           }
-          catch (NotName const& ex)
+          catch (NotName const&)
           {
             wcerr << e.file () << ":" << e.line () << ":" << e.column () << ": "
                   << "error: unable to resolve base type '" << uq_name << "' "

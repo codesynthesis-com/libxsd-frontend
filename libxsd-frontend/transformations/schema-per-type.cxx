@@ -1,7 +1,11 @@
 // file      : libxsd-frontend/transformations/schema-per-type.cxx
 // license   : GNU GPL v2 + exceptions; see accompanying LICENSE file
 
-#include <strings.h> // strcasecmp
+#ifndef _WIN32
+#  include <strings.h> // strcasecmp()
+#else
+#  include <string.h> // _stricmp()
+#endif
 
 #include <map>
 #include <set>
@@ -31,7 +35,11 @@ namespace XSDFrontend
     bool
     operator() (NarrowString const& x, NarrowString const& y) const
     {
+#ifndef _WIN32
       return strcasecmp (x.c_str (), y.c_str ()) < 0;
+#else
+      return _stricmp (x.c_str (), y.c_str ()) < 0;
+#endif
     }
   };
 

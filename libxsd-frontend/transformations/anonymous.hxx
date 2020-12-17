@@ -9,11 +9,13 @@
 #include <libxsd-frontend/semantic-graph/elements.hxx> // Path
 #include <libxsd-frontend/semantic-graph/schema.hxx>
 
+#include <libxsd-frontend/export.hxx>
+
 namespace XSDFrontend
 {
   namespace Transformations
   {
-    class AnonymousNameTranslator
+    class LIBXSD_FRONTEND_SYMEXPORT AnonymousNameTranslator
     {
     public:
       virtual
@@ -35,7 +37,7 @@ namespace XSDFrontend
     // then the transformation detects and reports unstable conflicts
     // in name assignment.
     //
-    class Anonymous
+    class LIBXSD_FRONTEND_SYMEXPORT Anonymous
     {
     public:
       struct Failed {};

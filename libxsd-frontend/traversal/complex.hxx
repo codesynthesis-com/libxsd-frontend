@@ -7,11 +7,14 @@
 #include <libxsd-frontend/traversal/elements.hxx>
 #include <libxsd-frontend/semantic-graph/complex.hxx>
 
+#include <libxsd-frontend/export.hxx>
+
 namespace XSDFrontend
 {
   namespace Traversal
   {
-    struct Complex : ScopeTemplate<SemanticGraph::Complex>
+    struct LIBXSD_FRONTEND_SYMEXPORT Complex:
+      ScopeTemplate<SemanticGraph::Complex>
     {
       virtual void
       traverse (Type&);

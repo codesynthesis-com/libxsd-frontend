@@ -6,11 +6,13 @@
 
 #include <libxsd-frontend/semantic-graph/elements.hxx>
 
+#include <libxsd-frontend/export.hxx>
+
 namespace XSDFrontend
 {
   namespace SemanticGraph
   {
-    class Union: public virtual Specialization
+    class LIBXSD_FRONTEND_SYMEXPORT Union: public virtual Specialization
     {
     public:
       Union (Path const& file, unsigned long line, unsigned long column);

@@ -6,11 +6,13 @@
 
 #include <libxsd-frontend/semantic-graph/elements.hxx>
 
+#include <libxsd-frontend/export.hxx>
+
 namespace XSDFrontend
 {
   namespace SemanticGraph
   {
-    class Namespace : public virtual Scope
+    class LIBXSD_FRONTEND_SYMEXPORT Namespace : public virtual Scope
     {
     public:
       Namespace (Path const& file, unsigned long line, unsigned long column);

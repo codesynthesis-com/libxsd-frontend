@@ -7,11 +7,13 @@
 #include <libxsd-frontend/traversal/elements.hxx>
 #include <libxsd-frontend/semantic-graph/list.hxx>
 
+#include <libxsd-frontend/export.hxx>
+
 namespace XSDFrontend
 {
   namespace Traversal
   {
-    struct List: Node<SemanticGraph::List>
+    struct LIBXSD_FRONTEND_SYMEXPORT List: Node<SemanticGraph::List>
     {
       virtual void
       traverse (Type&);

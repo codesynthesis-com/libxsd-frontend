@@ -4,6 +4,7 @@
 #include <cstdlib> // std::mbstowcs
 
 #include <libxsd-frontend/types.hxx>
+#include <libxsd-frontend/export.hxx>
 
 namespace XSDFrontend
 {
@@ -21,7 +22,7 @@ namespace XSDFrontend
   // Specialization for char to wchar_t conversion.
   //
   template <>
-  void StringTemplate<wchar_t, char>::
+  LIBXSD_FRONTEND_SYMEXPORT void StringTemplate<wchar_t, char>::
   from_narrow (char const* s)
   {
     size_type size (std::mbstowcs (0, s, 0) + 1);
@@ -38,7 +39,8 @@ namespace XSDFrontend
   // Specialization for wchar_t to char conversion.
   //
   template <>
-  StringTemplate<char> StringTemplate<wchar_t, char>::
+  LIBXSD_FRONTEND_SYMEXPORT StringTemplate<char>
+  StringTemplate<wchar_t, char>::
   to_narrow () const
   {
     size_type size (std::wcstombs (0, c_str (), 0));

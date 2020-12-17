@@ -9,13 +9,15 @@
 #include <libxsd-frontend/semantic-graph/elements.hxx>
 #include <libxsd-frontend/semantic-graph/particle.hxx>
 
+#include <libxsd-frontend/export.hxx>
+
 namespace XSDFrontend
 {
   namespace SemanticGraph
   {
     //
     //
-    class ContainsCompositor: public virtual Edge
+    class LIBXSD_FRONTEND_SYMEXPORT ContainsCompositor: public virtual Edge
     {
     public:
       Compositor&
@@ -206,7 +208,7 @@ namespace XSDFrontend
 
     //
     //
-    class All: public virtual Compositor
+    class LIBXSD_FRONTEND_SYMEXPORT All: public virtual Compositor
     {
     public:
       All (Path const& file, unsigned long line, unsigned long column);
@@ -214,7 +216,7 @@ namespace XSDFrontend
 
     //
     //
-    class Choice: public virtual Compositor
+    class LIBXSD_FRONTEND_SYMEXPORT Choice: public virtual Compositor
     {
     public:
       Choice (Path const& file, unsigned long line, unsigned long column);
@@ -222,7 +224,7 @@ namespace XSDFrontend
 
     //
     //
-    class Sequence: public virtual Compositor
+    class LIBXSD_FRONTEND_SYMEXPORT Sequence: public virtual Compositor
     {
     public:
       Sequence (Path const& file, unsigned long line, unsigned long column);

@@ -7,6 +7,8 @@
 #include <string>
 #include <cstddef> // std::size_t
 
+#include <libxsd-frontend/export.hxx>
+
 namespace XSDFrontend
 {
   using std::size_t;
@@ -28,7 +30,7 @@ namespace XSDFrontend
     };
   }
 
-  struct NonRepresentable: std::exception
+  struct LIBXSD_FRONTEND_SYMEXPORT NonRepresentable: std::exception
   {
     virtual char const*
     what () const throw ();
@@ -203,7 +205,6 @@ namespace XSDFrontend
     void
     from_narrow (NC const* s);
   };
-
 
   template<typename C>
   StringTemplate<C>

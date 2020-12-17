@@ -10,6 +10,8 @@
 #include <libxsd-frontend/semantic-graph/elements.hxx>
 #include <libxsd-frontend/semantic-graph/namespace.hxx>
 
+#include <libxsd-frontend/export.hxx>
+
 namespace XSDFrontend
 {
   namespace SemanticGraph
@@ -96,7 +98,7 @@ namespace XSDFrontend
 
     //
     //
-    class Schema: public graph, public virtual Scope
+    class LIBXSD_FRONTEND_SYMEXPORT Schema: public graph, public virtual Scope
     {
       typedef std::vector<Uses*> UsesList;
       typedef std::vector<Uses*> UsedList;

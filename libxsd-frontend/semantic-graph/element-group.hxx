@@ -7,11 +7,13 @@
 #include <libxsd-frontend/semantic-graph/elements.hxx>
 #include <libxsd-frontend/semantic-graph/compositors.hxx>
 
+#include <libxsd-frontend/export.hxx>
+
 namespace XSDFrontend
 {
   namespace SemanticGraph
   {
-    class ElementGroup: public virtual Scope
+    class LIBXSD_FRONTEND_SYMEXPORT ElementGroup: public virtual Scope
     {
     public:
       ContainsCompositor&

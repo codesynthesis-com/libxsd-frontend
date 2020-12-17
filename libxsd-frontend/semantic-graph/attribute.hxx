@@ -6,11 +6,13 @@
 
 #include <libxsd-frontend/semantic-graph/elements.hxx>
 
+#include <libxsd-frontend/export.hxx>
+
 namespace XSDFrontend
 {
   namespace SemanticGraph
   {
-    class Attribute: public virtual Member
+    class LIBXSD_FRONTEND_SYMEXPORT Attribute: public virtual Member
     {
     public:
       bool

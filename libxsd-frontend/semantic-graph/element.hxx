@@ -7,6 +7,8 @@
 #include <libxsd-frontend/semantic-graph/elements.hxx>
 #include <libxsd-frontend/semantic-graph/particle.hxx>
 
+#include <libxsd-frontend/export.hxx>
+
 namespace XSDFrontend
 {
   namespace SemanticGraph
@@ -47,8 +49,8 @@ namespace XSDFrontend
     };
 
 
-    class Element: public virtual Member,
-                   public virtual Particle
+    class LIBXSD_FRONTEND_SYMEXPORT Element: public virtual Member,
+                                             public virtual Particle
     {
     public:
       bool

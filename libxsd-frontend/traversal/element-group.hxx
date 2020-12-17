@@ -7,11 +7,14 @@
 #include <libxsd-frontend/traversal/elements.hxx>
 #include <libxsd-frontend/semantic-graph/element-group.hxx>
 
+#include <libxsd-frontend/export.hxx>
+
 namespace XSDFrontend
 {
   namespace Traversal
   {
-    struct ElementGroup: ScopeTemplate<SemanticGraph::ElementGroup>
+    struct LIBXSD_FRONTEND_SYMEXPORT ElementGroup:
+      ScopeTemplate<SemanticGraph::ElementGroup>
     {
       virtual void
       traverse (Type&);

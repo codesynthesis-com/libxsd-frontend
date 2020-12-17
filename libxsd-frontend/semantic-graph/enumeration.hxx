@@ -7,18 +7,20 @@
 #include <libxsd-frontend/semantic-graph/elements.hxx>
 #include <libxsd-frontend/semantic-graph/complex.hxx>
 
+#include <libxsd-frontend/export.hxx>
+
 namespace XSDFrontend
 {
   namespace SemanticGraph
   {
-    class Enumeration: public virtual Complex
+    class LIBXSD_FRONTEND_SYMEXPORT Enumeration: public virtual Complex
     {
     public:
       Enumeration (Path const& file, unsigned long line, unsigned long column);
     };
 
 
-    class Enumerator: public virtual Instance
+    class LIBXSD_FRONTEND_SYMEXPORT Enumerator: public virtual Instance
     {
     public:
       Enumerator (Path const& file, unsigned long line, unsigned long column);

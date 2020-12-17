@@ -6,6 +6,8 @@
 
 #include <libxsd-frontend/semantic-graph/elements.hxx>
 
+#include <libxsd-frontend/export.hxx>
+
 namespace XSDFrontend
 {
   namespace SemanticGraph
@@ -14,7 +16,7 @@ namespace XSDFrontend
     {
       // Type
       //
-      class Type: public virtual SemanticGraph::Type
+      class LIBXSD_FRONTEND_SYMEXPORT Type: public virtual SemanticGraph::Type
       {
       protected:
         Type ();
@@ -22,7 +24,7 @@ namespace XSDFrontend
 
       // Byte
       //
-      class Byte: public virtual Type
+      class LIBXSD_FRONTEND_SYMEXPORT Byte: public virtual Type
       {
       public:
         Byte (Path const& file,
@@ -32,7 +34,7 @@ namespace XSDFrontend
 
       // UnsignedByte
       //
-      class UnsignedByte: public virtual Type
+      class LIBXSD_FRONTEND_SYMEXPORT UnsignedByte: public virtual Type
       {
       public:
         UnsignedByte (Path const& file,
@@ -42,7 +44,7 @@ namespace XSDFrontend
 
       // Short
       //
-      class Short: public virtual Type
+      class LIBXSD_FRONTEND_SYMEXPORT Short: public virtual Type
       {
       public:
         Short (Path const& file,
@@ -52,7 +54,7 @@ namespace XSDFrontend
 
       // UnsignedShort
       //
-      class UnsignedShort: public virtual Type
+      class LIBXSD_FRONTEND_SYMEXPORT UnsignedShort: public virtual Type
       {
       public:
         UnsignedShort (Path const& file,
@@ -62,7 +64,7 @@ namespace XSDFrontend
 
       // Int
       //
-      class Int: public virtual Type
+      class LIBXSD_FRONTEND_SYMEXPORT Int: public virtual Type
       {
       public:
         Int (Path const& file,
@@ -72,7 +74,7 @@ namespace XSDFrontend
 
       // UnsignedInt
       //
-      class UnsignedInt: public virtual Type
+      class LIBXSD_FRONTEND_SYMEXPORT UnsignedInt: public virtual Type
       {
       public:
         UnsignedInt (Path const& file,
@@ -82,7 +84,7 @@ namespace XSDFrontend
 
       // Long
       //
-      class Long: public virtual Type
+      class LIBXSD_FRONTEND_SYMEXPORT Long: public virtual Type
       {
       public:
         Long (Path const& file,
@@ -92,7 +94,7 @@ namespace XSDFrontend
 
       // UnsignedLong
       //
-      class UnsignedLong: public virtual Type
+      class LIBXSD_FRONTEND_SYMEXPORT UnsignedLong: public virtual Type
       {
       public:
         UnsignedLong (Path const& file,
@@ -102,7 +104,7 @@ namespace XSDFrontend
 
       // Integer
       //
-      class Integer: public virtual Type
+      class LIBXSD_FRONTEND_SYMEXPORT Integer: public virtual Type
       {
       public:
         Integer (Path const& file,
@@ -112,7 +114,7 @@ namespace XSDFrontend
 
       // NonPositiveInteger
       //
-      class NonPositiveInteger: public virtual Type
+      class LIBXSD_FRONTEND_SYMEXPORT NonPositiveInteger: public virtual Type
       {
       public:
         NonPositiveInteger (Path const& file,
@@ -122,7 +124,7 @@ namespace XSDFrontend
 
       // NonNegativeInteger
       //
-      class NonNegativeInteger: public virtual Type
+      class LIBXSD_FRONTEND_SYMEXPORT NonNegativeInteger: public virtual Type
       {
       public:
         NonNegativeInteger (Path const& file,
@@ -132,7 +134,7 @@ namespace XSDFrontend
 
       // PositiveInteger
       //
-      class PositiveInteger: public virtual Type
+      class LIBXSD_FRONTEND_SYMEXPORT PositiveInteger: public virtual Type
       {
       public:
         PositiveInteger (Path const& file,
@@ -142,7 +144,7 @@ namespace XSDFrontend
 
       // NegativeInteger
       //
-      class NegativeInteger: public virtual Type
+      class LIBXSD_FRONTEND_SYMEXPORT NegativeInteger: public virtual Type
       {
       public:
         NegativeInteger (Path const& file,
@@ -152,7 +154,7 @@ namespace XSDFrontend
 
       // Boolean
       //
-      class Boolean: public virtual Type
+      class LIBXSD_FRONTEND_SYMEXPORT Boolean: public virtual Type
       {
       public:
         Boolean (Path const& file,
@@ -162,7 +164,7 @@ namespace XSDFrontend
 
       // Float
       //
-      class Float: public virtual Type
+      class LIBXSD_FRONTEND_SYMEXPORT Float: public virtual Type
       {
       public:
         Float (Path const& file,
@@ -172,7 +174,7 @@ namespace XSDFrontend
 
       // Double
       //
-      class Double: public virtual Type
+      class LIBXSD_FRONTEND_SYMEXPORT Double: public virtual Type
       {
       public:
         Double (Path const& file,
@@ -182,7 +184,7 @@ namespace XSDFrontend
 
       // Decimal
       //
-      class Decimal: public virtual Type
+      class LIBXSD_FRONTEND_SYMEXPORT Decimal: public virtual Type
       {
       public:
         Decimal (Path const& file,
@@ -192,7 +194,7 @@ namespace XSDFrontend
 
       // String
       //
-      class String: public virtual Type
+      class LIBXSD_FRONTEND_SYMEXPORT String: public virtual Type
       {
       public:
         String (Path const& file,
@@ -202,7 +204,7 @@ namespace XSDFrontend
 
       // NormalizedString
       //
-      class NormalizedString: public virtual Type
+      class LIBXSD_FRONTEND_SYMEXPORT NormalizedString: public virtual Type
       {
       public:
         NormalizedString (Path const& file,
@@ -212,7 +214,7 @@ namespace XSDFrontend
 
       // Token
       //
-      class Token: public virtual Type
+      class LIBXSD_FRONTEND_SYMEXPORT Token: public virtual Type
       {
       public:
         Token (Path const& file,
@@ -222,7 +224,7 @@ namespace XSDFrontend
 
       // Name
       //
-      class Name: public virtual Type
+      class LIBXSD_FRONTEND_SYMEXPORT Name: public virtual Type
       {
       public:
         Name (Path const& file,
@@ -232,7 +234,7 @@ namespace XSDFrontend
 
       // NameToken
       //
-      class NameToken: public virtual Type
+      class LIBXSD_FRONTEND_SYMEXPORT NameToken: public virtual Type
       {
       public:
         NameToken (Path const& file,
@@ -242,7 +244,7 @@ namespace XSDFrontend
 
       // NameTokens
       //
-      class NameTokens: public virtual Type
+      class LIBXSD_FRONTEND_SYMEXPORT NameTokens: public virtual Type
       {
       public:
         NameTokens (Path const& file,
@@ -252,7 +254,7 @@ namespace XSDFrontend
 
       // NCName
       //
-      class NCName: public virtual Type
+      class LIBXSD_FRONTEND_SYMEXPORT NCName: public virtual Type
       {
       public:
         NCName (Path const& file,
@@ -262,7 +264,7 @@ namespace XSDFrontend
 
       // Language
       //
-      class Language: public virtual Type
+      class LIBXSD_FRONTEND_SYMEXPORT Language: public virtual Type
       {
       public:
         Language (Path const& file,
@@ -272,7 +274,7 @@ namespace XSDFrontend
 
       // QName
       //
-      class QName: public virtual Type
+      class LIBXSD_FRONTEND_SYMEXPORT QName: public virtual Type
       {
       public:
         QName (Path const& file,
@@ -282,7 +284,7 @@ namespace XSDFrontend
 
       // Id
       //
-      class Id: public virtual Type
+      class LIBXSD_FRONTEND_SYMEXPORT Id: public virtual Type
       {
       public:
         Id (Path const& file,
@@ -292,8 +294,8 @@ namespace XSDFrontend
 
       // IdRef
       //
-      class IdRef: public virtual Type,
-                   public virtual Specialization
+      class LIBXSD_FRONTEND_SYMEXPORT IdRef: public virtual Type,
+                                             public virtual Specialization
       {
       public:
         IdRef (Path const& file,
@@ -303,8 +305,8 @@ namespace XSDFrontend
 
       // IdRefs
       //
-      class IdRefs: public virtual Type,
-                    public virtual Specialization
+      class LIBXSD_FRONTEND_SYMEXPORT IdRefs: public virtual Type,
+                                              public virtual Specialization
       {
       public:
         IdRefs (Path const& file,
@@ -314,7 +316,7 @@ namespace XSDFrontend
 
       // AnyURI
       //
-      class AnyURI: public virtual Type
+      class LIBXSD_FRONTEND_SYMEXPORT AnyURI: public virtual Type
       {
       public:
         AnyURI (Path const& file,
@@ -324,7 +326,7 @@ namespace XSDFrontend
 
       // Base64Binary
       //
-      class Base64Binary: public virtual Type
+      class LIBXSD_FRONTEND_SYMEXPORT Base64Binary: public virtual Type
       {
       public:
         Base64Binary (Path const& file,
@@ -334,7 +336,7 @@ namespace XSDFrontend
 
       // HexBinary
       //
-      class HexBinary: public virtual Type
+      class LIBXSD_FRONTEND_SYMEXPORT HexBinary: public virtual Type
       {
       public:
         HexBinary (Path const& file,
@@ -344,7 +346,7 @@ namespace XSDFrontend
 
       // Date
       //
-      class Date: public virtual Type
+      class LIBXSD_FRONTEND_SYMEXPORT Date: public virtual Type
       {
       public:
         Date (Path const& file,
@@ -354,7 +356,7 @@ namespace XSDFrontend
 
       // DateTime
       //
-      class DateTime: public virtual Type
+      class LIBXSD_FRONTEND_SYMEXPORT DateTime: public virtual Type
       {
       public:
         DateTime (Path const& file,
@@ -364,7 +366,7 @@ namespace XSDFrontend
 
       // Duration
       //
-      class Duration: public virtual Type
+      class LIBXSD_FRONTEND_SYMEXPORT Duration: public virtual Type
       {
       public:
         Duration (Path const& file,
@@ -374,7 +376,7 @@ namespace XSDFrontend
 
       // Day
       //
-      class Day: public virtual Type
+      class LIBXSD_FRONTEND_SYMEXPORT Day: public virtual Type
       {
       public:
         Day (Path const& file,
@@ -384,7 +386,7 @@ namespace XSDFrontend
 
       // Month
       //
-      class Month: public virtual Type
+      class LIBXSD_FRONTEND_SYMEXPORT Month: public virtual Type
       {
       public:
         Month (Path const& file,
@@ -394,7 +396,7 @@ namespace XSDFrontend
 
       // MonthDay
       //
-      class MonthDay: public virtual Type
+      class LIBXSD_FRONTEND_SYMEXPORT MonthDay: public virtual Type
       {
       public:
         MonthDay (Path const& file,
@@ -404,7 +406,7 @@ namespace XSDFrontend
 
       // Year
       //
-      class Year: public virtual Type
+      class LIBXSD_FRONTEND_SYMEXPORT Year: public virtual Type
       {
       public:
         Year (Path const& file,
@@ -414,7 +416,7 @@ namespace XSDFrontend
 
       // YearMonth
       //
-      class YearMonth: public virtual Type
+      class LIBXSD_FRONTEND_SYMEXPORT YearMonth: public virtual Type
       {
       public:
         YearMonth (Path const& file,
@@ -424,7 +426,7 @@ namespace XSDFrontend
 
       // Time
       //
-      class Time: public virtual Type
+      class LIBXSD_FRONTEND_SYMEXPORT Time: public virtual Type
       {
       public:
         Time (Path const& file,
@@ -434,7 +436,7 @@ namespace XSDFrontend
 
       // Entity
       //
-      class Entity: public virtual Type
+      class LIBXSD_FRONTEND_SYMEXPORT Entity: public virtual Type
       {
       public:
         Entity (Path const& file,
@@ -444,7 +446,7 @@ namespace XSDFrontend
 
       // Entities
       //
-      class Entities: public virtual Type
+      class LIBXSD_FRONTEND_SYMEXPORT Entities: public virtual Type
       {
       public:
         Entities (Path const& file,
@@ -454,7 +456,7 @@ namespace XSDFrontend
 
       // Notation
       //
-      class Notation: public virtual Type
+      class LIBXSD_FRONTEND_SYMEXPORT Notation: public virtual Type
       {
       public:
         Notation (Path const& file,

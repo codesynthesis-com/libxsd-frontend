@@ -6,6 +6,7 @@
 
 #include <vector>
 #include <ostream>
+#include <cstdint> // uintptr_t
 
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/util/XMLString.hpp>
@@ -220,7 +221,9 @@ namespace XSDFrontend
       {
         //@@ cache
         //
-        return reinterpret_cast<unsigned long> (e_->getUserData (line_key));
+        return static_cast<unsigned long> (
+                 reinterpret_cast<std::uintptr_t> (
+                   e_->getUserData (line_key)));
       }
 
       unsigned long
@@ -228,7 +231,9 @@ namespace XSDFrontend
       {
         //@@ cache
         //
-        return reinterpret_cast<unsigned long> (e_->getUserData (column_key));
+        return static_cast<unsigned long> (
+                 reinterpret_cast<std::uintptr_t> (
+                   e_->getUserData (column_key)));
       }
 
     public:

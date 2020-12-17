@@ -10,11 +10,13 @@
 #include <libxsd-frontend/types.hxx>
 #include <libxsd-frontend/semantic-graph/schema.hxx>
 
+#include <libxsd-frontend/export.hxx>
+
 namespace XSDFrontend
 {
   struct InvalidSchema {};
 
-  class LocationTranslator
+  class LIBXSD_FRONTEND_SYMEXPORT LocationTranslator
   {
   public:
     virtual
@@ -29,7 +31,7 @@ namespace XSDFrontend
   //
   typedef std::set<NarrowString> WarningSet;
 
-  class Parser
+  class LIBXSD_FRONTEND_SYMEXPORT Parser
   {
   public:
     ~Parser ();

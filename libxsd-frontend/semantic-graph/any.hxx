@@ -10,12 +10,14 @@
 #include <libxsd-frontend/semantic-graph/particle.hxx>
 #include <libxsd-frontend/semantic-graph/namespace.hxx>
 
+#include <libxsd-frontend/export.hxx>
+
 namespace XSDFrontend
 {
   namespace SemanticGraph
   {
-    class Any: public virtual Nameable,
-               public virtual Particle
+    class LIBXSD_FRONTEND_SYMEXPORT Any: public virtual Nameable,
+                                         public virtual Particle
     {
       typedef std::vector<String> Namespaces;
 

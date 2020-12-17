@@ -3,6 +3,8 @@
 
 #include <libxsd-frontend/schema-dom-parser.hxx>
 
+#include <cstdint> // uintptr_t
+
 #include <xercesc/dom/DOMDocument.hpp>
 #include <xercesc/dom/DOMElement.hpp>
 #include <xercesc/dom/DOMAttr.hpp>
@@ -74,8 +76,13 @@ namespace XSDFrontend
       unsigned long l (static_cast<unsigned long> (info.lineNumber));
       unsigned long c (static_cast<unsigned long> (info.colNumber));
 
-      fCurrentNode->setUserData (line_key, reinterpret_cast<void*> (l), 0);
-      fCurrentNode->setUserData (column_key, reinterpret_cast<void*> (c), 0);
+      fCurrentNode->setUserData (line_key,
+                                 reinterpret_cast<void*> (
+                                   static_cast<std::uintptr_t> (l)), 0);
+
+      fCurrentNode->setUserData (column_key,
+                                 reinterpret_cast<void*> (
+                                   static_cast<std::uintptr_t> (c)), 0);
 
       // If an empty element, call the endElement() now.
       //

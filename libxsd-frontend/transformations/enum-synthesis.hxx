@@ -9,6 +9,8 @@
 #include <libxsd-frontend/semantic-graph/elements.hxx> // Path
 #include <libxsd-frontend/semantic-graph/schema.hxx>
 
+#include <libxsd-frontend/export.hxx>
+
 namespace XSDFrontend
 {
   namespace Transformations
@@ -17,7 +19,7 @@ namespace XSDFrontend
     // with the same base with an equivalent synthesized enumeration.
     // This transformation assumes that there are no anonymous types.
     //
-    class EnumSynthesis
+    class LIBXSD_FRONTEND_SYMEXPORT EnumSynthesis
     {
     public:
       void

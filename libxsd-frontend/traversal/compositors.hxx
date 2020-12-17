@@ -7,13 +7,16 @@
 #include <libxsd-frontend/traversal/elements.hxx>
 #include <libxsd-frontend/semantic-graph/compositors.hxx>
 
+#include <libxsd-frontend/export.hxx>
+
 namespace XSDFrontend
 {
   namespace Traversal
   {
     //
     //
-    struct ContainsParticle: Edge<SemanticGraph::ContainsParticle>
+    struct LIBXSD_FRONTEND_SYMEXPORT ContainsParticle:
+      Edge<SemanticGraph::ContainsParticle>
     {
       ContainsParticle ()
       {
@@ -31,7 +34,8 @@ namespace XSDFrontend
 
     //
     //
-    struct ContainsCompositor: Edge<SemanticGraph::ContainsCompositor>
+    struct LIBXSD_FRONTEND_SYMEXPORT ContainsCompositor:
+      Edge<SemanticGraph::ContainsCompositor>
     {
       ContainsCompositor ()
       {
@@ -48,7 +52,8 @@ namespace XSDFrontend
 
     //
     //
-    struct Compositor : Node<SemanticGraph::Compositor>
+    struct LIBXSD_FRONTEND_SYMEXPORT Compositor:
+      Node<SemanticGraph::Compositor>
     {
       virtual void
       traverse (Type&);
@@ -69,7 +74,7 @@ namespace XSDFrontend
 
     //
     //
-    struct All : Node<SemanticGraph::All>
+    struct LIBXSD_FRONTEND_SYMEXPORT All: Node<SemanticGraph::All>
     {
       virtual void
       traverse (Type&);
@@ -90,7 +95,7 @@ namespace XSDFrontend
 
     //
     //
-    struct Choice : Node<SemanticGraph::Choice>
+    struct LIBXSD_FRONTEND_SYMEXPORT Choice: Node<SemanticGraph::Choice>
     {
       virtual void
       traverse (Type&);
@@ -111,7 +116,7 @@ namespace XSDFrontend
 
     //
     //
-    struct Sequence : Node<SemanticGraph::Sequence>
+    struct LIBXSD_FRONTEND_SYMEXPORT Sequence: Node<SemanticGraph::Sequence>
     {
       virtual void
       traverse (Type&);

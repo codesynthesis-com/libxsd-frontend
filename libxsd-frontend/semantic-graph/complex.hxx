@@ -7,11 +7,14 @@
 #include <libxsd-frontend/semantic-graph/elements.hxx>
 #include <libxsd-frontend/semantic-graph/compositors.hxx>
 
+#include <libxsd-frontend/export.hxx>
+
 namespace XSDFrontend
 {
   namespace SemanticGraph
   {
-    class Complex: public virtual Type, public virtual Scope
+    class LIBXSD_FRONTEND_SYMEXPORT Complex: public virtual Type,
+                                             public virtual Scope
     {
     public:
       bool

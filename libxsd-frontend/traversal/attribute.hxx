@@ -8,12 +8,13 @@
 
 #include <libxsd-frontend/semantic-graph/attribute.hxx>
 
+#include <libxsd-frontend/export.hxx>
 
 namespace XSDFrontend
 {
   namespace Traversal
   {
-    struct Attribute : Node<SemanticGraph::Attribute>
+    struct LIBXSD_FRONTEND_SYMEXPORT Attribute : Node<SemanticGraph::Attribute>
     {
       virtual void
       traverse (Type&);

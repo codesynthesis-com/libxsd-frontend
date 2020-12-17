@@ -11,6 +11,8 @@
 #include <libxsd-frontend/semantic-graph/elements.hxx> // Path
 #include <libxsd-frontend/semantic-graph/schema.hxx>
 
+#include <libxsd-frontend/export.hxx>
+
 namespace XSDFrontend
 {
   namespace Generators
@@ -19,7 +21,7 @@ namespace XSDFrontend
     // including the main schema file) which can then be used to produce
     // make dependencies, etc.
     //
-    class Dependencies
+    class LIBXSD_FRONTEND_SYMEXPORT Dependencies
     {
     public:
       std::vector<SemanticGraph::Path>

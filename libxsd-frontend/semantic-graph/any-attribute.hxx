@@ -9,11 +9,13 @@
 #include <libxsd-frontend/semantic-graph/elements.hxx>
 #include <libxsd-frontend/semantic-graph/namespace.hxx>
 
+#include <libxsd-frontend/export.hxx>
+
 namespace XSDFrontend
 {
   namespace SemanticGraph
   {
-    class AnyAttribute: public virtual Nameable
+    class LIBXSD_FRONTEND_SYMEXPORT AnyAttribute: public virtual Nameable
     {
       typedef std::vector<String> Namespaces;
 

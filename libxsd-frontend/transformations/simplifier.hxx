@@ -9,6 +9,8 @@
 #include <libxsd-frontend/semantic-graph/elements.hxx> // Path
 #include <libxsd-frontend/semantic-graph/schema.hxx>
 
+#include <libxsd-frontend/export.hxx>
+
 namespace XSDFrontend
 {
   namespace Transformations
@@ -17,7 +19,7 @@ namespace XSDFrontend
     // (e.g., removing empty compositors, etc). This transformation
     // assumes that there are no anonymous types.
     //
-    class Simplifier
+    class LIBXSD_FRONTEND_SYMEXPORT Simplifier
     {
     public:
       void

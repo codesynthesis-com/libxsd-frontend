@@ -1977,6 +1977,8 @@ namespace XSDFrontend
                               Traversal::Element,
                               Traversal::Member
       {
+        using Member::traverse;
+
         AnonymousMember (Traversal::NodeDispatcher& d)
         {
           belongs_.node_traverser (d);
@@ -2226,6 +2228,8 @@ namespace XSDFrontend
                               Traversal::Element,
                               Traversal::Member
       {
+        using Member::traverse;
+
         AnonymousMember (Traversal::NodeDispatcher& d)
         {
           belongs_.node_traverser (d);

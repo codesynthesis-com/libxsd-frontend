@@ -219,7 +219,12 @@ namespace XSDFrontend
 
           // With the same kind of inheritance (restriction or extension).
           //
-          if (typeid (x.inherits ()) != typeid (y.inherits ()))
+          // Suppress the Clang's 'expression with side effects will be
+          // evaluated despite being used as an operand to typeid' warning.
+          //
+          const SemanticGraph::Inherits& xi (x.inherits ());
+          const SemanticGraph::Inherits& yi (y.inherits ());
+          if (typeid (xi) != typeid (yi))
             return;
 
           // Bases should be the same.
@@ -252,7 +257,9 @@ namespace XSDFrontend
         Scope::NamesIterator ix (x.names_begin ()), iy (y.names_begin ());
         for (; ix != x.names_end () && iy != y.names_end (); ++ix, ++iy)
         {
-          if (typeid (ix->named ()) != typeid (iy->named ()))
+          const SemanticGraph::Nameable& xn (ix->named ());
+          const SemanticGraph::Nameable& yn (iy->named ());
+          if (typeid (xn) != typeid (yn))
             return;
 
           bool equal (false);

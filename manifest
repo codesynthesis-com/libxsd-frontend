@@ -10,6 +10,7 @@ url: https://www.codesynthesis.com/projects/libxsd-frontend/
 src-url: https://git.codesynthesis.com/cgit/libxsd-frontend/libxsd-frontend/
 email: libxsd-frontend-users@codesynthesis.com ; Mailing list
 build-warning-email: builds@codesynthesis.com
+builds: host : &default
 requires: c++11
 depends: * build2 >= 0.13.0
 depends: * bpkg >= 0.13.0

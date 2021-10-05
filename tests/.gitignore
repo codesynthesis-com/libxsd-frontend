@@ -1,3 +1,6 @@
 driver
-test/
-test-*/
+
+# Testscript output directory (can be symlink).
+#
+test
+test-*

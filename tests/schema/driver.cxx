@@ -11,6 +11,9 @@
 
 #include <iostream>
 
+#undef NDEBUG
+#include <cassert>
+
 using namespace std;
 using namespace XSDFrontend;
 

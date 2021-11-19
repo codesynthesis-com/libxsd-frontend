@@ -1,6 +1,6 @@
 : 1
 name: libxsd-frontend
-version: 2.1.0-b.2
+version: 2.1.0-b.2.z
 summary: XML Schema definition language compiler frontend library
 license: other: GPL-2.0-only with Xerces-C++ linking exception
 topics: C++, XML, XML Schema, XML parser

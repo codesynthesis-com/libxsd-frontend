@@ -13,5 +13,5 @@ build-warning-email: builds@codesynthesis.com
 requires: c++11
 depends: * build2 >= 0.16.0
 depends: * bpkg >= 0.16.0
-depends: libcutl ^1.11.0-
+depends: libcutl ^1.11.0
 depends: libxerces-c ^3.0.0

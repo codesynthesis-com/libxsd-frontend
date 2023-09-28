@@ -203,13 +203,13 @@ namespace XSDFrontend
       {
       }
 
-      String
+      const String&
       name () const
       {
         return name_;
       }
 
-      String
+      const String&
       namespace_ () const
       {
         return namespace__;

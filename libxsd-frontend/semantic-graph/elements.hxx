@@ -193,7 +193,7 @@ namespace XSDFrontend
     class Names: public virtual Edge
     {
     public:
-      Name
+      const Name&
       name () const
       {
         return name_;
@@ -256,7 +256,7 @@ namespace XSDFrontend
         return named_ != 0;
       }
 
-      Name
+      const Name&
       name () const
       {
         assert (named_p ());

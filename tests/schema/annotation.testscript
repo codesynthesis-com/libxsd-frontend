@@ -4,7 +4,7 @@
 : basic
 :
 {
-  cat <<EOI >=test.xsd;
+  cat <<EOI >=test.xsd
     <?xml version="1.0"?>
     <schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:t="test" targetNamespace="test">
 
@@ -201,7 +201,7 @@
 : refs
 :
 {
-  cat <<EOI >=refs.xsd;
+  cat <<EOI >=refs.xsd
     <?xml version="1.0"?>
     <schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:t="test" targetNamespace="test">
 

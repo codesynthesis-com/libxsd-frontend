@@ -4,7 +4,7 @@
 : qual
 :
 {
-  cat <<EOI >=test.xsd;
+  cat <<EOI >=test.xsd
     <?xml version="1.0"?>
     <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:t="test" xmlns:x="foo" targetNamespace="test">
 
@@ -65,7 +65,7 @@
 : unqual
 :
 {
-  cat <<EOI >=test.xsd;
+  cat <<EOI >=test.xsd
     <?xml version="1.0"?>
     <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:t="test" xmlns="foo" targetNamespace="test">
 
